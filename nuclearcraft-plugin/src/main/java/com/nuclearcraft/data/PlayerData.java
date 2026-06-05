@@ -8,7 +8,11 @@ import java.util.UUID;
  * Holds all persistent data for a single player.
  *
  * Phase 2 additions: timesInfected, totalRadiationCured, radiationDeaths,
- * lastRadiationSource, lastRadiationReceivedMs.
+ *                    lastRadiationSource, lastRadiationReceivedMs.
+ *
+ * Phase 3 additions: irradiatedZombiesKilled, alphaZombiesKilled,
+ *                    radiationCloudsSurvived, radioactiveCoresCollected,
+ *                    mutatedSeedsCollected, irradiatedHeartsCollected.
  *
  * Thread-safety: volatile for primitive fields read across threads;
  * writes must be done on the main thread or with external synchronization.
@@ -30,6 +34,14 @@ public class PlayerData {
     private volatile double totalRadiationExposure;
     private volatile double totalRadiationCured;
     private volatile int radiationDeaths;
+
+    // Zombie statistics (Phase 3)
+    private volatile int irradiatedZombiesKilled;
+    private volatile int alphaZombiesKilled;
+    private volatile int radiationCloudsSurvived;
+    private volatile int radioactiveCoresCollected;
+    private volatile int mutatedSeedsCollected;
+    private volatile int irradiatedHeartsCollected;
 
     // Progression
     private volatile int bossKills;
@@ -53,6 +65,12 @@ public class PlayerData {
         this.totalRadiationExposure = 0.0;
         this.totalRadiationCured = 0.0;
         this.radiationDeaths = 0;
+        this.irradiatedZombiesKilled = 0;
+        this.alphaZombiesKilled = 0;
+        this.radiationCloudsSurvived = 0;
+        this.radioactiveCoresCollected = 0;
+        this.mutatedSeedsCollected = 0;
+        this.irradiatedHeartsCollected = 0;
         this.bossKills = 0;
         this.unlockedUpgrades = new HashSet<>();
         this.dirty = false;
@@ -65,7 +83,12 @@ public class PlayerData {
                       long lastRadiationReceivedMs, String lastRadiationSource,
                       int timesInfected,
                       double totalRadiationExposure, double totalRadiationCured,
-                      int radiationDeaths, int bossKills,
+                      int radiationDeaths,
+                      int irradiatedZombiesKilled, int alphaZombiesKilled,
+                      int radiationCloudsSurvived,
+                      int radioactiveCoresCollected, int mutatedSeedsCollected,
+                      int irradiatedHeartsCollected,
+                      int bossKills,
                       Set<String> unlockedUpgrades) {
         this.uuid = uuid;
         this.radiationLevel = radiationLevel;
@@ -78,6 +101,12 @@ public class PlayerData {
         this.totalRadiationExposure = totalRadiationExposure;
         this.totalRadiationCured = totalRadiationCured;
         this.radiationDeaths = radiationDeaths;
+        this.irradiatedZombiesKilled = irradiatedZombiesKilled;
+        this.alphaZombiesKilled = alphaZombiesKilled;
+        this.radiationCloudsSurvived = radiationCloudsSurvived;
+        this.radioactiveCoresCollected = radioactiveCoresCollected;
+        this.mutatedSeedsCollected = mutatedSeedsCollected;
+        this.irradiatedHeartsCollected = irradiatedHeartsCollected;
         this.bossKills = bossKills;
         this.unlockedUpgrades = new HashSet<>(unlockedUpgrades);
         this.dirty = false;
@@ -155,6 +184,70 @@ public class PlayerData {
     }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // Phase 3 zombie statistics
+    // ──────────────────────────────────────────────────────────────────────────
+
+    public int getIrradiatedZombiesKilled() { return irradiatedZombiesKilled; }
+    public void incrementIrradiatedZombiesKilled() {
+        this.irradiatedZombiesKilled++;
+        this.dirty = true;
+    }
+    public void setIrradiatedZombiesKilled(int count) {
+        this.irradiatedZombiesKilled = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    public int getAlphaZombiesKilled() { return alphaZombiesKilled; }
+    public void incrementAlphaZombiesKilled() {
+        this.alphaZombiesKilled++;
+        this.dirty = true;
+    }
+    public void setAlphaZombiesKilled(int count) {
+        this.alphaZombiesKilled = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    public int getRadiationCloudsSurvived() { return radiationCloudsSurvived; }
+    public void incrementRadiationCloudsSurvived() {
+        this.radiationCloudsSurvived++;
+        this.dirty = true;
+    }
+    public void setRadiationCloudsSurvived(int count) {
+        this.radiationCloudsSurvived = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    public int getRadioactiveCoresCollected() { return radioactiveCoresCollected; }
+    public void incrementRadioactiveCoresCollected() {
+        this.radioactiveCoresCollected++;
+        this.dirty = true;
+    }
+    public void setRadioactiveCoresCollected(int count) {
+        this.radioactiveCoresCollected = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    public int getMutatedSeedsCollected() { return mutatedSeedsCollected; }
+    public void incrementMutatedSeedsCollected() {
+        this.mutatedSeedsCollected++;
+        this.dirty = true;
+    }
+    public void setMutatedSeedsCollected(int count) {
+        this.mutatedSeedsCollected = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    public int getIrradiatedHeartsCollected() { return irradiatedHeartsCollected; }
+    public void incrementIrradiatedHeartsCollected() {
+        this.irradiatedHeartsCollected++;
+        this.dirty = true;
+    }
+    public void setIrradiatedHeartsCollected(int count) {
+        this.irradiatedHeartsCollected = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // Progression
     // ──────────────────────────────────────────────────────────────────────────
 
@@ -164,7 +257,7 @@ public class PlayerData {
         this.dirty = true;
     }
 
-    public Set<String> getUnlockedUpgrades() { return new HashSet<>(unlockedUpgrades); }
+    public Set<String> getUnlockedUpgrades() { return unlockedUpgrades; }
     public boolean hasUpgrade(String id) { return unlockedUpgrades.contains(id); }
     public void unlockUpgrade(String id) { unlockedUpgrades.add(id); this.dirty = true; }
     public void revokeUpgrade(String id) { unlockedUpgrades.remove(id); this.dirty = true; }
@@ -182,6 +275,7 @@ public class PlayerData {
         return "PlayerData{uuid=" + uuid
                 + ", radiation=" + radiationLevel
                 + ", stage=" + radiationStage
+                + ", izKills=" + irradiatedZombiesKilled
                 + ", source=" + lastRadiationSource + "}";
     }
 }

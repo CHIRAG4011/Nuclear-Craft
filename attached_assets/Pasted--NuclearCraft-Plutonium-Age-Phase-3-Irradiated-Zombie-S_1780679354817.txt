@@ -1,0 +1,695 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 3 - Irradiated Zombie System
+
+You are continuing development of NuclearCraft for PaperMC 1.21+ using Java 21.
+
+Previous completed phases:
+
+### Phase 1
+
+* Core Framework
+* Managers
+* Commands
+* GUI System
+* Data System
+* Config System
+
+### Phase 2
+
+* Radiation System
+* Infection System
+* Radiation Events
+* Radiation Data
+* Contagion Mechanics
+
+Now implement the complete **Irradiated Zombie System**.
+
+This system is the primary early-game progression path.
+
+Players will encounter Irradiated Zombies before they discover Plutonium Ore.
+
+The zombie system must be balanced, performant, configurable, and scalable.
+
+---
+
+# SYSTEM OVERVIEW
+
+Irradiated Zombies are mutated zombies created by long-term plutonium contamination.
+
+They are stronger than normal zombies.
+
+They spread radiation.
+
+They are the primary source of:
+
+* Radioactive Core
+* Mutated Seed
+* Irradiated Heart
+
+Every future progression system depends on players hunting these zombies.
+
+---
+
+# ZOMBIE REPLACEMENT SYSTEM
+
+Create:
+
+ZombieSpawnManager
+
+ZombieSpawnListener
+
+IrradiatedZombieManager
+
+---
+
+# SPAWN DISTRIBUTION
+
+Whenever a zombie naturally spawns:
+
+40% chance:
+
+* Normal Zombie
+
+60% chance:
+
+* Irradiated Zombie
+
+This applies to:
+
+* Surface Night Spawns
+* Cave Spawns
+* Structure Spawns
+* Reinforcement Spawns
+* Dungeon Spawns
+
+Must NOT affect:
+
+* Villager Zombie Conversions
+* Custom Plugin Zombies
+* Spawn Eggs
+* Commands
+* Mob Spawners (config option)
+
+Create config settings for all sources.
+
+---
+
+# IDENTIFICATION SYSTEM
+
+Never identify zombies by name alone.
+
+Use:
+
+PersistentDataContainer
+
+Namespace:
+
+nuclearcraft:irradiated_zombie
+
+Store:
+
+isIrradiated
+
+spawnTime
+
+level
+
+variant
+
+radiationPower
+
+Every irradiated zombie must persist correctly.
+
+---
+
+# VISUAL DESIGN
+
+Create visual systems.
+
+Appearance:
+
+* Bright toxic green eyes
+* Radioactive flesh patches
+* Green particle emissions
+* Toxic aura
+
+Particle Types:
+
+* Dust
+* Spores
+* Smoke
+
+Particles should scale with zombie strength.
+
+Must be optimized.
+
+Particles only visible nearby.
+
+---
+
+# BASE STATS
+
+Normal Zombie
+
+20 HP
+
+Default Damage
+
+Default Speed
+
+---
+
+Irradiated Zombie
+
+35 HP
+
+5-6 Attack Damage
+
+15% Speed Increase
+
+15% Knockback Resistance
+
+20% Follow Range Increase
+
+Must scale correctly with difficulty.
+
+---
+
+# ZOMBIE LEVEL SYSTEM
+
+Every irradiated zombie receives a level.
+
+Level 1
+80%
+
+Level 2
+15%
+
+Level 3
+4%
+
+Level 4
+1%
+
+Store level data.
+
+---
+
+# LEVEL 1
+
+Health:
+35
+
+Damage:
+5
+
+Radiation:
+10
+
+Particles:
+Low
+
+---
+
+# LEVEL 2
+
+Health:
+45
+
+Damage:
+7
+
+Radiation:
+20
+
+Particles:
+Medium
+
+Extra Loot:
++10%
+
+---
+
+# LEVEL 3
+
+Health:
+60
+
+Damage:
+9
+
+Radiation:
+35
+
+Particles:
+Heavy
+
+Extra Loot:
++25%
+
+---
+
+# LEVEL 4
+
+Health:
+80
+
+Damage:
+12
+
+Radiation:
+50
+
+Particles:
+Extreme
+
+Special Name:
+
+Alpha Irradiated Zombie
+
+Boss-like Early Game Enemy
+
+---
+
+# ALPHA IRRADIATED ZOMBIE
+
+Spawn Chance:
+1%
+
+Appearance:
+
+* Larger Size
+* Intense Green Glow
+* Radiation Aura
+* Special Boss Bar
+
+Health:
+80
+
+Damage:
+12
+
+Movement:
+20% Faster
+
+Knockback Resistance:
+50%
+
+Follow Range:
++50%
+
+Drops:
+Guaranteed Special Loot
+
+---
+
+# ATTACK SYSTEM
+
+Create:
+
+ZombieCombatManager
+
+When Irradiated Zombie attacks player:
+
+Apply Radiation.
+
+Formula:
+
+Level 1:
+10 Radiation
+
+Level 2:
+20 Radiation
+
+Level 3:
+35 Radiation
+
+Level 4:
+50 Radiation
+
+Source:
+
+IRRADIATED_ZOMBIE
+
+Must integrate with Phase 2 Radiation System.
+
+---
+
+# RADIATION CLOUD SYSTEM
+
+When Irradiated Zombie dies:
+
+20% Chance
+
+Spawn Radiation Cloud
+
+Duration:
+10 Seconds
+
+Radius:
+3 Blocks
+
+Players inside:
+
+Gain Radiation Every Second
+
+Cloud Source:
+
+RADIATION_CLOUD
+
+Create:
+
+RadiationCloudManager
+
+---
+
+# LOOT SYSTEM
+
+Create:
+
+ZombieLootManager
+
+---
+
+# COMMON DROPS
+
+Rotten Flesh
+
+0-3
+
+---
+
+# RADIOACTIVE CORE
+
+Primary Progression Item
+
+Drop Chance:
+
+Level 1:
+15%
+
+Level 2:
+25%
+
+Level 3:
+40%
+
+Level 4:
+100%
+
+Used Later For:
+
+* Radiation Drill
+* Nuclear Forge
+* Armor Upgrades
+
+---
+
+# MUTATED SEED
+
+Used For Future Farming System
+
+Drop Chance:
+
+Level 1:
+5%
+
+Level 2:
+10%
+
+Level 3:
+20%
+
+Level 4:
+50%
+
+---
+
+# IRRADIATED HEART
+
+Rare Item
+
+Drop Chance:
+
+Level 1:
+1%
+
+Level 2:
+3%
+
+Level 3:
+7%
+
+Level 4:
+25%
+
+Used For:
+
+* Radiation Serum
+* Titan Summoning
+* Endgame Recipes
+
+---
+
+# EXPERIENCE REWARDS
+
+Level 1:
+10 XP
+
+Level 2:
+20 XP
+
+Level 3:
+40 XP
+
+Level 4:
+100 XP
+
+Configurable.
+
+---
+
+# NIGHT EVENT SYSTEM
+
+Create:
+
+RadiationNightManager
+
+Rare Event
+
+Chance:
+
+5% Each Night
+
+Event Name:
+
+Radiation Surge
+
+Duration:
+Entire Night
+
+Effects:
+
+100% Zombies Spawn Irradiated
+
+Double Radiation Damage
+
+Double Loot
+
+Broadcast Message
+
+Custom Sounds
+
+Custom Particles
+
+---
+
+# RADIATION SURGE BOSSBAR
+
+Display:
+
+☢ RADIATION SURGE ACTIVE ☢
+
+Visible To:
+All Players
+
+Color:
+Green
+
+Update Automatically
+
+---
+
+# ADVANCEMENTS
+
+Create Custom Advancements.
+
+---
+
+## First Exposure
+
+Get Radiation For First Time
+
+Reward:
+XP
+
+---
+
+## Mutant Hunter
+
+Kill First Irradiated Zombie
+
+Reward:
+XP
+
+---
+
+## Core Collector
+
+Obtain Radioactive Core
+
+Reward:
+XP
+
+---
+
+## Alpha Slayer
+
+Kill Alpha Irradiated Zombie
+
+Reward:
+Special Loot
+
+---
+
+# STATISTICS TRACKING
+
+Track:
+
+Irradiated Zombies Killed
+
+Alpha Zombies Killed
+
+Radiation Clouds Survived
+
+Radioactive Cores Collected
+
+Seeds Collected
+
+Hearts Collected
+
+Store in PlayerData.
+
+---
+
+# COMMANDS
+
+Admin Commands
+
+/nuclearcraft zombie spawn irradiated
+
+Spawn Level 1 Zombie
+
+---
+
+/nuclearcraft zombie spawn alpha
+
+Spawn Alpha Zombie
+
+---
+
+/nuclearcraft zombie stats
+
+Displays:
+
+Spawn Counts
+
+Active Zombies
+
+Alpha Count
+
+Radiation Clouds
+
+Permissions:
+
+nuclearcraft.admin.zombies
+
+---
+
+# CONFIGURATION
+
+Create:
+
+zombies.yml
+
+Must Include:
+
+Spawn Chances
+
+Level Chances
+
+Health
+
+Damage
+
+Speed
+
+Loot Chances
+
+Particle Settings
+
+Cloud Settings
+
+Night Event Settings
+
+Bossbar Settings
+
+Everything configurable.
+
+---
+
+# OPTIMIZATION
+
+Requirements:
+
+Support:
+
+100+ Players
+
+Thousands Of Zombies
+
+Large SMP Servers
+
+Avoid:
+
+Heavy Tick Loops
+
+Unnecessary Metadata Lookups
+
+Memory Leaks
+
+Store Active Zombies Efficiently.
+
+Clean Up References On Death.
+
+---
+
+# DELIVERABLES
+
+Generate complete production-ready code for:
+
+* ZombieSpawnManager
+* IrradiatedZombieManager
+* ZombieCombatManager
+* ZombieLootManager
+* RadiationCloudManager
+* RadiationNightManager
+* Zombie Commands
+* Config Integration
+* Statistics Tracking
+* Advancement Support
+
+All code must compile successfully and integrate perfectly with the existing Radiation System.
+
+After completion, the project should be fully ready for Phase 4: Plutonium Ore Generation & Radiation Mining Progression.

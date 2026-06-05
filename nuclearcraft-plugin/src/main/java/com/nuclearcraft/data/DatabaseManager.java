@@ -11,9 +11,9 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * Manages database connectivity and schema (Phase 1 + Phase 2 extended schema).
+ * Manages database connectivity and schema (Phase 1 + Phase 2 + Phase 3 extended schema).
  * Supports SQLite (default) and MySQL via HikariCP.
- * Migration-safe: uses ALTER TABLE IF NOT COLUMN EXISTS approach for new columns.
+ * Migration-safe: uses ALTER TABLE approach for new columns so existing data is preserved.
  */
 public class DatabaseManager {
 
@@ -78,21 +78,27 @@ public class DatabaseManager {
 
     private void createTables() throws SQLException {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
-            // Phase 1 + 2 combined schema
+            // Full Phase 1 + 2 + 3 schema
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS player_data (
-                    uuid                    TEXT PRIMARY KEY,
-                    radiation_level         REAL    NOT NULL DEFAULT 0.0,
-                    radiation_stage         INTEGER NOT NULL DEFAULT 0,
-                    immunity_timer_end      INTEGER NOT NULL DEFAULT 0,
-                    infection_progress      REAL    NOT NULL DEFAULT 0.0,
-                    last_radiation_recv_ms  INTEGER NOT NULL DEFAULT 0,
-                    last_radiation_source   TEXT    NOT NULL DEFAULT 'UNKNOWN',
-                    times_infected          INTEGER NOT NULL DEFAULT 0,
-                    boss_kills              INTEGER NOT NULL DEFAULT 0,
-                    total_exposure          REAL    NOT NULL DEFAULT 0.0,
-                    total_cured             REAL    NOT NULL DEFAULT 0.0,
-                    radiation_deaths        INTEGER NOT NULL DEFAULT 0
+                    uuid                        TEXT    PRIMARY KEY,
+                    radiation_level             REAL    NOT NULL DEFAULT 0.0,
+                    radiation_stage             INTEGER NOT NULL DEFAULT 0,
+                    immunity_timer_end          INTEGER NOT NULL DEFAULT 0,
+                    infection_progress          REAL    NOT NULL DEFAULT 0.0,
+                    last_radiation_recv_ms      INTEGER NOT NULL DEFAULT 0,
+                    last_radiation_source       TEXT    NOT NULL DEFAULT 'UNKNOWN',
+                    times_infected              INTEGER NOT NULL DEFAULT 0,
+                    boss_kills                  INTEGER NOT NULL DEFAULT 0,
+                    total_exposure              REAL    NOT NULL DEFAULT 0.0,
+                    total_cured                 REAL    NOT NULL DEFAULT 0.0,
+                    radiation_deaths            INTEGER NOT NULL DEFAULT 0,
+                    irradiated_zombies_killed   INTEGER NOT NULL DEFAULT 0,
+                    alpha_zombies_killed        INTEGER NOT NULL DEFAULT 0,
+                    radiation_clouds_survived   INTEGER NOT NULL DEFAULT 0,
+                    radioactive_cores_collected INTEGER NOT NULL DEFAULT 0,
+                    mutated_seeds_collected     INTEGER NOT NULL DEFAULT 0,
+                    irradiated_hearts_collected INTEGER NOT NULL DEFAULT 0
                 )
             """);
             stmt.execute("""
@@ -107,16 +113,25 @@ public class DatabaseManager {
     }
 
     /**
-     * Applies migrations for databases created with Phase 1 schema.
-     * Adds Phase 2 columns if they don't already exist.
+     * Applies migrations for databases created with Phase 1 or Phase 2 schema.
+     * Adds missing columns safely — no data loss.
      */
     private void runMigrations() throws SQLException {
         try (Connection conn = getConnection()) {
+            // Phase 2 columns
             addColumnIfMissing(conn, "player_data", "last_radiation_recv_ms", "INTEGER NOT NULL DEFAULT 0");
             addColumnIfMissing(conn, "player_data", "last_radiation_source",  "TEXT NOT NULL DEFAULT 'UNKNOWN'");
             addColumnIfMissing(conn, "player_data", "times_infected",         "INTEGER NOT NULL DEFAULT 0");
             addColumnIfMissing(conn, "player_data", "total_cured",            "REAL NOT NULL DEFAULT 0.0");
             addColumnIfMissing(conn, "player_data", "radiation_deaths",       "INTEGER NOT NULL DEFAULT 0");
+
+            // Phase 3 columns
+            addColumnIfMissing(conn, "player_data", "irradiated_zombies_killed",   "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "alpha_zombies_killed",        "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "radiation_clouds_survived",   "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "radioactive_cores_collected", "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "mutated_seeds_collected",     "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "irradiated_hearts_collected", "INTEGER NOT NULL DEFAULT 0");
         }
         NCLogger.debug("Database migrations complete.");
     }
@@ -160,6 +175,12 @@ public class DatabaseManager {
                             rs.getDouble("total_exposure"),
                             rs.getDouble("total_cured"),
                             rs.getInt("radiation_deaths"),
+                            rs.getInt("irradiated_zombies_killed"),
+                            rs.getInt("alpha_zombies_killed"),
+                            rs.getInt("radiation_clouds_survived"),
+                            rs.getInt("radioactive_cores_collected"),
+                            rs.getInt("mutated_seeds_collected"),
+                            rs.getInt("irradiated_hearts_collected"),
                             rs.getInt("boss_kills"),
                             upgrades
                     ));
@@ -176,20 +197,28 @@ public class DatabaseManager {
             INSERT INTO player_data (
                 uuid, radiation_level, radiation_stage, immunity_timer_end,
                 infection_progress, last_radiation_recv_ms, last_radiation_source,
-                times_infected, boss_kills, total_exposure, total_cured, radiation_deaths
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+                times_infected, boss_kills, total_exposure, total_cured, radiation_deaths,
+                irradiated_zombies_killed, alpha_zombies_killed, radiation_clouds_survived,
+                radioactive_cores_collected, mutated_seeds_collected, irradiated_hearts_collected
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(uuid) DO UPDATE SET
-                radiation_level        = excluded.radiation_level,
-                radiation_stage        = excluded.radiation_stage,
-                immunity_timer_end     = excluded.immunity_timer_end,
-                infection_progress     = excluded.infection_progress,
-                last_radiation_recv_ms = excluded.last_radiation_recv_ms,
-                last_radiation_source  = excluded.last_radiation_source,
-                times_infected         = excluded.times_infected,
-                boss_kills             = excluded.boss_kills,
-                total_exposure         = excluded.total_exposure,
-                total_cured            = excluded.total_cured,
-                radiation_deaths       = excluded.radiation_deaths
+                radiation_level             = excluded.radiation_level,
+                radiation_stage             = excluded.radiation_stage,
+                immunity_timer_end          = excluded.immunity_timer_end,
+                infection_progress          = excluded.infection_progress,
+                last_radiation_recv_ms      = excluded.last_radiation_recv_ms,
+                last_radiation_source       = excluded.last_radiation_source,
+                times_infected              = excluded.times_infected,
+                boss_kills                  = excluded.boss_kills,
+                total_exposure              = excluded.total_exposure,
+                total_cured                 = excluded.total_cured,
+                radiation_deaths            = excluded.radiation_deaths,
+                irradiated_zombies_killed   = excluded.irradiated_zombies_killed,
+                alpha_zombies_killed        = excluded.alpha_zombies_killed,
+                radiation_clouds_survived   = excluded.radiation_clouds_survived,
+                radioactive_cores_collected = excluded.radioactive_cores_collected,
+                mutated_seeds_collected     = excluded.mutated_seeds_collected,
+                irradiated_hearts_collected = excluded.irradiated_hearts_collected
         """;
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1,  data.getUuid().toString());
@@ -204,6 +233,12 @@ public class DatabaseManager {
             ps.setDouble(10, data.getTotalRadiationExposure());
             ps.setDouble(11, data.getTotalRadiationCured());
             ps.setInt(12,    data.getRadiationDeaths());
+            ps.setInt(13,    data.getIrradiatedZombiesKilled());
+            ps.setInt(14,    data.getAlphaZombiesKilled());
+            ps.setInt(15,    data.getRadiationCloudsSurvived());
+            ps.setInt(16,    data.getRadioactiveCoresCollected());
+            ps.setInt(17,    data.getMutatedSeedsCollected());
+            ps.setInt(18,    data.getIrradiatedHeartsCollected());
             ps.executeUpdate();
             saveUpgrades(conn, data);
             data.markClean();

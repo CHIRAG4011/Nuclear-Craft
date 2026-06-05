@@ -1,71 +1,177 @@
-# NuclearCraft Irradiated Zombies Configuration
+# ============================================================
+# NuclearCraft — Irradiated Zombie System Configuration
+# Phase 3 — Complete config for all zombie subsystems
+# ============================================================
 
-irradiated-zombies:
+# ── Spawn System ────────────────────────────────────────────
+spawn:
+  # Fraction of qualifying natural zombie spawns that become irradiated (0.0–1.0)
+  irradiated-chance: 0.60
+
+  # Whether mob spawners can also produce irradiated zombies
+  allow-spawner-conversion: false
+
+  # Spawn reasons that ARE eligible for irradiated conversion.
+  # Do not include SPAWN_EGG, CUSTOM, COMMAND, INFECTION — they are always excluded.
+  eligible-reasons:
+    - NATURAL
+    - JOCKEY
+    - MOUNT
+    - REINFORCEMENTS
+    - VILLAGE_DEFENSE
+    - CHUNK_GEN
+
+  # Exclude baby zombies from conversion
+  exclude-baby: true
+
+# ── Level Distribution ──────────────────────────────────────
+levels:
+  # Level spawn weights (should sum to 1.0)
+  level-1-weight: 0.80
+  level-2-weight: 0.15
+  level-3-weight: 0.04
+  level-4-weight: 0.01
+
+  # Level 1: Standard Irradiated Zombie
+  level-1:
+    health: 35.0
+    attack-damage: 5.0
+    speed-multiplier: 1.15
+    knockback-resistance: 0.15
+    follow-range-multiplier: 1.20
+    radiation-on-hit: 10
+    xp-reward: 10
+
+  # Level 2: Enhanced Irradiated Zombie
+  level-2:
+    health: 45.0
+    attack-damage: 7.0
+    speed-multiplier: 1.20
+    knockback-resistance: 0.20
+    follow-range-multiplier: 1.20
+    radiation-on-hit: 20
+    xp-reward: 20
+
+  # Level 3: Powerful Irradiated Zombie
+  level-3:
+    health: 60.0
+    attack-damage: 9.0
+    speed-multiplier: 1.25
+    knockback-resistance: 0.30
+    follow-range-multiplier: 1.20
+    radiation-on-hit: 35
+    xp-reward: 40
+
+  # Level 4: Alpha Irradiated Zombie (boss-tier)
+  level-4:
+    health: 80.0
+    attack-damage: 12.0
+    speed-multiplier: 1.30
+    knockback-resistance: 0.50
+    follow-range-multiplier: 1.50
+    radiation-on-hit: 50
+    xp-reward: 100
+    glowing: true
+    show-bossbar: true
+    bossbar-color: GREEN
+    bossbar-title: "☢ Alpha Irradiated Zombie ☢"
+
+# ── Loot Tables ─────────────────────────────────────────────
+loot:
+  # Rotten flesh (0–3 always drops)
+  rotten-flesh-max: 3
+
+  level-1:
+    radioactive-core-chance: 0.15
+    mutated-seed-chance: 0.05
+    irradiated-heart-chance: 0.01
+
+  level-2:
+    radioactive-core-chance: 0.25
+    mutated-seed-chance: 0.10
+    irradiated-heart-chance: 0.03
+
+  level-3:
+    radioactive-core-chance: 0.40
+    mutated-seed-chance: 0.20
+    irradiated-heart-chance: 0.07
+
+  level-4:
+    radioactive-core-chance: 1.00
+    mutated-seed-chance: 0.50
+    irradiated-heart-chance: 0.25
+
+# ── Radiation Cloud ─────────────────────────────────────────
+cloud:
+  # Chance a radiation cloud spawns on irradiated zombie death (0.0–1.0)
+  spawn-chance: 0.20
+
+  # How long the cloud lasts in seconds
+  duration-seconds: 10
+
+  # Cloud radius in blocks
+  radius: 3.0
+
+  # Radiation applied per second to players inside the cloud
+  radiation-per-second: 5
+
+  # Whether to emit particles inside the cloud
+  particles: true
+
+# ── Night Event: Radiation Surge ────────────────────────────
+night-event:
+  # Chance per in-game night that a Radiation Surge activates (0.0–1.0)
+  surge-chance: 0.05
+
+  # Whether to double radiation damage during a surge
+  double-radiation: true
+
+  # Whether to double loot drops during a surge
+  double-loot: true
+
+  # BossBar shown to all players during a surge
+  bossbar-title: "☢ RADIATION SURGE ACTIVE ☢"
+  bossbar-color: GREEN
+
+  # Broadcast message on surge start (supports & color codes)
+  start-message: "&4☢ &c&lRADIATION SURGE! &4☢ &cA wave of radioactive energy sweeps the world!"
+
+  # Broadcast message on surge end
+  end-message: "&2☢ &a&lRadiation Surge has ended. &2☢ &aThe air clears..."
+
+# ── Particles ───────────────────────────────────────────────
+particles:
+  # Master particle toggle
   enabled: true
 
-  spawning:
-    natural-spawn: true
-    spawn-chance: 0.15
-    allowed-biomes: []
-    blocked-biomes:
-      - THE_END
-      - NETHER_WASTES
-    min-y: -64
-    max-y: 64
-    near-ore-boost:
-      enabled: true
-      radius: 16
-      extra-chance: 0.25
+  # Particle visibility radius (blocks)
+  visibility-radius: 20.0
 
-  stats:
-    base-health: 40.0
-    base-damage: 4.0
-    base-speed: 0.28
-    base-knockback-resistance: 0.2
-    armor: 2.0
-    follow-range: 48.0
-    glow: false
+  # Interval between particle bursts per zombie (ticks)
+  interval-ticks: 30
 
-  radiation:
-    on-hit-player: true
-    hit-exposure: 8.0
-    passive-aura: true
-    aura-radius: 4.0
-    aura-exposure-rate: 2.0
-    aura-interval-ticks: 20
+  # Particle counts per level (0=none, higher=more)
+  level-1-count: 3
+  level-2-count: 6
+  level-3-count: 12
+  level-4-count: 20
 
-  drops:
-    irradiated-heart:
-      chance: 0.08
-      min: 1
-      max: 1
-    raw-plutonium-fragment:
-      chance: 0.04
-      min: 1
-      max: 1
-    radioactive-core:
-      chance: 0.02
-      min: 1
-      max: 1
-    xp-bonus: 5
+# ── Statistics ──────────────────────────────────────────────
+# Tracked per-player in database (Phase 3):
+#   irradiated_zombies_killed
+#   alpha_zombies_killed
+#   radiation_clouds_survived
+#   radioactive_cores_collected
+#   mutated_seeds_collected
+#   irradiated_hearts_collected
 
-  particles:
-    enabled: true
-    type: SPELL_MOB
-    color: "57,255,20"
-    count: 8
-    interval-ticks: 10
-
-  sounds:
-    ambient: ENTITY_ZOMBIE_AMBIENT
-    hurt: ENTITY_ZOMBIE_HURT
-    death: ENTITY_ZOMBIE_DEATH
-
-  infection:
-    enabled: true
-    chance-on-hit: 0.10
-    progress-per-tick: 0.05
-    cure-item: healing-petal
-    full-infection-effect: WITHER
-    full-infection-amplifier: 1
-    full-infection-duration: 200
+# ── Advancements ────────────────────────────────────────────
+advancements:
+  first-exposure:
+    xp-reward: 50
+  mutant-hunter:
+    xp-reward: 100
+  core-collector:
+    xp-reward: 100
+  alpha-slayer:
+    xp-reward: 500

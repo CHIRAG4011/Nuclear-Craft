@@ -1,5 +1,6 @@
 package com.nuclearcraft.core;
 
+import com.nuclearcraft.advancements.AdvancementManager;
 import com.nuclearcraft.blocks.BlockManager;
 import com.nuclearcraft.commands.NuclearCraftCommand;
 import com.nuclearcraft.config.ConfigManager;
@@ -9,12 +10,14 @@ import com.nuclearcraft.gui.GUIManager;
 import com.nuclearcraft.items.ItemManager;
 import com.nuclearcraft.listeners.CoreListener;
 import com.nuclearcraft.listeners.RadiationListener;
+import com.nuclearcraft.listeners.ZombieSpawnListener;
 import com.nuclearcraft.radiation.ContagionManager;
 import com.nuclearcraft.radiation.RadiationManager;
 import com.nuclearcraft.radiation.RadiationVisualManager;
 import com.nuclearcraft.recipes.RecipeManager;
 import com.nuclearcraft.tasks.TaskManager;
 import com.nuclearcraft.utils.NCLogger;
+import com.nuclearcraft.zombies.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -24,7 +27,10 @@ import java.util.Objects;
  * Manages the lifecycle of all subsystems via dependency injection.
  *
  * Phase 2 additions: RadiationManager, ContagionManager, RadiationVisualManager,
- * RadiationListener registration.
+ *                    RadiationListener registration.
+ * Phase 3 additions: IrradiatedZombieManager, ZombieSpawnManager, ZombieCombatManager,
+ *                    ZombieLootManager, RadiationCloudManager, RadiationNightManager,
+ *                    AdvancementManager, ZombieSpawnListener registration.
  */
 public final class NuclearCraftPlugin extends JavaPlugin {
 
@@ -43,6 +49,16 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     private ContagionManager contagionManager;
     private RadiationVisualManager radiationVisualManager;
     private RadiationListener radiationListener;
+
+    // ── Phase 3 ──
+    private IrradiatedZombieManager irradiatedZombieManager;
+    private ZombieSpawnManager zombieSpawnManager;
+    private ZombieCombatManager zombieCombatManager;
+    private ZombieLootManager zombieLootManager;
+    private RadiationCloudManager radiationCloudManager;
+    private RadiationNightManager radiationNightManager;
+    private AdvancementManager advancementManager;
+    private ZombieSpawnListener zombieSpawnListener;
 
     @Override
     public void onEnable() {
@@ -68,10 +84,22 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
 
+        // Phase 3 — shut down first (depends on Phase 2)
+        if (radiationNightManager != null)  radiationNightManager.shutdown();
+        if (radiationCloudManager != null)  radiationCloudManager.shutdown();
+        if (zombieLootManager != null)      zombieLootManager.shutdown();
+        if (zombieCombatManager != null)    zombieCombatManager.shutdown();
+        if (zombieSpawnManager != null)     zombieSpawnManager.shutdown();
+        if (irradiatedZombieManager != null) irradiatedZombieManager.shutdown();
+        if (advancementManager != null)     advancementManager.shutdown();
+
+        // Phase 2
         if (taskManager != null)            taskManager.shutdown();
         if (radiationVisualManager != null) radiationVisualManager.shutdown();
         if (contagionManager != null)       contagionManager.shutdown();
         if (radiationManager != null)       radiationManager.shutdown();
+
+        // Phase 1
         if (playerDataManager != null)      playerDataManager.shutdown();
         if (databaseManager != null)        databaseManager.shutdown();
         if (guiManager != null)             guiManager.shutdown();
@@ -110,8 +138,6 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         guiManager = new GUIManager(this, configManager);
         guiManager.initialize();
 
-        // TaskManager must be initialized before radiation managers
-        // so scheduleSync / scheduleAsync are available.
         taskManager = new TaskManager(this, configManager, playerDataManager);
         taskManager.initialize();
 
@@ -126,6 +152,31 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 this, configManager, playerDataManager, radiationManager);
         radiationVisualManager.initialize();
 
+        // ── Phase 3 ──
+        irradiatedZombieManager = new IrradiatedZombieManager();
+        irradiatedZombieManager.initialize();
+
+        zombieSpawnManager = new ZombieSpawnManager(this, configManager, irradiatedZombieManager);
+        zombieSpawnManager.initialize();
+
+        zombieCombatManager = new ZombieCombatManager(
+                this, configManager, irradiatedZombieManager, radiationManager, zombieSpawnManager);
+        zombieCombatManager.initialize();
+
+        zombieLootManager = new ZombieLootManager(
+                this, configManager, irradiatedZombieManager, itemManager, zombieSpawnManager);
+        zombieLootManager.initialize();
+
+        radiationCloudManager = new RadiationCloudManager(
+                this, configManager, radiationManager, irradiatedZombieManager);
+        radiationCloudManager.initialize();
+
+        radiationNightManager = new RadiationNightManager(this, configManager, zombieSpawnManager);
+        radiationNightManager.initialize();
+
+        advancementManager = new AdvancementManager(this, playerDataManager);
+        advancementManager.initialize();
+
         NCLogger.debug("All managers initialized successfully.");
     }
 
@@ -137,6 +188,12 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         radiationListener = new RadiationListener(this, radiationManager, contagionManager);
         pm.registerEvents(radiationListener, this);
 
+        zombieSpawnListener = new ZombieSpawnListener(
+                zombieSpawnManager, zombieCombatManager, zombieLootManager,
+                radiationCloudManager, radiationNightManager, irradiatedZombieManager,
+                playerDataManager, advancementManager);
+        pm.registerEvents(zombieSpawnListener, this);
+
         NCLogger.debug("Event listeners registered.");
     }
 
@@ -144,13 +201,20 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         var cmd = Objects.requireNonNull(getCommand("nuclearcraft"),
                 "Command 'nuclearcraft' not found in plugin.yml");
         var handler = new NuclearCraftCommand(
-                this, configManager, playerDataManager, itemManager, radiationManager);
+                this, configManager, playerDataManager, itemManager,
+                radiationManager, irradiatedZombieManager, zombieSpawnManager,
+                radiationCloudManager, radiationNightManager, advancementManager);
         cmd.setExecutor(handler);
         cmd.setTabCompleter(handler);
         NCLogger.debug("Commands registered.");
     }
 
     public void reload() throws Exception {
+        // Shutdown Phase 3 tasks
+        if (radiationNightManager != null)  radiationNightManager.shutdown();
+        if (radiationCloudManager != null)  radiationCloudManager.shutdown();
+
+        // Shutdown Phase 2 tasks
         if (taskManager != null)            taskManager.shutdown();
         if (radiationVisualManager != null) radiationVisualManager.shutdown();
         if (contagionManager != null)       contagionManager.shutdown();
@@ -163,26 +227,39 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         recipeManager.reload();
         guiManager.reload();
 
+        // Restart Phase 2
         taskManager.initialize();
         radiationManager.initialize();
         contagionManager.initialize();
         radiationVisualManager.initialize();
+
+        // Restart Phase 3 tasks
+        radiationCloudManager.initialize();
+        radiationNightManager.initialize();
 
         NCLogger.info("NuclearCraft reloaded successfully.");
     }
 
     // ── Getters ──────────────────────────────────────────────────────────────
 
-    public ConfigManager getConfigManager()               { return configManager; }
-    public DatabaseManager getDatabaseManager()           { return databaseManager; }
-    public PlayerDataManager getPlayerDataManager()       { return playerDataManager; }
-    public ItemManager getItemManager()                   { return itemManager; }
-    public BlockManager getBlockManager()                 { return blockManager; }
-    public RecipeManager getRecipeManager()               { return recipeManager; }
-    public GUIManager getGuiManager()                     { return guiManager; }
-    public TaskManager getTaskManager()                   { return taskManager; }
-    public RadiationManager getRadiationManager()         { return radiationManager; }
-    public ContagionManager getContagionManager()         { return contagionManager; }
-    public RadiationVisualManager getRadiationVisualManager() { return radiationVisualManager; }
-    public RadiationListener getRadiationListener()       { return radiationListener; }
+    public ConfigManager getConfigManager()                       { return configManager; }
+    public DatabaseManager getDatabaseManager()                   { return databaseManager; }
+    public PlayerDataManager getPlayerDataManager()               { return playerDataManager; }
+    public ItemManager getItemManager()                           { return itemManager; }
+    public BlockManager getBlockManager()                         { return blockManager; }
+    public RecipeManager getRecipeManager()                       { return recipeManager; }
+    public GUIManager getGuiManager()                             { return guiManager; }
+    public TaskManager getTaskManager()                           { return taskManager; }
+    public RadiationManager getRadiationManager()                 { return radiationManager; }
+    public ContagionManager getContagionManager()                 { return contagionManager; }
+    public RadiationVisualManager getRadiationVisualManager()     { return radiationVisualManager; }
+    public RadiationListener getRadiationListener()               { return radiationListener; }
+    public IrradiatedZombieManager getIrradiatedZombieManager()   { return irradiatedZombieManager; }
+    public ZombieSpawnManager getZombieSpawnManager()             { return zombieSpawnManager; }
+    public ZombieCombatManager getZombieCombatManager()           { return zombieCombatManager; }
+    public ZombieLootManager getZombieLootManager()               { return zombieLootManager; }
+    public RadiationCloudManager getRadiationCloudManager()       { return radiationCloudManager; }
+    public RadiationNightManager getRadiationNightManager()       { return radiationNightManager; }
+    public AdvancementManager getAdvancementManager()             { return advancementManager; }
+    public ZombieSpawnListener getZombieSpawnListener()           { return zombieSpawnListener; }
 }
