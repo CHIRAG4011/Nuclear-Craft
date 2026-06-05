@@ -1,86 +1,144 @@
-# NuclearCraft Radiation System Configuration
+# NuclearCraft Radiation System Configuration — Phase 2
+# All values are configurable. Nothing is hardcoded.
 
 radiation:
   enabled: true
-  max-level: 1000.0
-  decay-rate: 0.05
-  decay-interval-ticks: 20
+  max-level: 1000
 
+  # Stage thresholds (min radiation points required for each stage)
   stages:
     0:
-      name: "No Radiation"
-      min: 0.0
-      max: 49.9
+      name: "Healthy"
+      min: 0
+      max: 99
       effects: []
     1:
-      name: "Mild Exposure"
-      min: 50.0
-      max: 199.9
+      name: "Minor Exposure"
+      min: 100
+      max: 249
       effects:
-        - type: HUNGER
-          amplifier: 0
-          duration: 100
-    2:
-      name: "Moderate Exposure"
-      min: 200.0
-      max: 499.9
-      effects:
-        - type: HUNGER
-          amplifier: 1
-          duration: 100
         - type: WEAKNESS
-          amplifier: 0
-          duration: 100
-    3:
-      name: "Heavy Exposure"
-      min: 500.0
-      max: 799.9
-      effects:
-        - type: HUNGER
-          amplifier: 2
-          duration: 100
-        - type: WEAKNESS
-          amplifier: 1
-          duration: 100
-        - type: POISON
-          amplifier: 0
-          duration: 60
-    4:
-      name: "Critical Exposure"
-      min: 800.0
-      max: 1000.0
-      effects:
-        - type: WITHER
-          amplifier: 0
-          duration: 60
-        - type: BLINDNESS
           amplifier: 0
           duration: 40
+        - type: NAUSEA
+          amplifier: 0
+          duration: 40
+    2:
+      name: "Moderate Exposure"
+      min: 250
+      max: 499
+      effects:
+        - type: WEAKNESS
+          amplifier: 0
+          duration: 40
+        - type: SLOWNESS
+          amplifier: 0
+          duration: 40
+        - type: NAUSEA
+          amplifier: 0
+          duration: 40
+    3:
+      name: "Severe Exposure"
+      min: 500
+      max: 749
+      damage-per-cycle: 0.5
+      effects:
+        - type: WEAKNESS
+          amplifier: 1
+          duration: 40
+        - type: SLOWNESS
+          amplifier: 1
+          duration: 40
+        - type: HUNGER
+          amplifier: 0
+          duration: 40
+    4:
+      name: "Critical Radiation Poisoning"
+      min: 750
+      max: 1000
+      damage-per-cycle: 1.0
+      effects:
         - type: WEAKNESS
           amplifier: 2
-          duration: 100
+          duration: 40
+        - type: SLOWNESS
+          amplifier: 2
+          duration: 40
+        - type: HUNGER
+          amplifier: 1
+          duration: 40
 
+  # Natural progression — radiation worsens over time while infected
+  progression:
+    enabled: true
+    interval-ticks: 1200   # 60 seconds
+    stage-1-gain: 5
+    stage-2-gain: 10
+    stage-3-gain: 15
+    stage-4-gain: 20
+
+  # Natural decay — radiation slowly clears if the player has been clean for a while
+  decay:
+    enabled: true
+    interval-ticks: 1200        # check every 60 seconds
+    grace-period-minutes: 10    # must not have received radiation for this long
+    amount-per-interval: 2      # radiation removed per decay tick
+
+  # Armor reduces incoming radiation exposure
+  armor-reduction:
+    enabled: true
+    per-piece-reduction: 0.15   # 15% reduction per worn armor piece
+    max-reduction: 0.60         # cap at 60% (full set)
+
+  # Immunity timer protection
   immunity:
     enabled: true
     base-duration-seconds: 30
     max-duration-seconds: 300
     cooldown-seconds: 60
 
-  armor-reduction:
-    enabled: true
-    per-piece-reduction: 0.15
-    max-reduction: 0.60
+  # Death configuration
+  death:
+    message: "{player} succumbed to radiation poisoning."
 
-  particles:
-    enabled: true
-    stage-1-particle: SPELL_MOB
-    stage-2-particle: SPELL_MOB
-    stage-3-particle: VILLAGER_ANGRY
-    stage-4-particle: SMOKE_LARGE
-    interval-ticks: 10
-
+  # Radiation sources (exposure values used by future systems)
   sources:
-    plutonium-ore: 5.0
-    radioactive-core: 2.0
-    refined-plutonium-ingot: 1.5
-    titan-core: 25.0
+    plutonium-ore: 5
+    radioactive-core: 2
+    refined-plutonium-ingot: 2
+    titan-core: 25
+    irradiated-zombie-hit: 8
+    irradiated-zombie-aura: 2
+
+contagion:
+  enabled: true
+
+  # Proximity spread — checked every 5 seconds
+  proximity-interval-ticks: 100    # 5 seconds
+  proximity-range: 3.0             # blocks
+  proximity-amount: 25             # radiation given to target on spread
+  proximity-chance-stage-2: 0.05   # 5%
+  proximity-chance-stage-3: 0.15   # 15%
+  proximity-chance-stage-4: 0.25   # 25%
+
+  # Physical contact spread — when infected player hits another player
+  physical-contact-chance: 0.35    # 35%
+  physical-contact-amount: 50
+
+  # Vehicle spread — shared boat/minecart
+  vehicle-interval-ticks: 300      # 15 seconds
+  vehicle-chance: 0.20             # 20%
+  vehicle-amount: 25
+
+visuals:
+  particles-enabled: true
+  particle-interval-ticks: 10
+
+  sounds-enabled: true
+  geiger-check-interval-ticks: 10
+
+  # Per-stage particle colors (RGB)
+  stage-1-color: "57,255,20"
+  stage-2-color: "255,220,0"
+  stage-3-color: "255,100,0"
+  stage-4-color: "200,0,0"

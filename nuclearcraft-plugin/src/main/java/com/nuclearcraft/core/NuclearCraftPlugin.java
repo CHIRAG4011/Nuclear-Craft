@@ -8,6 +8,10 @@ import com.nuclearcraft.data.PlayerDataManager;
 import com.nuclearcraft.gui.GUIManager;
 import com.nuclearcraft.items.ItemManager;
 import com.nuclearcraft.listeners.CoreListener;
+import com.nuclearcraft.listeners.RadiationListener;
+import com.nuclearcraft.radiation.ContagionManager;
+import com.nuclearcraft.radiation.RadiationManager;
+import com.nuclearcraft.radiation.RadiationVisualManager;
 import com.nuclearcraft.recipes.RecipeManager;
 import com.nuclearcraft.tasks.TaskManager;
 import com.nuclearcraft.utils.NCLogger;
@@ -18,9 +22,13 @@ import java.util.Objects;
 /**
  * Main entry point for the NuclearCraft plugin.
  * Manages the lifecycle of all subsystems via dependency injection.
+ *
+ * Phase 2 additions: RadiationManager, ContagionManager, RadiationVisualManager,
+ * RadiationListener registration.
  */
 public final class NuclearCraftPlugin extends JavaPlugin {
 
+    // ── Phase 1 ──
     private ConfigManager configManager;
     private DatabaseManager databaseManager;
     private PlayerDataManager playerDataManager;
@@ -30,10 +38,15 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     private GUIManager guiManager;
     private TaskManager taskManager;
 
+    // ── Phase 2 ──
+    private RadiationManager radiationManager;
+    private ContagionManager contagionManager;
+    private RadiationVisualManager radiationVisualManager;
+    private RadiationListener radiationListener;
+
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
-
         NCLogger.init(this);
         NCLogger.info("Starting NuclearCraft v" + getDescription().getVersion() + "...");
 
@@ -55,19 +68,25 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
 
-        if (taskManager != null) taskManager.shutdown();
-        if (playerDataManager != null) playerDataManager.shutdown();
-        if (databaseManager != null) databaseManager.shutdown();
-        if (guiManager != null) guiManager.shutdown();
-        if (recipeManager != null) recipeManager.shutdown();
-        if (blockManager != null) blockManager.shutdown();
-        if (itemManager != null) itemManager.shutdown();
-        if (configManager != null) configManager.shutdown();
+        if (taskManager != null)            taskManager.shutdown();
+        if (radiationVisualManager != null) radiationVisualManager.shutdown();
+        if (contagionManager != null)       contagionManager.shutdown();
+        if (radiationManager != null)       radiationManager.shutdown();
+        if (playerDataManager != null)      playerDataManager.shutdown();
+        if (databaseManager != null)        databaseManager.shutdown();
+        if (guiManager != null)             guiManager.shutdown();
+        if (recipeManager != null)          recipeManager.shutdown();
+        if (blockManager != null)           blockManager.shutdown();
+        if (itemManager != null)            itemManager.shutdown();
+        if (configManager != null)          configManager.shutdown();
 
         NCLogger.info("NuclearCraft has been disabled.");
     }
 
+    // ──────────────────────────────────────────────────────────────────────────
+
     private void initializeManagers() throws Exception {
+        // ── Phase 1 ──
         configManager = new ConfigManager(this);
         configManager.initialize();
 
@@ -91,29 +110,51 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         guiManager = new GUIManager(this, configManager);
         guiManager.initialize();
 
+        // TaskManager must be initialized before radiation managers
+        // so scheduleSync / scheduleAsync are available.
         taskManager = new TaskManager(this, configManager, playerDataManager);
         taskManager.initialize();
+
+        // ── Phase 2 ──
+        radiationManager = new RadiationManager(this, configManager, playerDataManager);
+        radiationManager.initialize();
+
+        contagionManager = new ContagionManager(this, configManager, radiationManager);
+        contagionManager.initialize();
+
+        radiationVisualManager = new RadiationVisualManager(
+                this, configManager, playerDataManager, radiationManager);
+        radiationVisualManager.initialize();
 
         NCLogger.debug("All managers initialized successfully.");
     }
 
     private void registerListeners() {
         var pm = getServer().getPluginManager();
+
         pm.registerEvents(new CoreListener(this, playerDataManager), this);
+
+        radiationListener = new RadiationListener(this, radiationManager, contagionManager);
+        pm.registerEvents(radiationListener, this);
+
         NCLogger.debug("Event listeners registered.");
     }
 
     private void registerCommands() {
         var cmd = Objects.requireNonNull(getCommand("nuclearcraft"),
                 "Command 'nuclearcraft' not found in plugin.yml");
-        var handler = new NuclearCraftCommand(this, configManager, playerDataManager, itemManager);
+        var handler = new NuclearCraftCommand(
+                this, configManager, playerDataManager, itemManager, radiationManager);
         cmd.setExecutor(handler);
         cmd.setTabCompleter(handler);
         NCLogger.debug("Commands registered.");
     }
 
     public void reload() throws Exception {
-        if (taskManager != null) taskManager.shutdown();
+        if (taskManager != null)            taskManager.shutdown();
+        if (radiationVisualManager != null) radiationVisualManager.shutdown();
+        if (contagionManager != null)       contagionManager.shutdown();
+        if (radiationManager != null)       radiationManager.shutdown();
 
         configManager.reload();
         NCLogger.setDebugMode(configManager.isDebugMode());
@@ -121,17 +162,27 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         blockManager.reload();
         recipeManager.reload();
         guiManager.reload();
+
         taskManager.initialize();
+        radiationManager.initialize();
+        contagionManager.initialize();
+        radiationVisualManager.initialize();
 
         NCLogger.info("NuclearCraft reloaded successfully.");
     }
 
-    public ConfigManager getConfigManager() { return configManager; }
-    public DatabaseManager getDatabaseManager() { return databaseManager; }
-    public PlayerDataManager getPlayerDataManager() { return playerDataManager; }
-    public ItemManager getItemManager() { return itemManager; }
-    public BlockManager getBlockManager() { return blockManager; }
-    public RecipeManager getRecipeManager() { return recipeManager; }
-    public GUIManager getGuiManager() { return guiManager; }
-    public TaskManager getTaskManager() { return taskManager; }
+    // ── Getters ──────────────────────────────────────────────────────────────
+
+    public ConfigManager getConfigManager()               { return configManager; }
+    public DatabaseManager getDatabaseManager()           { return databaseManager; }
+    public PlayerDataManager getPlayerDataManager()       { return playerDataManager; }
+    public ItemManager getItemManager()                   { return itemManager; }
+    public BlockManager getBlockManager()                 { return blockManager; }
+    public RecipeManager getRecipeManager()               { return recipeManager; }
+    public GUIManager getGuiManager()                     { return guiManager; }
+    public TaskManager getTaskManager()                   { return taskManager; }
+    public RadiationManager getRadiationManager()         { return radiationManager; }
+    public ContagionManager getContagionManager()         { return contagionManager; }
+    public RadiationVisualManager getRadiationVisualManager() { return radiationVisualManager; }
+    public RadiationListener getRadiationListener()       { return radiationListener; }
 }

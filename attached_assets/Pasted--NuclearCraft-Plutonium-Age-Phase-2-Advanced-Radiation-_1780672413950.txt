@@ -1,0 +1,626 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 2 - Advanced Radiation & Infection System
+
+You are continuing development of the NuclearCraft Paper 1.21+ plugin.
+
+Phase 1 has already been completed and includes:
+
+* Core Framework
+* Data System
+* Config System
+* Manager System
+* Custom Item Framework
+* Custom Block Framework
+* Command Framework
+* GUI Framework
+
+You must now implement the complete Radiation & Infection System.
+
+This system is the core mechanic of the entire plugin.
+
+Everything else in NuclearCraft will eventually interact with this system.
+
+The implementation must be production-ready, multiplayer-safe, highly optimized, configurable, and expandable.
+
+---
+
+# SYSTEM OVERVIEW
+
+Radiation is a persistent disease-like status effect.
+
+Unlike vanilla potion effects, radiation must:
+
+* Persist through relogs.
+* Persist through server restarts.
+* Progress over time.
+* Spread to other players.
+* Be partially blocked by armor.
+* Be removable through cures.
+* Interact with future NuclearCraft systems.
+
+Every player should have their own radiation profile.
+
+---
+
+# PLAYER DATA
+
+Extend PlayerData to store:
+
+radiationPoints
+
+radiationStage
+
+infectionProgress
+
+infectionTimer
+
+radiationImmunityTimer
+
+lastRadiationSource
+
+timesInfected
+
+totalRadiationReceived
+
+totalRadiationCured
+
+radiationDeaths
+
+isContagious
+
+Data must save instantly on logout.
+
+Data must load instantly on login.
+
+Data must survive restarts.
+
+---
+
+# RADIATION SOURCES
+
+Create a RadiationSource enum.
+
+Sources:
+
+IRRADIATED_ZOMBIE
+
+PLUTONIUM_ORE
+
+RADIOACTIVE_DEBRIS
+
+RADIOACTIVE_FARMLAND
+
+PLUTONIUM_WEAPON
+
+RADIATED_PLAYER
+
+PLUTONIUM_ARROW
+
+RADIATION_CLOUD
+
+BOSS_ATTACK
+
+COMMAND
+
+UNKNOWN
+
+Store source information whenever radiation is applied.
+
+---
+
+# RADIATION MANAGER
+
+Create:
+
+RadiationManager
+
+Responsibilities:
+
+* Add radiation
+* Remove radiation
+* Update stages
+* Handle progression
+* Apply effects
+* Spread infection
+* Trigger events
+
+Methods:
+
+addRadiation(Player player, int amount, RadiationSource source)
+
+removeRadiation(Player player, int amount)
+
+setRadiation(Player player, int amount)
+
+getRadiation(Player player)
+
+clearRadiation(Player player)
+
+getStage(Player player)
+
+isInfected(Player player)
+
+isContagious(Player player)
+
+All methods must be documented.
+
+---
+
+# RADIATION SCALE
+
+Maximum Radiation:
+
+1000 Points
+
+Stages:
+
+Stage 0
+0-99
+
+Stage 1
+100-249
+
+Stage 2
+250-499
+
+Stage 3
+500-749
+
+Stage 4
+750-1000
+
+Crossing thresholds must trigger stage events.
+
+---
+
+# STAGE 0
+
+Healthy State
+
+Effects:
+
+None
+
+Visual:
+
+No infection
+
+Player Status:
+
+Not contagious
+
+---
+
+# STAGE 1
+
+Minor Exposure
+
+Radiation:
+100-249
+
+Effects:
+
+Weakness I
+
+Nausea I
+
+Occasional green particles
+
+Small Geiger counter sounds
+
+Visual Infection:
+
+Tiny green spots
+
+Contagious:
+
+No
+
+---
+
+# STAGE 2
+
+Moderate Exposure
+
+Radiation:
+250-499
+
+Effects:
+
+Weakness I
+
+Slowness I
+
+Nausea I
+
+Random visual glitches
+
+Occasional screen distortion packet effects
+
+Visual Infection:
+
+Visible arm infection
+
+Contagious:
+
+5% chance
+
+---
+
+# STAGE 3
+
+Severe Exposure
+
+Radiation:
+500-749
+
+Effects:
+
+Weakness II
+
+Slowness II
+
+Hunger I
+
+Periodic damage
+
+Heavy particles
+
+Random electrical sound effects
+
+Visual Infection:
+
+Half body infected
+
+Contagious:
+
+15% chance
+
+---
+
+# STAGE 4
+
+Critical Radiation Poisoning
+
+Radiation:
+750-1000
+
+Effects:
+
+Weakness III
+
+Slowness III
+
+Hunger II
+
+Damage over time
+
+Random nausea bursts
+
+Glitch events
+
+Visual Infection:
+
+Most of body infected
+
+Contagious:
+
+25% chance
+
+---
+
+# RADIATION PROGRESSION
+
+Radiation should naturally worsen.
+
+Every 60 seconds:
+
+Stage 1
+
++5 Radiation
+
+Stage 2
+
++10 Radiation
+
+Stage 3
+
++15 Radiation
+
+Stage 4
+
++20 Radiation
+
+Progression values configurable.
+
+---
+
+# RADIATION DECAY
+
+Healthy players should recover slowly.
+
+If player has not received radiation for:
+
+10 minutes
+
+Radiation slowly decreases.
+
+Every minute:
+
+-2 Radiation
+
+Configurable.
+
+---
+
+# CONTAGION SYSTEM
+
+Create:
+
+ContagionManager
+
+Responsibilities:
+
+Spread infection between players.
+
+---
+
+# PROXIMITY SPREAD
+
+Every 5 seconds:
+
+Check nearby players.
+
+Range:
+
+3 Blocks
+
+If infected player exists:
+
+Chance to spread:
+
+Stage 2 = 5%
+
+Stage 3 = 15%
+
+Stage 4 = 25%
+
+If successful:
+
+Target gains:
+
+25 Radiation
+
+Source:
+
+RADIATED_PLAYER
+
+---
+
+# PHYSICAL CONTACT SPREAD
+
+When infected player:
+
+Hits another player
+
+Chance:
+
+35%
+
+Apply:
+
+50 Radiation
+
+---
+
+# VEHICLE SPREAD
+
+Shared:
+
+Boat
+
+Minecart
+
+Chance:
+
+20%
+
+Every 15 seconds
+
+---
+
+# RADIATION EVENTS
+
+Create custom events.
+
+RadiationGainEvent
+
+RadiationLossEvent
+
+RadiationStageChangeEvent
+
+RadiationSpreadEvent
+
+RadiationDeathEvent
+
+Events must be cancellable where appropriate.
+
+Future systems will hook into them.
+
+---
+
+# RADIATION DEATHS
+
+If player dies from radiation:
+
+Custom death message:
+
+"PlayerName succumbed to radiation poisoning."
+
+Track:
+
+radiationDeaths
+
+Future achievements will use this.
+
+---
+
+# VISUAL SYSTEM
+
+Create RadiationVisualManager.
+
+Responsibilities:
+
+Particles
+
+Sounds
+
+Visual indicators
+
+Stage-specific effects
+
+---
+
+# PARTICLES
+
+Stage 1
+
+Small green dust
+
+Stage 2
+
+Dust + spores
+
+Stage 3
+
+Heavy radioactive mist
+
+Stage 4
+
+Dense toxic cloud
+
+Must be optimized.
+
+Only render near affected player.
+
+---
+
+# AUDIO
+
+Create Geiger counter sound system.
+
+Stage 1
+
+Slow clicks
+
+Stage 2
+
+Moderate clicks
+
+Stage 3
+
+Rapid clicks
+
+Stage 4
+
+Continuous clicking
+
+Use configurable intervals.
+
+---
+
+# COMMANDS
+
+Add:
+
+/nuclearcraft radiation check
+
+Displays:
+
+Current Radiation
+
+Current Stage
+
+Contagious Status
+
+Immunity Time
+
+---
+
+Admin Commands
+
+/nuclearcraft radiation add <player> <amount>
+
+/nuclearcraft radiation remove <player> <amount>
+
+/nuclearcraft radiation set <player> <amount>
+
+/nuclearcraft radiation clear <player>
+
+Permissions:
+
+nuclearcraft.admin.radiation
+
+---
+
+# CONFIGURATION
+
+Create radiation.yml
+
+Must include:
+
+Stage thresholds
+
+Damage values
+
+Spread chances
+
+Decay rates
+
+Progression rates
+
+Particle settings
+
+Sound settings
+
+Immunity settings
+
+Everything configurable.
+
+---
+
+# OPTIMIZATION
+
+Requirements:
+
+Support 100+ players.
+
+Avoid checking every tick.
+
+Use scheduled tasks.
+
+Use cached player data.
+
+No memory leaks.
+
+No async Bukkit API misuse.
+
+---
+
+# DELIVERABLES
+
+Generate complete code for:
+
+* RadiationManager
+* ContagionManager
+* RadiationVisualManager
+* RadiationListener
+* RadiationSource enum
+* Radiation Events
+* Commands
+* Config integration
+* Data integration
+* Scheduled tasks
+
+Code must compile successfully and be fully ready for Phase 3: Irradiated Zombie System.

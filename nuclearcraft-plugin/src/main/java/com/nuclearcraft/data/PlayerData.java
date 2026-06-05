@@ -6,22 +6,40 @@ import java.util.UUID;
 
 /**
  * Holds all persistent data for a single player.
- * Designed for thread-safe reads; writes must be synchronized by the caller.
+ *
+ * Phase 2 additions: timesInfected, totalRadiationCured, radiationDeaths,
+ * lastRadiationSource, lastRadiationReceivedMs.
+ *
+ * Thread-safety: volatile for primitive fields read across threads;
+ * writes must be done on the main thread or with external synchronization.
  */
 public class PlayerData {
 
     private final UUID uuid;
 
+    // Radiation core
     private volatile double radiationLevel;
     private volatile int radiationStage;
     private volatile long immunityTimerEndMs;
     private volatile double infectionProgress;
-    private volatile int bossKills;
-    private volatile double totalRadiationExposure;
 
+    // Radiation statistics (Phase 2)
+    private volatile long lastRadiationReceivedMs;
+    private volatile String lastRadiationSource;
+    private volatile int timesInfected;
+    private volatile double totalRadiationExposure;
+    private volatile double totalRadiationCured;
+    private volatile int radiationDeaths;
+
+    // Progression
+    private volatile int bossKills;
     private final Set<String> unlockedUpgrades;
 
     private volatile boolean dirty;
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Constructors
+    // ──────────────────────────────────────────────────────────────────────────
 
     public PlayerData(UUID uuid) {
         this.uuid = uuid;
@@ -29,38 +47,57 @@ public class PlayerData {
         this.radiationStage = 0;
         this.immunityTimerEndMs = 0L;
         this.infectionProgress = 0.0;
-        this.bossKills = 0;
+        this.lastRadiationReceivedMs = 0L;
+        this.lastRadiationSource = "UNKNOWN";
+        this.timesInfected = 0;
         this.totalRadiationExposure = 0.0;
+        this.totalRadiationCured = 0.0;
+        this.radiationDeaths = 0;
+        this.bossKills = 0;
         this.unlockedUpgrades = new HashSet<>();
         this.dirty = false;
     }
 
-    public PlayerData(UUID uuid, double radiationLevel, int radiationStage,
+    /** Full constructor used when loading from the database. */
+    public PlayerData(UUID uuid,
+                      double radiationLevel, int radiationStage,
                       long immunityTimerEndMs, double infectionProgress,
-                      int bossKills, double totalRadiationExposure,
+                      long lastRadiationReceivedMs, String lastRadiationSource,
+                      int timesInfected,
+                      double totalRadiationExposure, double totalRadiationCured,
+                      int radiationDeaths, int bossKills,
                       Set<String> unlockedUpgrades) {
         this.uuid = uuid;
         this.radiationLevel = radiationLevel;
         this.radiationStage = radiationStage;
         this.immunityTimerEndMs = immunityTimerEndMs;
         this.infectionProgress = infectionProgress;
-        this.bossKills = bossKills;
+        this.lastRadiationReceivedMs = lastRadiationReceivedMs;
+        this.lastRadiationSource = lastRadiationSource != null ? lastRadiationSource : "UNKNOWN";
+        this.timesInfected = timesInfected;
         this.totalRadiationExposure = totalRadiationExposure;
+        this.totalRadiationCured = totalRadiationCured;
+        this.radiationDeaths = radiationDeaths;
+        this.bossKills = bossKills;
         this.unlockedUpgrades = new HashSet<>(unlockedUpgrades);
         this.dirty = false;
     }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Radiation core
+    // ──────────────────────────────────────────────────────────────────────────
 
     public UUID getUuid() { return uuid; }
 
     public double getRadiationLevel() { return radiationLevel; }
     public void setRadiationLevel(double level) {
-        this.radiationLevel = Math.max(0, level);
+        this.radiationLevel = Math.max(0, Math.min(1000, level));
         this.dirty = true;
     }
 
     public int getRadiationStage() { return radiationStage; }
     public void setRadiationStage(int stage) {
-        this.radiationStage = stage;
+        this.radiationStage = Math.max(0, Math.min(4, stage));
         this.dirty = true;
     }
 
@@ -69,10 +106,7 @@ public class PlayerData {
         this.immunityTimerEndMs = ms;
         this.dirty = true;
     }
-
-    public boolean isImmune() {
-        return System.currentTimeMillis() < immunityTimerEndMs;
-    }
+    public boolean isImmune() { return System.currentTimeMillis() < immunityTimerEndMs; }
 
     public double getInfectionProgress() { return infectionProgress; }
     public void setInfectionProgress(double progress) {
@@ -80,33 +114,64 @@ public class PlayerData {
         this.dirty = true;
     }
 
+    // ──────────────────────────────────────────────────────────────────────────
+    // Phase 2 radiation statistics
+    // ──────────────────────────────────────────────────────────────────────────
+
+    public long getLastRadiationReceivedMs() { return lastRadiationReceivedMs; }
+    public void setLastRadiationReceivedMs(long ms) {
+        this.lastRadiationReceivedMs = ms;
+        this.dirty = true;
+    }
+
+    public String getLastRadiationSource() { return lastRadiationSource; }
+    public void setLastRadiationSource(String source) {
+        this.lastRadiationSource = source != null ? source : "UNKNOWN";
+        this.dirty = true;
+    }
+
+    public int getTimesInfected() { return timesInfected; }
+    public void setTimesInfected(int count) {
+        this.timesInfected = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    public double getTotalRadiationExposure() { return totalRadiationExposure; }
+    public void addTotalRadiationExposure(double amount) {
+        this.totalRadiationExposure += Math.max(0, amount);
+        this.dirty = true;
+    }
+
+    public double getTotalRadiationCured() { return totalRadiationCured; }
+    public void addTotalRadiationCured(double amount) {
+        this.totalRadiationCured += Math.max(0, amount);
+        this.dirty = true;
+    }
+
+    public int getRadiationDeaths() { return radiationDeaths; }
+    public void setRadiationDeaths(int count) {
+        this.radiationDeaths = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Progression
+    // ──────────────────────────────────────────────────────────────────────────
+
     public int getBossKills() { return bossKills; }
     public void incrementBossKills() {
         this.bossKills++;
         this.dirty = true;
     }
 
-    public double getTotalRadiationExposure() { return totalRadiationExposure; }
-    public void addTotalRadiationExposure(double amount) {
-        this.totalRadiationExposure += amount;
-        this.dirty = true;
-    }
-
     public Set<String> getUnlockedUpgrades() { return new HashSet<>(unlockedUpgrades); }
+    public boolean hasUpgrade(String id) { return unlockedUpgrades.contains(id); }
+    public void unlockUpgrade(String id) { unlockedUpgrades.add(id); this.dirty = true; }
+    public void revokeUpgrade(String id) { unlockedUpgrades.remove(id); this.dirty = true; }
 
-    public boolean hasUpgrade(String upgradeId) {
-        return unlockedUpgrades.contains(upgradeId);
-    }
-
-    public void unlockUpgrade(String upgradeId) {
-        unlockedUpgrades.add(upgradeId);
-        this.dirty = true;
-    }
-
-    public void revokeUpgrade(String upgradeId) {
-        unlockedUpgrades.remove(upgradeId);
-        this.dirty = true;
-    }
+    // ──────────────────────────────────────────────────────────────────────────
+    // Dirty flag
+    // ──────────────────────────────────────────────────────────────────────────
 
     public boolean isDirty() { return dirty; }
     public void markClean() { this.dirty = false; }
@@ -114,6 +179,9 @@ public class PlayerData {
 
     @Override
     public String toString() {
-        return "PlayerData{uuid=" + uuid + ", radiation=" + radiationLevel + ", stage=" + radiationStage + "}";
+        return "PlayerData{uuid=" + uuid
+                + ", radiation=" + radiationLevel
+                + ", stage=" + radiationStage
+                + ", source=" + lastRadiationSource + "}";
     }
 }

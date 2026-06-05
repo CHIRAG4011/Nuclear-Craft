@@ -19,16 +19,17 @@ commands:
 
 permissions:
   nuclearcraft.use:
-    description: Allows use of basic NuclearCraft commands
+    description: Allows use of basic NuclearCraft commands (radiation check on self)
     default: true
   nuclearcraft.admin:
-    description: Allows use of NuclearCraft admin commands
+    description: Grants all NuclearCraft admin permissions
     default: op
     children:
       nuclearcraft.use: true
       nuclearcraft.reload: true
       nuclearcraft.debug: true
       nuclearcraft.give: true
+      nuclearcraft.admin.radiation: true
   nuclearcraft.reload:
     description: Allows reloading NuclearCraft configuration
     default: op
@@ -36,5 +37,8 @@ permissions:
     description: Allows access to debug commands
     default: op
   nuclearcraft.give:
-    description: Allows giving custom NuclearCraft items
+    description: Allows giving custom NuclearCraft items to players
+    default: op
+  nuclearcraft.admin.radiation:
+    description: Allows admin-level radiation commands (add, remove, set, clear, check others)
     default: op
