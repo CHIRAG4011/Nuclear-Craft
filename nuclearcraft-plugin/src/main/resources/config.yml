@@ -1,0 +1,38 @@
+# NuclearCraft Main Configuration
+# Version 1.0.0
+
+plugin:
+  debug: false
+  language: en_US
+  metrics: true
+  update-check: true
+
+database:
+  type: SQLITE  # SQLITE or MYSQL
+  sqlite:
+    file: nuclearcraft.db
+  mysql:
+    host: localhost
+    port: 3306
+    database: nuclearcraft
+    username: root
+    password: password
+    pool-size: 10
+    max-lifetime: 1800000
+    connection-timeout: 30000
+
+performance:
+  task-interval-ticks: 20
+  data-save-interval-minutes: 5
+  chunk-load-range: 2
+  max-particles-per-player: 50
+  async-data-operations: true
+
+world:
+  allowed-worlds: []  # Empty list = all worlds
+  blocked-worlds:
+    - world_the_end
+
+gui:
+  animation-ticks: 2
+  close-on-outside-click: false

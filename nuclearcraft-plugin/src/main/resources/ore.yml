@@ -1,0 +1,43 @@
+# NuclearCraft Ore Configuration
+
+plutonium-ore:
+  enabled: true
+  generation:
+    min-y: -64
+    max-y: 16
+    vein-size: 4
+    attempts-per-chunk: 2
+    biome-blacklist: []
+  drop:
+    item: raw_plutonium_fragment
+    min-amount: 1
+    max-amount: 3
+    fortune-bonus: true
+    silktouch-gives-block: true
+    xp-min: 3
+    xp-max: 7
+  radiation:
+    on-mine: true
+    exposure-amount: 5.0
+    radius: 3.0
+  block:
+    base-material: STONE
+    custom-model-data: 1001
+    glow: true
+    particle:
+      type: GLOW
+      count: 3
+      interval-ticks: 10
+
+radioactive-debris:
+  enabled: true
+  generation:
+    min-y: -64
+    max-y: -32
+    rarity: 0.001
+  drop:
+    item: radioactive-core
+    chance: 0.15
+  radiation:
+    passive-radius: 5
+    exposure-rate: 0.5

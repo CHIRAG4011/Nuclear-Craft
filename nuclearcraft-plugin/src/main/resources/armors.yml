@@ -1,0 +1,89 @@
+# NuclearCraft Armor Configuration
+
+plutonium-armor:
+  display-prefix: "<gradient:#39ff14:#00ff88>"
+  display-suffix: "</gradient>"
+
+  helmet:
+    display-name: "Plutonium Helmet"
+    lore:
+      - "<gray>Shields the mind from radiation.</gray>"
+      - "<green>☢ -15% Radiation Exposure</green>"
+    material: NETHERITE_HELMET
+    custom-model-data: 3001
+    stats:
+      armor: 4
+      armor-toughness: 2
+      durability: 450
+    enchantments:
+      PROTECTION: 3
+      UNBREAKING: 3
+    radiation-reduction: 0.15
+    set-bonus-piece: true
+
+  chestplate:
+    display-name: "Plutonium Chestplate"
+    lore:
+      - "<gray>A chest shielded by plutonium alloy.</gray>"
+      - "<green>☢ -15% Radiation Exposure</green>"
+    material: NETHERITE_CHESTPLATE
+    custom-model-data: 3002
+    stats:
+      armor: 8
+      armor-toughness: 2
+      durability: 640
+    enchantments:
+      PROTECTION: 3
+      UNBREAKING: 3
+    radiation-reduction: 0.15
+    set-bonus-piece: true
+
+  leggings:
+    display-name: "Plutonium Leggings"
+    lore:
+      - "<gray>Reinforced with radioactive shielding.</gray>"
+      - "<green>☢ -15% Radiation Exposure</green>"
+    material: NETHERITE_LEGGINGS
+    custom-model-data: 3003
+    stats:
+      armor: 6
+      armor-toughness: 2
+      durability: 590
+    enchantments:
+      PROTECTION: 3
+      UNBREAKING: 3
+    radiation-reduction: 0.15
+    set-bonus-piece: true
+
+  boots:
+    display-name: "Plutonium Boots"
+    lore:
+      - "<gray>Walk through contaminated zones safely.</gray>"
+      - "<green>☢ -15% Radiation Exposure</green>"
+      - "<aqua>⬆ No radiation from ground contact</aqua>"
+    material: NETHERITE_BOOTS
+    custom-model-data: 3004
+    stats:
+      armor: 4
+      armor-toughness: 2
+      durability: 480
+    enchantments:
+      PROTECTION: 3
+      UNBREAKING: 3
+      FEATHER_FALLING: 2
+    radiation-reduction: 0.15
+    set-bonus-piece: true
+    special:
+      no-ground-radiation: true
+
+  set-bonus:
+    required-pieces: 4
+    effects:
+      - type: SPEED
+        amplifier: 1
+        duration: -1
+      - type: FIRE_RESISTANCE
+        amplifier: 0
+        duration: -1
+    radiation-reduction-bonus: 0.25
+    display-message: "<gradient:#39ff14:#00ff88>☢ Full Plutonium Set Bonus ACTIVE</gradient>"

@@ -1,0 +1,86 @@
+# NuclearCraft Radiation System Configuration
+
+radiation:
+  enabled: true
+  max-level: 1000.0
+  decay-rate: 0.05
+  decay-interval-ticks: 20
+
+  stages:
+    0:
+      name: "No Radiation"
+      min: 0.0
+      max: 49.9
+      effects: []
+    1:
+      name: "Mild Exposure"
+      min: 50.0
+      max: 199.9
+      effects:
+        - type: HUNGER
+          amplifier: 0
+          duration: 100
+    2:
+      name: "Moderate Exposure"
+      min: 200.0
+      max: 499.9
+      effects:
+        - type: HUNGER
+          amplifier: 1
+          duration: 100
+        - type: WEAKNESS
+          amplifier: 0
+          duration: 100
+    3:
+      name: "Heavy Exposure"
+      min: 500.0
+      max: 799.9
+      effects:
+        - type: HUNGER
+          amplifier: 2
+          duration: 100
+        - type: WEAKNESS
+          amplifier: 1
+          duration: 100
+        - type: POISON
+          amplifier: 0
+          duration: 60
+    4:
+      name: "Critical Exposure"
+      min: 800.0
+      max: 1000.0
+      effects:
+        - type: WITHER
+          amplifier: 0
+          duration: 60
+        - type: BLINDNESS
+          amplifier: 0
+          duration: 40
+        - type: WEAKNESS
+          amplifier: 2
+          duration: 100
+
+  immunity:
+    enabled: true
+    base-duration-seconds: 30
+    max-duration-seconds: 300
+    cooldown-seconds: 60
+
+  armor-reduction:
+    enabled: true
+    per-piece-reduction: 0.15
+    max-reduction: 0.60
+
+  particles:
+    enabled: true
+    stage-1-particle: SPELL_MOB
+    stage-2-particle: SPELL_MOB
+    stage-3-particle: VILLAGER_ANGRY
+    stage-4-particle: SMOKE_LARGE
+    interval-ticks: 10
+
+  sources:
+    plutonium-ore: 5.0
+    radioactive-core: 2.0
+    refined-plutonium-ingot: 1.5
+    titan-core: 25.0

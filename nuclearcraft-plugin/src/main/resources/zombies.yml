@@ -1,0 +1,71 @@
+# NuclearCraft Irradiated Zombies Configuration
+
+irradiated-zombies:
+  enabled: true
+
+  spawning:
+    natural-spawn: true
+    spawn-chance: 0.15
+    allowed-biomes: []
+    blocked-biomes:
+      - THE_END
+      - NETHER_WASTES
+    min-y: -64
+    max-y: 64
+    near-ore-boost:
+      enabled: true
+      radius: 16
+      extra-chance: 0.25
+
+  stats:
+    base-health: 40.0
+    base-damage: 4.0
+    base-speed: 0.28
+    base-knockback-resistance: 0.2
+    armor: 2.0
+    follow-range: 48.0
+    glow: false
+
+  radiation:
+    on-hit-player: true
+    hit-exposure: 8.0
+    passive-aura: true
+    aura-radius: 4.0
+    aura-exposure-rate: 2.0
+    aura-interval-ticks: 20
+
+  drops:
+    irradiated-heart:
+      chance: 0.08
+      min: 1
+      max: 1
+    raw-plutonium-fragment:
+      chance: 0.04
+      min: 1
+      max: 1
+    radioactive-core:
+      chance: 0.02
+      min: 1
+      max: 1
+    xp-bonus: 5
+
+  particles:
+    enabled: true
+    type: SPELL_MOB
+    color: "57,255,20"
+    count: 8
+    interval-ticks: 10
+
+  sounds:
+    ambient: ENTITY_ZOMBIE_AMBIENT
+    hurt: ENTITY_ZOMBIE_HURT
+    death: ENTITY_ZOMBIE_DEATH
+
+  infection:
+    enabled: true
+    chance-on-hit: 0.10
+    progress-per-tick: 0.05
+    cure-item: healing-petal
+    full-infection-effect: WITHER
+    full-infection-amplifier: 1
+    full-infection-duration: 200

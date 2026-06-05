@@ -1,0 +1,40 @@
+name: NuclearCraft
+version: '${project.version}'
+main: com.nuclearcraft.core.NuclearCraftPlugin
+api-version: '1.21'
+description: A nuclear-themed Minecraft plugin featuring radiation, plutonium, and boss encounters.
+authors: [NuclearCraft Team]
+website: https://github.com/nuclearcraft
+
+load: STARTUP
+
+prefix: NuclearCraft
+
+commands:
+  nuclearcraft:
+    description: Main NuclearCraft command
+    aliases: [nc, nuclear]
+    usage: /nuclearcraft <subcommand>
+    permission: nuclearcraft.use
+
+permissions:
+  nuclearcraft.use:
+    description: Allows use of basic NuclearCraft commands
+    default: true
+  nuclearcraft.admin:
+    description: Allows use of NuclearCraft admin commands
+    default: op
+    children:
+      nuclearcraft.use: true
+      nuclearcraft.reload: true
+      nuclearcraft.debug: true
+      nuclearcraft.give: true
+  nuclearcraft.reload:
+    description: Allows reloading NuclearCraft configuration
+    default: op
+  nuclearcraft.debug:
+    description: Allows access to debug commands
+    default: op
+  nuclearcraft.give:
+    description: Allows giving custom NuclearCraft items
+    default: op

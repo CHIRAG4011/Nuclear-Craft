@@ -1,0 +1,47 @@
+# NuclearCraft Messages Configuration
+# Supports MiniMessage formatting (https://docs.advntr.dev/minimessage/)
+
+prefix: "<dark_gray>[<gradient:#39ff14:#00ff88>NuclearCraft</gradient>]</dark_gray> "
+
+general:
+  no-permission: "<red>You do not have permission to use this command.</red>"
+  player-only: "<red>This command can only be used by players.</red>"
+  unknown-command: "<red>Unknown subcommand. Use <yellow>/nc help</yellow> for a list of commands.</red>"
+  player-not-found: "<red>Player <yellow>{player}</yellow> was not found.</red>"
+  invalid-number: "<red>Invalid number: <yellow>{input}</yellow>.</red>"
+  reload-start: "<yellow>Reloading NuclearCraft configuration...</yellow>"
+  reload-complete: "<green>NuclearCraft configuration reloaded successfully.</green>"
+  reload-failed: "<red>Failed to reload configuration. Check console for errors.</red>"
+
+commands:
+  help-header: "<dark_gray>─────── <gradient:#39ff14:#00ff88>NuclearCraft</gradient> Help ───────</dark_gray>"
+  help-entry: " <yellow>/{command}</yellow> <gray>-</gray> <white>{description}</white>"
+  version: "<gray>NuclearCraft version <green>{version}</green> running on <aqua>{server}</aqua></gray>"
+  debug-enabled: "<yellow>Debug mode <green>ENABLED</green>.</yellow>"
+  debug-disabled: "<yellow>Debug mode <red>DISABLED</red>.</yellow>"
+  give-success: "<green>Gave <yellow>{amount}x {item}</yellow> to <aqua>{player}</aqua>.</green>"
+  give-invalid-item: "<red>Unknown item: <yellow>{item}</yellow>. Use <white>/nc give list</white> to see all items.</red>"
+  info-header: "<dark_gray>─────── <gradient:#39ff14:#00ff88>Plugin Info</gradient> ───────</dark_gray>"
+  info-version: " <gray>Version: <green>{version}</green></gray>"
+  info-players: " <gray>Online Players: <green>{players}</green></gray>"
+  info-debug: " <gray>Debug Mode: {status}</gray>"
+
+radiation:
+  stage-0: "<green>✔ No Radiation</green>"
+  stage-1: "<yellow>⚠ Mild Exposure</yellow>"
+  stage-2: "<gold>⚠ Moderate Exposure</gold>"
+  stage-3: "<red>☢ Heavy Exposure</red>"
+  stage-4: "<dark_red>☢ Critical Exposure</dark_red>"
+  status: "<gray>Radiation: {stage} <dark_gray>({level} rads)</dark_gray></gray>"
+  exposed: "<yellow>☢ You have been exposed to radiation!</yellow>"
+  critical: "<red>☢ CRITICAL RADIATION LEVEL — Seek medical attention immediately!</red>"
+  immune: "<green>☢ Your immunity timer protected you from radiation.</green>"
+
+items:
+  radioactive-core: "Radioactive Core"
+  raw-plutonium-fragment: "Raw Plutonium Fragment"
+  refined-plutonium-ingot: "Refined Plutonium Ingot"
+  mutated-seed: "Mutated Seed"
+  healing-petal: "Healing Petal"
+  irradiated-heart: "Irradiated Heart"
+  titan-core: "Titan Core"

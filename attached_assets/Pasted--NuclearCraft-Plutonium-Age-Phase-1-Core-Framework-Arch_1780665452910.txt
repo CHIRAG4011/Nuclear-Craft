@@ -1,0 +1,380 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 1 - Core Framework & Architecture
+
+You are a senior Minecraft Paper plugin developer.
+
+Create a professional-grade Minecraft Paper plugin called **NuclearCraft** for PaperMC 1.21+ using Java 21 and Maven.
+
+This plugin will eventually contain:
+
+* Radiation System
+* Irradiated Zombies
+* Plutonium Ore
+* Nuclear Smelter
+* Radioactive Farming
+* Custom Armor
+* Custom Tools
+* Nuclear Forge
+* Plutonium Titan Boss
+* Endgame Progression
+
+The architecture must be built to support all future systems.
+
+---
+
+# Development Standards
+
+Requirements:
+
+* Java 21
+* PaperMC 1.21+
+* Maven
+* Fully object-oriented design
+* Production ready
+* Multiplayer safe
+* Thread safe
+* Optimized for large servers
+* No memory leaks
+* No deprecated APIs
+* Follow Paper best practices
+
+---
+
+# Main Plugin Class
+
+Create:
+
+NuclearCraftPlugin.java
+
+Responsibilities:
+
+* Plugin startup
+* Plugin shutdown
+* Manager registration
+* Listener registration
+* Configuration loading
+* Data initialization
+
+Use dependency injection wherever possible.
+
+Do not use static abuse.
+
+---
+
+# Package Structure
+
+Create the following packages:
+
+com.nuclearcraft.core
+
+com.nuclearcraft.config
+
+com.nuclearcraft.data
+
+com.nuclearcraft.items
+
+com.nuclearcraft.blocks
+
+com.nuclearcraft.radiation
+
+com.nuclearcraft.zombies
+
+com.nuclearcraft.ore
+
+com.nuclearcraft.farming
+
+com.nuclearcraft.tools
+
+com.nuclearcraft.armor
+
+com.nuclearcraft.smelter
+
+com.nuclearcraft.forge
+
+com.nuclearcraft.bosses
+
+com.nuclearcraft.gui
+
+com.nuclearcraft.commands
+
+com.nuclearcraft.listeners
+
+com.nuclearcraft.utils
+
+---
+
+# Configuration System
+
+Create:
+
+config.yml
+
+messages.yml
+
+ore.yml
+
+radiation.yml
+
+zombies.yml
+
+farming.yml
+
+boss.yml
+
+toolstats.yml
+
+armors.yml
+
+All values must be configurable.
+
+Nothing should be hardcoded.
+
+---
+
+# Data Storage System
+
+Create persistent player storage.
+
+Store:
+
+UUID
+
+Radiation Level
+
+Radiation Stage
+
+Immunity Timer
+
+Infection Progress
+
+Unlocked Upgrades
+
+Boss Kills
+
+Total Radiation Exposure
+
+Use:
+
+PersistentDataContainer where appropriate.
+
+Use YAML or SQLite support.
+
+Design system so migration to MySQL is possible later.
+
+---
+
+# Manager System
+
+Create manager classes:
+
+ConfigManager
+
+DataManager
+
+ItemManager
+
+BlockManager
+
+RecipeManager
+
+GUIManager
+
+PlayerDataManager
+
+TaskManager
+
+Each manager must:
+
+* Have initialize()
+* Have shutdown()
+* Be properly registered
+
+---
+
+# Custom Item Framework
+
+Create a reusable custom item framework.
+
+Future items:
+
+* Radioactive Core
+* Raw Plutonium Fragment
+* Refined Plutonium Ingot
+* Mutated Seed
+* Healing Petal
+* Irradiated Heart
+* Titan Core
+
+Requirements:
+
+* Unique IDs
+* PersistentDataContainer support
+* Custom lore support
+* Custom model data support
+* Easy registration
+
+---
+
+# Custom Block Framework
+
+Create reusable framework for future blocks.
+
+Future blocks:
+
+* Plutonium Ore
+* Radioactive Farmland
+* Radioactive Debris
+* Nuclear Smelter
+* Nuclear Forge
+
+Requirements:
+
+* Persistent block tracking
+* Chunk-safe storage
+* Break handling
+* Placement handling
+* Easy expansion
+
+---
+
+# Recipe Framework
+
+Create recipe registry.
+
+Support:
+
+* Shaped Recipes
+* Shapeless Recipes
+* Future custom machine recipes
+
+Requirements:
+
+* Easy registration
+* Duplicate prevention
+* Dynamic reload support
+
+---
+
+# GUI Framework
+
+Create reusable GUI system.
+
+Requirements:
+
+* Custom inventory menus
+* Click handling
+* Page support
+* Button support
+* Dynamic updates
+
+Future GUIs:
+
+* Nuclear Smelter
+* Nuclear Forge
+* Boss Rewards
+
+---
+
+# Command System
+
+Create root command:
+
+/nuclearcraft
+
+Subcommands:
+
+reload
+
+info
+
+debug
+
+give
+
+version
+
+permission structure:
+
+nuclearcraft.admin
+
+nuclearcraft.debug
+
+nuclearcraft.give
+
+Create tab completion.
+
+---
+
+# Logging System
+
+Create utility logger.
+
+Support:
+
+INFO
+
+WARNING
+
+ERROR
+
+DEBUG
+
+Debug mode configurable.
+
+---
+
+# Utility Classes
+
+Create utilities for:
+
+Item creation
+
+Color formatting
+
+Particle handling
+
+Location serialization
+
+Cooldown management
+
+Math helpers
+
+Random utilities
+
+---
+
+# Performance Requirements
+
+Must support:
+
+100+ players
+
+Thousands of radioactive blocks
+
+Large farms
+
+Multiple bosses
+
+Avoid excessive repeating tasks.
+
+Use scheduled tasks efficiently.
+
+---
+
+# Deliverables
+
+Generate:
+
+1. Complete Maven project structure.
+2. Complete package structure.
+3. plugin.yml
+4. pom.xml
+5. All manager classes.
+6. All framework classes.
+7. Configuration files.
+8. Command system.
+9. Data system.
+10. Startup registration.
+
+The code must compile successfully without errors and be ready for Phase 2 Radiation System development.
