@@ -1,0 +1,856 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 10 - Plutonium Titan Boss, Nuclear Raid Progression & Endgame Encounters
+
+You are continuing development of NuclearCraft for PaperMC 1.21+ using Java 21.
+
+Completed Systems:
+
+### Phase 1
+
+* Core Framework
+* Data System
+* Config System
+* GUI Framework
+
+### Phase 2
+
+* Radiation System
+* Infection System
+* Contagion System
+
+### Phase 3
+
+* Irradiated Zombies
+* Alpha Irradiated Zombies
+* Radiation Clouds
+* Radiation Surge Events
+
+### Phase 4
+
+* Plutonium Ore
+* Radiation Drill
+* Ore Radiation
+
+### Phase 5
+
+* Nuclear Smelter
+* Industrial Processing
+* Refined Plutonium
+
+### Phase 6
+
+* Plutonium Equipment
+* Hazmat Armor
+* Combat Systems
+
+### Phase 7
+
+* Radioactive Farming
+* Cure System
+* Mutated Crops
+
+### Phase 8
+
+* Nuclear Forge
+* MK-I to MK-IV Upgrades
+
+### Phase 9
+
+* Advanced Combat
+* PvP Radiation
+* Plutonium Arrows
+* Weapon Mastery
+
+Now implement the complete **Plutonium Titan Boss System**.
+
+This is the first major end-game challenge.
+
+The Titan should require preparation, teamwork, upgraded gear, cures, and radiation resistance.
+
+The encounter should feel like a raid boss rather than a large zombie.
+
+---
+
+# SYSTEM OVERVIEW
+
+Progression:
+
+Irradiated Zombies
+
+↓
+
+Plutonium Mining
+
+↓
+
+Nuclear Smelting
+
+↓
+
+Plutonium Equipment
+
+↓
+
+MK-IV Upgrades
+
+↓
+
+Plutonium Titan
+
+↓
+
+Titan Core
+
+↓
+
+Titan Equipment
+
+The Titan serves as the gateway to all end-game progression.
+
+---
+
+# TITAN LORE
+
+The Plutonium Titan was once the leader of the ancient civilization that created plutonium technology.
+
+During a reactor catastrophe, its body fused with an experimental reactor core.
+
+It now exists as a massive radioactive abomination buried deep underground.
+
+Its reactor heart continuously emits catastrophic radiation.
+
+---
+
+# BOSS FRAMEWORK
+
+Create:
+
+TitanManager
+
+TitanAIManager
+
+TitanCombatManager
+
+TitanAbilityManager
+
+TitanRewardManager
+
+TitanArenaManager
+
+TitanEventManager
+
+All boss systems must be modular and support future bosses.
+
+---
+
+# BOSS SUMMONING
+
+Create:
+
+TitanSummoningManager
+
+---
+
+# SUMMON REQUIREMENTS
+
+4 Radioactive Cores
+
+*
+
+1 Plutonium Block
+
+*
+
+1 Irradiated Heart
+
+---
+
+When arranged correctly:
+
+Trigger summoning ritual.
+
+Play animation.
+
+Create particles.
+
+Spawn boss.
+
+Broadcast message.
+
+---
+
+# SUMMONING ANIMATION
+
+Duration:
+
+15 Seconds
+
+---
+
+Effects:
+
+Ground shaking
+
+Green lightning
+
+Radiation particles
+
+Reactor sounds
+
+Energy beam
+
+Boss emergence animation
+
+---
+
+# GLOBAL ANNOUNCEMENT
+
+Display:
+
+☢ THE PLUTONIUM TITAN HAS AWAKENED ☢
+
+Broadcast to all online players.
+
+Play warning sound.
+
+---
+
+# TITAN APPEARANCE
+
+Massive Mutated Humanoid
+
+Height:
+
+6-8 Blocks
+
+---
+
+Visual Features:
+
+Exposed Reactor Core
+
+Green Energy Veins
+
+Broken Reactor Plating
+
+Radioactive Crystals
+
+Glowing Eyes
+
+Constant Radiation Aura
+
+---
+
+# BOSS HEALTH
+
+Base:
+
+5000 HP
+
+Configurable.
+
+Scale with player count.
+
+---
+
+# PLAYER SCALING
+
+1-3 Players
+
+5000 HP
+
+---
+
+4-6 Players
+
+6500 HP
+
+---
+
+7-10 Players
+
+8500 HP
+
+---
+
+10+ Players
+
+10000 HP
+
+Configurable.
+
+---
+
+# TITAN PHASE SYSTEM
+
+Create:
+
+TitanPhaseManager
+
+---
+
+Phase 1
+
+100%-75%
+
+---
+
+Phase 2
+
+75%-50%
+
+---
+
+Phase 3
+
+50%-25%
+
+---
+
+Phase 4
+
+25%-0%
+
+Each phase unlocks new attacks.
+
+---
+
+# PHASE 1
+
+Abilities:
+
+Titan Slam
+
+Radiation Aura
+
+Heavy Melee
+
+---
+
+# TITAN SLAM
+
+Cooldown:
+
+10 Seconds
+
+---
+
+Effects:
+
+Area Damage
+
+Knockback
+
+Small Radiation Burst
+
+Radius:
+
+5 Blocks
+
+---
+
+# PHASE 2
+
+Unlock:
+
+Radiation Wave
+
+Mutant Summoning
+
+---
+
+# RADIATION WAVE
+
+Large Expanding Ring
+
+Radius:
+
+20 Blocks
+
+Applies Radiation
+
+Visual Warning
+
+Dodgeable.
+
+---
+
+# MUTANT SUMMONING
+
+Summons:
+
+Irradiated Zombies
+
+Alpha Irradiated Zombies
+
+Configurable amounts.
+
+---
+
+# PHASE 3
+
+Unlock:
+
+Reactor Overload
+
+Energy Beam
+
+---
+
+# REACTOR OVERLOAD
+
+Titan Charges Reactor
+
+Duration:
+
+5 Seconds
+
+Visual Warning
+
+Massive Radiation Burst
+
+Players must move away.
+
+---
+
+# ENERGY BEAM
+
+Targeted Attack
+
+Locks Onto Player
+
+Deals Heavy Damage
+
+Applies Radiation
+
+Creates Ground Scorch Effects
+
+---
+
+# PHASE 4
+
+Unlock:
+
+Nuclear Catastrophe
+
+Final Frenzy
+
+---
+
+# FINAL FRENZY
+
+Titan Gains:
+
+Movement Speed
+
+Attack Speed
+
+Reduced Cooldowns
+
+Aggressive AI
+
+---
+
+# NUCLEAR CATASTROPHE
+
+Ultimate Attack
+
+Warning:
+
+10 Seconds
+
+Boss Charges Reactor
+
+Arena Darkens
+
+Massive Radiation Explosion
+
+Players must take cover.
+
+Can be survived.
+
+Should not instantly kill.
+
+---
+
+# TITAN RADIATION AURA
+
+Constant Effect.
+
+Radius:
+
+10 Blocks
+
+Players gain radiation over time.
+
+---
+
+Protection:
+
+Hazmat Armor
+
+Partial Protection
+
+---
+
+Plutonium Armor
+
+Strong Protection
+
+---
+
+Titan Armor (Future)
+
+Complete Protection
+
+---
+
+# TITAN AI
+
+Create Advanced AI.
+
+Behaviors:
+
+Target Highest Damage Player
+
+Target Nearest Player
+
+Target Most Irradiated Player
+
+Switch Targets Dynamically
+
+Avoid Stuck Behavior.
+
+---
+
+# TITAN ARENA
+
+Create:
+
+TitanArenaManager
+
+---
+
+Arena Effects:
+
+Radiation Crystals
+
+Contaminated Ground
+
+Reactor Fragments
+
+Hazard Zones
+
+---
+
+Arena remains after battle.
+
+Supports future content.
+
+---
+
+# TITAN BOSS BAR
+
+Display:
+
+☢ PLUTONIUM TITAN ☢
+
+Shows:
+
+Health
+
+Phase
+
+Special Attack Warnings
+
+Visible to all nearby players.
+
+---
+
+# TITAN MUSIC SYSTEM
+
+Create framework.
+
+Support:
+
+Custom Resource Pack Music
+
+Boss Themes
+
+Phase Transitions
+
+Do not hardcode audio.
+
+---
+
+# REWARD SYSTEM
+
+Create:
+
+TitanRewardManager
+
+---
+
+# GUARANTEED DROPS
+
+Titan Core
+
+Titan Fragments
+
+Large XP Reward
+
+---
+
+# TITAN CORE
+
+Main Endgame Material
+
+Used For:
+
+Titan Armor
+
+Titan Weapons
+
+Future Reactors
+
+---
+
+# TITAN FRAGMENTS
+
+Used For:
+
+High Tier Upgrades
+
+Future Crafting
+
+Titan Equipment
+
+---
+
+# BONUS DROPS
+
+Rare Chance:
+
+Reactor Heart
+
+Ancient Reactor Blueprint
+
+Mutated Crystal
+
+Future Content Support.
+
+---
+
+# DAMAGE TRACKING
+
+Track:
+
+Damage Done
+
+Healing Done
+
+Radiation Applied
+
+Contribution
+
+---
+
+Rewards scale based on contribution.
+
+Prevent AFK rewards.
+
+---
+
+# DEATH SEQUENCE
+
+Titan falls.
+
+Reactor destabilizes.
+
+Explosion animation.
+
+Particles.
+
+Loot chest appears.
+
+Broadcast:
+
+☢ THE PLUTONIUM TITAN HAS BEEN DEFEATED ☢
+
+---
+
+# TITAN EVENTS
+
+Create:
+
+TitanSpawnEvent
+
+TitanPhaseChangeEvent
+
+TitanAbilityEvent
+
+TitanDeathEvent
+
+TitanRewardEvent
+
+Future systems must hook into these.
+
+---
+
+# ADVANCEMENTS
+
+Create:
+
+Titan Awakens
+
+Summon Titan
+
+---
+
+Titan Slayer
+
+Defeat Titan
+
+---
+
+Radiation Hero
+
+Survive Nuclear Catastrophe
+
+---
+
+Master Of Plutonium
+
+Defeat Titan Without Dying
+
+---
+
+# STATISTICS
+
+Track:
+
+Titan Summons
+
+Titan Kills
+
+Titan Deaths
+
+Damage Dealt
+
+Damage Taken
+
+Catastrophes Survived
+
+Titan Cores Obtained
+
+Store permanently.
+
+---
+
+# COMMANDS
+
+Admin:
+
+/nuclearcraft titan spawn
+
+Spawn Titan
+
+---
+
+/nuclearcraft titan kill
+
+Kill Active Titan
+
+---
+
+/nuclearcraft titan stats
+
+Display Statistics
+
+---
+
+/nuclearcraft titan phase
+
+Force Phase
+
+Permissions:
+
+nuclearcraft.admin.titan
+
+---
+
+# CONFIGURATION
+
+Create:
+
+titan.yml
+
+Include:
+
+Health
+
+Damage
+
+Phase Thresholds
+
+Cooldowns
+
+Drop Rates
+
+Arena Settings
+
+Bossbar Settings
+
+Scaling Settings
+
+Everything configurable.
+
+---
+
+# PERFORMANCE REQUIREMENTS
+
+Support:
+
+50+ Players In Boss Fight
+
+Large SMP Servers
+
+Avoid:
+
+Heavy pathfinding loops
+
+Entity memory leaks
+
+Constant particle spam
+
+Optimize boss logic.
+
+---
+
+# DELIVERABLES
+
+Generate complete production-ready code for:
+
+* TitanManager
+* TitanAIManager
+* TitanCombatManager
+* TitanAbilityManager
+* TitanPhaseManager
+* TitanArenaManager
+* TitanRewardManager
+* TitanSummoningManager
+* Boss Events
+* Statistics Tracking
+* Commands
+* Config Integration
+
+All code must compile successfully and integrate perfectly with:
+
+* Radiation System
+* Equipment System
+* Upgrade System
+* Combat System
+* Player Data System
+
+After completion, the project should be fully ready for **Phase 11: Titan Reactor Armor, Endgame Equipment & Ultimate Nuclear Technology**.

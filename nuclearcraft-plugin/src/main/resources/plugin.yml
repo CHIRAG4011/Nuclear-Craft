@@ -38,6 +38,7 @@ permissions:
       nuclearcraft.admin.farming: true
       nuclearcraft.admin.forge: true
       nuclearcraft.admin.combat: true
+      nuclearcraft.admin.titan: true
 
   nuclearcraft.reload:
     description: Allows reloading NuclearCraft configuration
@@ -81,4 +82,8 @@ permissions:
 
   nuclearcraft.admin.combat:
     description: Allows admin-level combat commands (view stats, mastery, radiation kills)
+    default: op
+
+  nuclearcraft.admin.titan:
+    description: Allows admin-level Titan commands (spawn, kill, phase, stats)
     default: op

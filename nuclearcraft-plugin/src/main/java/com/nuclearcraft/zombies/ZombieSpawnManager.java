@@ -116,6 +116,20 @@ public class ZombieSpawnManager {
         return ZombieLevel.rollLevel();
     }
 
+    /**
+     * Convenience method for TitanAbilityManager — spawns a regular irradiated zombie.
+     */
+    public IrradiatedZombie spawnIrradiatedZombie(org.bukkit.Location location) {
+        return spawnAt(location, ZombieLevel.rollLevel());
+    }
+
+    /**
+     * Convenience method for TitanAbilityManager — spawns an Alpha zombie (Level 3 or 4).
+     */
+    public IrradiatedZombie spawnAlphaZombie(org.bukkit.Location location) {
+        return spawnAt(location, ZombieLevel.LEVEL_3);
+    }
+
     public void setSurgeActive(boolean active) {
         this.surgeActive = active;
         NCLogger.info("Radiation Surge: " + (active ? "ACTIVE" : "ENDED"));

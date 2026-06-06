@@ -1,6 +1,7 @@
 package com.nuclearcraft.commands;
 
 import com.nuclearcraft.advancements.AdvancementManager;
+import com.nuclearcraft.boss.TitanManager;
 import com.nuclearcraft.combat.CombatManager;
 import com.nuclearcraft.combat.WeaponMasteryManager;
 import com.nuclearcraft.config.ConfigManager;
@@ -62,9 +63,11 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> TOP_SUBCOMMANDS =
             List.of("help", "reload", "info", "debug", "give", "version",
-                    "radiation", "zombie", "ore", "smelter", "equipment", "farming", "forge", "combat");
+                    "radiation", "zombie", "ore", "smelter", "equipment", "farming", "forge", "combat", "titan");
     private static final List<String> COMBAT_SUBCOMMANDS =
             List.of("stats", "mastery", "radiation");
+    private static final List<String> TITAN_SUBCOMMANDS =
+            List.of("spawn", "kill", "phase", "stats");
     private static final List<String> FORGE_SUBCOMMANDS =
             List.of("give", "energy", "upgrade", "stats");
     private static final List<String> FORGE_ENERGY_ACTIONS =
@@ -117,6 +120,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     private final NuclearForgeManager nuclearForgeManager;
     private final UpgradeManager upgradeManager;
     private CombatManager combatManager;
+    private TitanManager titanManager;
 
     public NuclearCraftCommand(NuclearCraftPlugin plugin, ConfigManager configManager,
                                 PlayerDataManager playerDataManager, ItemManager itemManager,
@@ -157,6 +161,11 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         this.combatManager = combatManager;
     }
 
+    /** Called after Phase 10 init so command can manage the Titan. */
+    public void setTitanManager(TitanManager titanManager) {
+        this.titanManager = titanManager;
+    }
+
     // ──────────────────────────────────────────────────────────────────────────
     // Routing
     // ──────────────────────────────────────────────────────────────────────────
@@ -179,7 +188,8 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             case "equipment" -> { handleEquipment(sender, args);   yield true; }
             case "farming"   -> { handleFarming(sender, args);     yield true; }
             case "forge"     -> { handleForge(sender, args);       yield true; }
-            case "combat"    -> { handleCombat(sender, args);     yield true; }
+            case "combat"    -> { handleCombat(sender, args);      yield true; }
+            case "titan"     -> { handleTitan(sender, args);       yield true; }
             default -> {
                 sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.unknown-command")));
                 yield true;
@@ -235,6 +245,12 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             entries.put("nuclearcraft farming give <type> [amount]", "Give a farming/cure item");
             entries.put("nuclearcraft farming growall [radius]",     "Force-grow all mutated crops nearby");
             entries.put("nuclearcraft farming stats",                "Show Phase 7 farming statistics");
+        }
+        if (sender.hasPermission("nuclearcraft.admin.titan")) {
+            entries.put("nuclearcraft titan spawn",          "Spawn the Plutonium Titan at your location");
+            entries.put("nuclearcraft titan kill",           "Force-kill the active Titan");
+            entries.put("nuclearcraft titan phase <1-4>",   "Force the Titan into a specific phase");
+            entries.put("nuclearcraft titan stats [player]","Show Titan statistics for self or target");
         }
         entries.forEach((cmd, desc) ->
                 sender.sendMessage(ColorUtil.parse(
@@ -977,6 +993,88 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // Phase 10 — Titan
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private void handleTitan(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("nuclearcraft.admin.titan")) {
+            sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.no-permission")));
+            return;
+        }
+        if (titanManager == null) {
+            sender.sendMessage(ColorUtil.parse("<red>Titan system (Phase 10) is not initialized.</red>"));
+            return;
+        }
+        if (args.length < 2) {
+            sender.sendMessage(ColorUtil.parse("<gold>☢ /nc titan</gold> <gray>spawn|kill|phase|stats</gray>"));
+            return;
+        }
+        switch (args[1].toLowerCase()) {
+            case "spawn" -> {
+                if (!(sender instanceof Player p)) {
+                    sender.sendMessage(ColorUtil.parse("<red>Only players can use titan spawn from console (no location).</red>"));
+                    return;
+                }
+                if (titanManager.isTitanAlive()) {
+                    sender.sendMessage(ColorUtil.parse("<red>A Plutonium Titan is already active!</red>"));
+                    return;
+                }
+                titanManager.spawnTitan(p.getLocation(), p);
+                sender.sendMessage(ColorUtil.parse("<green>☢ Summoned the Plutonium Titan at your location.</green>"));
+            }
+            case "kill" -> {
+                if (!titanManager.isTitanAlive()) {
+                    sender.sendMessage(ColorUtil.parse("<red>No active Titan to kill.</red>"));
+                    return;
+                }
+                titanManager.adminKillTitan();
+                sender.sendMessage(ColorUtil.parse("<green>☢ Titan forcibly killed.</green>"));
+            }
+            case "phase" -> {
+                if (args.length < 3) {
+                    sender.sendMessage(ColorUtil.parse("<red>Usage: /nc titan phase <1-4></red>"));
+                    return;
+                }
+                int phaseNum = parseAmount(sender, args[2]);
+                if (phaseNum < 1 || phaseNum > 4) {
+                    sender.sendMessage(ColorUtil.parse("<red>Phase must be 1–4.</red>"));
+                    return;
+                }
+                if (!titanManager.isTitanAlive()) {
+                    sender.sendMessage(ColorUtil.parse("<red>No active Titan.</red>"));
+                    return;
+                }
+                titanManager.getPhaseManager().forcePhase(phaseNum);
+                sender.sendMessage(ColorUtil.parse("<green>☢ Titan forced to phase " + phaseNum + ".</green>"));
+            }
+            case "stats" -> {
+                Player target = (sender instanceof Player p && args.length < 3) ? p
+                        : args.length >= 3 ? resolvePlayer(sender, args[2]) : null;
+                if (target == null) {
+                    sender.sendMessage(ColorUtil.parse("<red>Usage: /nc titan stats [player]</red>"));
+                    return;
+                }
+                playerDataManager.get(target.getUniqueId()).ifPresentOrElse(data -> {
+                    sender.sendMessage(ColorUtil.parse(
+                            "<gold>☢ Titan Stats — <white>" + target.getName() + "</white></gold>"));
+                    sender.sendMessage(ColorUtil.parse(
+                            "  <gray>Summons:</gray> <white>" + data.getTitanSummons()
+                            + "</white>  <gray>Kills:</gray> <white>" + data.getTitanKills()
+                            + "</white>  <gray>Deaths:</gray> <white>" + data.getTitanDeaths() + "</white>"));
+                    sender.sendMessage(ColorUtil.parse(
+                            "  <gray>Damage Dealt:</gray> <green>" + data.getTitanDamageDealt()
+                            + "</green>  <gray>Damage Taken:</gray> <red>" + data.getTitanDamageTaken() + "</red>"));
+                    sender.sendMessage(ColorUtil.parse(
+                            "  <gray>Catastrophes Survived:</gray> <yellow>" + data.getCatastrophesSurvived()
+                            + "</yellow>  <gray>Cores Obtained:</gray> <aqua>" + data.getTitanCoresObtained() + "</aqua>"));
+                }, () -> sender.sendMessage(ColorUtil.parse("<red>No data found for " + target.getName() + ".</red>")));
+            }
+            default -> sender.sendMessage(ColorUtil.parse(
+                    "<red>Unknown titan subcommand. Use: spawn | kill | phase | stats</red>"));
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // Tab completion
     // ──────────────────────────────────────────────────────────────────────────
 
@@ -1007,6 +1105,9 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                               : args.length == 3 && "upgrade".equals(args[1]) ? filter(FORGE_UPGRADE_TIERS, args[2])
                               : List.of();
             case "combat"    -> args.length == 2 ? filter(COMBAT_SUBCOMMANDS, args[1]) : List.of();
+            case "titan"     -> args.length == 2 ? filter(TITAN_SUBCOMMANDS, args[1])
+                              : args.length == 3 && "phase".equals(args[1]) ? List.of("1", "2", "3", "4")
+                              : List.of();
             case "give"      -> args.length == 2
                     ? plugin.getServer().getOnlinePlayers().stream()
                             .map(Player::getName)

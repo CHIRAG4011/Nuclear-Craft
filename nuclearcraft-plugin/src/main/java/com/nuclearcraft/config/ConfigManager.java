@@ -29,7 +29,8 @@ public class ConfigManager {
         SMELTER("smelter.yml"),
         EQUIPMENT("equipment.yml"),
         FORGE("forge.yml"),
-        COMBAT("combat.yml");
+        COMBAT("combat.yml"),
+        TITAN("titan.yml");
 
         private final String fileName;
 
@@ -133,6 +134,10 @@ public class ConfigManager {
 
     public FileConfiguration getCombat() {
         return get(ConfigFile.COMBAT);
+    }
+
+    public FileConfiguration getTitan() {
+        return get(ConfigFile.TITAN);
     }
 
     public void save(ConfigFile cf) {

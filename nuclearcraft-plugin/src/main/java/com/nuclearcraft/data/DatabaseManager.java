@@ -127,7 +127,14 @@ public class DatabaseManager {
                     antidotes_crafted           INTEGER NOT NULL DEFAULT 0,
                     serums_crafted              INTEGER NOT NULL DEFAULT 0,
                     radiation_cures_used        INTEGER NOT NULL DEFAULT 0,
-                    toxic_blooms_generated      INTEGER NOT NULL DEFAULT 0
+                    toxic_blooms_generated      INTEGER NOT NULL DEFAULT 0,
+                    titan_summons               INTEGER NOT NULL DEFAULT 0,
+                    titan_kills                 INTEGER NOT NULL DEFAULT 0,
+                    titan_deaths                INTEGER NOT NULL DEFAULT 0,
+                    titan_damage_dealt          INTEGER NOT NULL DEFAULT 0,
+                    titan_damage_taken          INTEGER NOT NULL DEFAULT 0,
+                    catastrophes_survived       INTEGER NOT NULL DEFAULT 0,
+                    titan_cores_obtained        INTEGER NOT NULL DEFAULT 0
                 )
             """);
             stmt.execute("""
@@ -193,6 +200,15 @@ public class DatabaseManager {
             addColumnIfMissing(conn, "player_data", "serums_crafted",           "INTEGER NOT NULL DEFAULT 0");
             addColumnIfMissing(conn, "player_data", "radiation_cures_used",     "INTEGER NOT NULL DEFAULT 0");
             addColumnIfMissing(conn, "player_data", "toxic_blooms_generated",   "INTEGER NOT NULL DEFAULT 0");
+
+            // Phase 10 columns
+            addColumnIfMissing(conn, "player_data", "titan_summons",         "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "titan_kills",           "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "titan_deaths",          "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "titan_damage_dealt",    "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "titan_damage_taken",    "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "catastrophes_survived", "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "titan_cores_obtained",  "INTEGER NOT NULL DEFAULT 0");
         }
         NCLogger.debug("Database migrations complete.");
     }
@@ -224,7 +240,7 @@ public class DatabaseManager {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Set<String> upgrades = loadUpgrades(conn, uuid);
-                    return Optional.of(new PlayerData(
+                    PlayerData pd = new PlayerData(
                             uuid,
                             rs.getDouble("radiation_level"),
                             rs.getInt("radiation_stage"),
@@ -270,7 +286,18 @@ public class DatabaseManager {
                             rs.getInt("serums_crafted"),
                             rs.getInt("radiation_cures_used"),
                             rs.getInt("toxic_blooms_generated")
-                    ));
+                    );
+                    // Phase 10 titan stats — loaded via setter since they aren't in the main constructor
+                    pd.setTitanStats(
+                            rs.getInt("titan_summons"),
+                            rs.getInt("titan_kills"),
+                            rs.getInt("titan_deaths"),
+                            rs.getInt("titan_damage_dealt"),
+                            rs.getInt("titan_damage_taken"),
+                            rs.getInt("catastrophes_survived"),
+                            rs.getInt("titan_cores_obtained")
+                    );
+                    return Optional.of(pd);
                 }
             }
         } catch (SQLException e) {
@@ -294,8 +321,10 @@ public class DatabaseManager {
                 sword_hits, radiation_damage_inflicted,
                 blocks_converted, farmland_created, debris_generated, arrows_fired,
                 seeds_planted, plants_harvested, healing_petals_collected,
-                antidotes_crafted, serums_crafted, radiation_cures_used, toxic_blooms_generated
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                antidotes_crafted, serums_crafted, radiation_cures_used, toxic_blooms_generated,
+                titan_summons, titan_kills, titan_deaths, titan_damage_dealt,
+                titan_damage_taken, catastrophes_survived, titan_cores_obtained
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(uuid) DO UPDATE SET
                 radiation_level             = excluded.radiation_level,
                 radiation_stage             = excluded.radiation_stage,
@@ -337,7 +366,14 @@ public class DatabaseManager {
                 antidotes_crafted           = excluded.antidotes_crafted,
                 serums_crafted              = excluded.serums_crafted,
                 radiation_cures_used        = excluded.radiation_cures_used,
-                toxic_blooms_generated      = excluded.toxic_blooms_generated
+                toxic_blooms_generated      = excluded.toxic_blooms_generated,
+                titan_summons               = excluded.titan_summons,
+                titan_kills                 = excluded.titan_kills,
+                titan_deaths                = excluded.titan_deaths,
+                titan_damage_dealt          = excluded.titan_damage_dealt,
+                titan_damage_taken          = excluded.titan_damage_taken,
+                catastrophes_survived       = excluded.catastrophes_survived,
+                titan_cores_obtained        = excluded.titan_cores_obtained
         """;
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1,  data.getUuid().toString());
@@ -383,6 +419,14 @@ public class DatabaseManager {
             ps.setInt(40,    data.getSerumsCrafted());
             ps.setInt(41,    data.getRadiationCuresUsed());
             ps.setInt(42,    data.getToxicBloomsGenerated());
+            // Phase 10
+            ps.setInt(43,    data.getTitanSummons());
+            ps.setInt(44,    data.getTitanKills());
+            ps.setInt(45,    data.getTitanDeaths());
+            ps.setInt(46,    data.getTitanDamageDealt());
+            ps.setInt(47,    data.getTitanDamageTaken());
+            ps.setInt(48,    data.getCatastrophesSurvived());
+            ps.setInt(49,    data.getTitanCoresObtained());
             ps.executeUpdate();
             saveUpgrades(conn, data);
             data.markClean();

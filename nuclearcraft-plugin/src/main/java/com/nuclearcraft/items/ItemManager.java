@@ -42,6 +42,48 @@ public class ItemManager {
     }
 
     private void registerCoreItems() {
+        // ── Phase 10: Titan items ─────────────────────────────────────────────
+
+        register(new CustomItem(plugin,
+                "titan-fragment",
+                "<gradient:#7700ff:#39ff14>Titan Fragment</gradient>",
+                List.of("A shard of the Plutonium Titan's reactor plating.",
+                        "<dark_purple>Used in high-tier crafting</dark_purple>",
+                        "<red>☢ Emits extreme radiation</red>"),
+                Material.AMETHYST_SHARD,
+                1108,
+                true));
+
+        register(new CustomItem(plugin,
+                "reactor-heart",
+                "<gradient:#ff0000:#7700ff>Reactor Heart</gradient>",
+                List.of("The beating core of the Titan's reactor.",
+                        "<dark_purple>Rare drop — immense energy within</dark_purple>",
+                        "<red>☢ CRITICAL radiation hazard</red>"),
+                Material.NETHER_STAR,
+                1109,
+                true));
+
+        register(new CustomItem(plugin,
+                "ancient-reactor-blueprint",
+                "<gradient:#ffaa00:#ffffff>Ancient Reactor Blueprint</gradient>",
+                List.of("Blueprints recovered from the Titan's body.",
+                        "<gold>Unlocks advanced reactor crafting</gold>",
+                        "<gray>☢ Future content — Phase 11</gray>"),
+                Material.PAPER,
+                1110,
+                false));
+
+        register(new CustomItem(plugin,
+                "mutated-crystal",
+                "<gradient:#00ffcc:#7700ff>Mutated Crystal</gradient>",
+                List.of("A crystallized mass of radioactive energy.",
+                        "<aqua>Grown inside the Titan's body</aqua>",
+                        "<yellow>☢ Radioactive — handle with care</yellow>"),
+                Material.AMETHYST_SHARD,
+                1111,
+                true));
+
         register(new CustomItem(plugin,
                 "radioactive-core",
                 "<gradient:#39ff14:#ffcc00>Radioactive Core</gradient>",

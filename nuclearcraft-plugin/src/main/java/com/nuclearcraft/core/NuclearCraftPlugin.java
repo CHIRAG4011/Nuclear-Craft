@@ -2,6 +2,7 @@ package com.nuclearcraft.core;
 
 import com.nuclearcraft.advancements.AdvancementManager;
 import com.nuclearcraft.blocks.BlockManager;
+import com.nuclearcraft.boss.TitanManager;
 import com.nuclearcraft.combat.CombatManager;
 import com.nuclearcraft.commands.NuclearCraftCommand;
 import com.nuclearcraft.config.ConfigManager;
@@ -98,6 +99,10 @@ public final class NuclearCraftPlugin extends JavaPlugin {
 
     // ── Phase 9 ──
     private CombatManager combatManager;
+
+    // ── Phase 10 ──
+    private TitanManager titanManager;
+
     private NuclearCraftCommand nuclearCraftCommandHandler;
 
     @Override
@@ -123,6 +128,9 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
+
+        // Phase 10 — shut down titan before combat
+        if (titanManager != null) titanManager.shutdown();
 
         // Phase 9 — shut down combat systems first
         if (combatManager != null) combatManager.shutdown();
@@ -313,6 +321,13 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 radiationAuraManager);
         combatManager.initialize();
 
+        // ── Phase 10 ──
+        titanManager = new TitanManager(
+                this, configManager, radiationManager, playerDataManager,
+                itemManager, advancementManager,
+                irradiatedZombieManager, zombieSpawnManager);
+        titanManager.initialize();
+
         NCLogger.debug("All managers initialized successfully.");
     }
 
@@ -366,6 +381,11 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 new com.nuclearcraft.listeners.CombatListener(this, combatManager, configManager),
                 this);
 
+        // Phase 10
+        pm.registerEvents(
+                new com.nuclearcraft.listeners.TitanListener(this, titanManager, itemManager),
+                this);
+
         NCLogger.debug("Event listeners registered.");
     }
 
@@ -379,6 +399,7 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 plutoniumOreManager, oreMiningManager, nuclearSmelterManager,
                 equipmentManager, farmingManager, nuclearForgeManager, upgradeManager);
         nuclearCraftCommandHandler.setCombatManager(combatManager);
+        nuclearCraftCommandHandler.setTitanManager(titanManager);
         cmd.setExecutor(nuclearCraftCommandHandler);
         cmd.setTabCompleter(nuclearCraftCommandHandler);
         NCLogger.debug("Commands registered.");
@@ -498,4 +519,7 @@ public final class NuclearCraftPlugin extends JavaPlugin {
 
     // Phase 9
     public CombatManager getCombatManager()                       { return combatManager; }
+
+    // Phase 10
+    public TitanManager getTitanManager()                         { return titanManager; }
 }

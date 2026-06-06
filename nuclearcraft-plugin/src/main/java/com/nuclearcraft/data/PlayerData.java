@@ -27,6 +27,9 @@ import java.util.UUID;
  *                    antidotesCrafted, serumsCrafted, radiationCuresUsed,
  *                    toxicBloomsGenerated.
  *
+ * Phase 10 additions: titanSummons, titanKills, titanDeaths, titanDamageDealt,
+ *                     titanDamageTaken, catastrophesSurvived, titanCoresObtained.
+ *
  * Thread-safety: volatile for primitive fields read across threads;
  * writes must be done on the main thread or with external synchronization.
  */
@@ -108,6 +111,16 @@ public class PlayerData {
 
     // Progression
     private volatile int bossKills;
+
+    // Titan statistics (Phase 10)
+    private volatile int titanSummons;
+    private volatile int titanKills;
+    private volatile int titanDeaths;
+    private volatile int titanDamageDealt;
+    private volatile int titanDamageTaken;
+    private volatile int catastrophesSurvived;
+    private volatile int titanCoresObtained;
+
     private final Set<String> unlockedUpgrades;
 
     private volatile boolean dirty;
@@ -173,6 +186,13 @@ public class PlayerData {
         this.radiationCuresUsed = 0;
         this.toxicBloomsGenerated = 0;
         this.bossKills = 0;
+        this.titanSummons = 0;
+        this.titanKills = 0;
+        this.titanDeaths = 0;
+        this.titanDamageDealt = 0;
+        this.titanDamageTaken = 0;
+        this.catastrophesSurvived = 0;
+        this.titanCoresObtained = 0;
         this.unlockedUpgrades = new HashSet<>();
         this.dirty = false;
     }
@@ -248,6 +268,13 @@ public class PlayerData {
         this.serumsCrafted = Math.max(0, serumsCrafted);
         this.radiationCuresUsed = Math.max(0, radiationCuresUsed);
         this.toxicBloomsGenerated = Math.max(0, toxicBloomsGenerated);
+        this.titanSummons = 0;
+        this.titanKills = 0;
+        this.titanDeaths = 0;
+        this.titanDamageDealt = 0;
+        this.titanDamageTaken = 0;
+        this.catastrophesSurvived = 0;
+        this.titanCoresObtained = 0;
         this.dirty = false;
     }
 
@@ -447,6 +474,45 @@ public class PlayerData {
 
     public int getBossKills() { return bossKills; }
     public void incrementBossKills() { this.bossKills++; this.dirty = true; }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Phase 10 titan statistics
+    // ──────────────────────────────────────────────────────────────────────────
+
+    public int getTitanSummons()                     { return titanSummons; }
+    public void incrementTitanSummons()              { this.titanSummons++; this.dirty = true; }
+
+    public int getTitanKills()                       { return titanKills; }
+    public void incrementTitanKills()                { this.titanKills++; this.dirty = true; incrementBossKills(); }
+
+    public int getTitanDeaths()                      { return titanDeaths; }
+    public void incrementTitanDeaths()               { this.titanDeaths++; this.dirty = true; }
+
+    public int getTitanDamageDealt()                 { return titanDamageDealt; }
+    public void incrementTitanDamageDealt(int amount){ this.titanDamageDealt += Math.max(0, amount); this.dirty = true; }
+
+    public int getTitanDamageTaken()                 { return titanDamageTaken; }
+    public void incrementTitanDamageTaken(int amount){ this.titanDamageTaken += Math.max(0, amount); this.dirty = true; }
+
+    public int getCatastrophesSurvived()             { return catastrophesSurvived; }
+    public void incrementCatastrophesSurvived()      { this.catastrophesSurvived++; this.dirty = true; }
+
+    public int getTitanCoresObtained()               { return titanCoresObtained; }
+    public void addTitanCoresObtained(int amount)    { this.titanCoresObtained += Math.max(0, amount); this.dirty = true; }
+
+    /** Bulk-setter used by DatabaseManager when loading Phase 10 stats. */
+    public void setTitanStats(int summons, int kills, int deaths,
+                              int damageDealt, int damageTaken,
+                              int catastrophes, int coresObtained) {
+        this.titanSummons        = Math.max(0, summons);
+        this.titanKills          = Math.max(0, kills);
+        this.titanDeaths         = Math.max(0, deaths);
+        this.titanDamageDealt    = Math.max(0, damageDealt);
+        this.titanDamageTaken    = Math.max(0, damageTaken);
+        this.catastrophesSurvived = Math.max(0, catastrophes);
+        this.titanCoresObtained  = Math.max(0, coresObtained);
+        this.dirty = false;
+    }
 
     // ──────────────────────────────────────────────────────────────────────────
     // Phase 8 forge statistics
