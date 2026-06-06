@@ -1,0 +1,715 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 5 - Nuclear Smelter, Plutonium Refining & Industrial Processing
+
+You are continuing development of NuclearCraft for PaperMC 1.21+ using Java 21.
+
+Completed Systems:
+
+### Phase 1
+
+* Core Framework
+* Data System
+* Config System
+* GUI Framework
+* Custom Item Framework
+* Custom Block Framework
+
+### Phase 2
+
+* Radiation System
+* Infection System
+* Contagion System
+
+### Phase 3
+
+* Irradiated Zombies
+* Alpha Irradiated Zombies
+* Radiation Clouds
+* Radiation Surge Events
+* Loot System
+
+### Phase 4
+
+* Plutonium Ore
+* Radiation Drill Pickaxe
+* Ore Radiation
+* Raw Plutonium Fragments
+* Lead Storage
+* Mining Progression
+
+Now implement the complete **Industrial Processing System**.
+
+This phase introduces the first true machine in NuclearCraft.
+
+Players can now process radioactive materials and begin producing advanced plutonium technology.
+
+This machine should feel like the first step toward industrialization.
+
+---
+
+# SYSTEM OVERVIEW
+
+Current Progression:
+
+Kill Irradiated Zombies
+
+↓
+
+Craft Radiation Drill
+
+↓
+
+Mine Plutonium Ore
+
+↓
+
+Collect Raw Plutonium Fragments
+
+↓
+
+Build Nuclear Smelter
+
+↓
+
+Refine Plutonium
+
+↓
+
+Craft Plutonium Equipment
+
+The Nuclear Smelter should feel like a major milestone similar to obtaining an Enchanting Table.
+
+---
+
+# NUCLEAR SMELTER
+
+Create:
+
+NuclearSmelterManager
+
+NuclearSmelterBlock
+
+NuclearSmelterGUI
+
+NuclearSmelterRecipeManager
+
+NuclearSmelterListener
+
+---
+
+# MACHINE PURPOSE
+
+Converts:
+
+Raw Plutonium Fragment
+
+↓
+
+Refined Plutonium Ingot
+
+Vanilla Furnaces must NOT be capable of processing plutonium.
+
+Blast Furnaces must NOT work.
+
+Smokers must NOT work.
+
+Only Nuclear Smelters may process radioactive materials.
+
+---
+
+# CRAFTING RECIPE
+
+Recipe Layout:
+
+Diamond | Obsidian | Diamond
+
+Obsidian | Furnace | Obsidian
+
+Diamond | Obsidian | Diamond
+
+Result:
+
+Nuclear Smelter
+
+---
+
+# MACHINE APPEARANCE
+
+Texture Design:
+
+Heavy industrial reactor.
+
+Dark steel casing.
+
+Green reactor viewport.
+
+Animated cooling vents.
+
+Warning labels.
+
+Radiation symbols.
+
+Glowing internal reactor core.
+
+Visual Goal:
+
+Looks dangerous.
+
+Looks expensive.
+
+Looks powerful.
+
+---
+
+# MACHINE PLACEMENT
+
+Behaves like a custom machine block.
+
+Must support:
+
+Placement
+
+Breaking
+
+Chunk unloading
+
+Chunk loading
+
+Persistence after restart
+
+Store machine data safely.
+
+Integrate with Custom Block Framework.
+
+---
+
+# MACHINE GUI
+
+Create custom GUI.
+
+Size:
+
+54 Slots
+
+Layout:
+
+Top Section:
+Input
+
+Middle Section:
+Processing
+
+Bottom Section:
+Output
+
+Fuel Area
+
+Progress Bar
+
+Temperature Display
+
+Radiation Meter
+
+Status Indicator
+
+---
+
+# GUI FEATURES
+
+Show:
+
+Current Recipe
+
+Fuel Remaining
+
+Smelting Progress
+
+Temperature
+
+Radiation Level
+
+Machine Status
+
+Use dynamic updating.
+
+Optimize updates.
+
+Avoid excessive inventory refreshes.
+
+---
+
+# FUEL SYSTEM
+
+The Nuclear Smelter requires more energy than a normal furnace.
+
+---
+
+# STANDARD PROCESSING
+
+Input:
+
+Raw Plutonium Fragment
+
+Fuel:
+
+2 Coal
+
+Output:
+
+Refined Plutonium Ingot
+
+Processing Time:
+
+15 Seconds
+
+Configurable.
+
+---
+
+# FUEL VALUES
+
+Coal:
+100
+
+Charcoal:
+80
+
+Coal Block:
+900
+
+Blaze Rod:
+120
+
+Lava Bucket:
+1000
+
+Configurable.
+
+Future fuels should be supported.
+
+---
+
+# TEMPERATURE SYSTEM
+
+Create:
+
+TemperatureManager
+
+Every active machine tracks:
+
+Current Temperature
+
+Maximum Temperature
+
+Heating Rate
+
+Cooling Rate
+
+---
+
+# HEATING
+
+Fuel increases temperature.
+
+Machine must reach:
+
+500°C
+
+Before processing begins.
+
+---
+
+# COOLING
+
+When inactive:
+
+Temperature slowly decreases.
+
+Display in GUI.
+
+---
+
+# OVERHEATING
+
+If machine exceeds:
+
+1500°C
+
+Enter Overheat State.
+
+Effects:
+
+Stop Processing
+
+Warning Sounds
+
+Smoke Particles
+
+Temporary Shutdown
+
+Configurable.
+
+---
+
+# RADIATION SYSTEM
+
+Nuclear Smelters emit radiation.
+
+Create:
+
+MachineRadiationManager
+
+---
+
+# PASSIVE RADIATION
+
+While active:
+
+Players within:
+
+3 Blocks
+
+Receive Radiation
+
+Source:
+
+NUCLEAR_SMELTER
+
+---
+
+# PROTECTION
+
+Hazmat Armor:
+
+80% Reduction
+
+Plutonium Armor:
+
+100% Reduction
+
+Must integrate with Radiation System.
+
+---
+
+# PROCESSING SYSTEM
+
+Create recipe framework.
+
+Future recipes will use same machine.
+
+---
+
+# INITIAL RECIPE
+
+Raw Plutonium Fragment
+
+↓
+
+Refined Plutonium Ingot
+
+---
+
+# FUTURE SUPPORT
+
+Support:
+
+Advanced Alloys
+
+Reactor Components
+
+Titan Components
+
+Nuclear Fuel
+
+Without redesigning architecture.
+
+---
+
+# REFINED PLUTONIUM INGOT
+
+Create Custom Item.
+
+Appearance:
+
+Refined Metallic Bar
+
+Bright Green Energy Core
+
+Subtle Glow
+
+High-Tech Appearance
+
+---
+
+# ITEM PROPERTIES
+
+Stack Size:
+
+64
+
+Radiation:
+
+Minimal
+
+Safer than Raw Fragment.
+
+Still slightly radioactive.
+
+---
+
+# INGOT STORAGE
+
+Players may store ingots.
+
+Radiation leakage:
+
+Very low.
+
+Configurable.
+
+Lead Storage fully blocks radiation.
+
+---
+
+# MACHINE UPGRADES
+
+Design framework now.
+
+Do NOT implement upgrade items yet.
+
+Future support:
+
+Speed Upgrade
+
+Efficiency Upgrade
+
+Cooling Upgrade
+
+Containment Upgrade
+
+Energy Upgrade
+
+Architecture must support these later.
+
+---
+
+# MACHINE STATES
+
+Create state system.
+
+States:
+
+OFFLINE
+
+HEATING
+
+ACTIVE
+
+COOLING
+
+OVERHEATED
+
+ERROR
+
+GUI updates accordingly.
+
+---
+
+# MACHINE PARTICLES
+
+ACTIVE:
+
+Steam
+
+Green Energy Particles
+
+Heat Distortion
+
+---
+
+OVERHEATED:
+
+Heavy Smoke
+
+Sparks
+
+Warning Effects
+
+---
+
+# MACHINE SOUNDS
+
+Heating
+
+Processing
+
+Completion
+
+Overheat Warning
+
+Cooling
+
+Configurable.
+
+---
+
+# COMPLETION EVENTS
+
+Create:
+
+NuclearSmelterStartEvent
+
+NuclearSmelterCompleteEvent
+
+NuclearSmelterOverheatEvent
+
+Future systems will hook into these.
+
+---
+
+# ADVANCEMENTS
+
+Create:
+
+Industrial Age
+
+Craft Nuclear Smelter
+
+---
+
+First Refinement
+
+Create First Plutonium Ingot
+
+---
+
+Master Refiner
+
+Process 100 Ingots
+
+---
+
+# STATISTICS
+
+Track:
+
+Machines Built
+
+Fragments Processed
+
+Ingots Produced
+
+Fuel Consumed
+
+Overheats Triggered
+
+Machine Runtime
+
+Store permanently.
+
+---
+
+# COMMANDS
+
+Admin:
+
+/nuclearcraft smelter give
+
+Give Nuclear Smelter
+
+---
+
+/nuclearcraft smelter stats
+
+Display Statistics
+
+---
+
+/nuclearcraft smelter debug
+
+Show Machine Data
+
+Permissions:
+
+nuclearcraft.admin.smelter
+
+---
+
+# CONFIGURATION
+
+Create:
+
+smelter.yml
+
+Include:
+
+Fuel Values
+
+Temperature Values
+
+Processing Times
+
+Radiation Values
+
+Overheat Values
+
+Sound Settings
+
+Particle Settings
+
+Machine Limits
+
+Everything configurable.
+
+---
+
+# PERFORMANCE REQUIREMENTS
+
+Must support:
+
+100+ Players
+
+Hundreds of Active Machines
+
+Large SMP Servers
+
+Avoid:
+
+Constant inventory recreation
+
+Heavy ticking
+
+Chunk memory leaks
+
+Unsafe async operations
+
+Store machine data efficiently.
+
+---
+
+# DELIVERABLES
+
+Generate complete production-ready code for:
+
+* NuclearSmelterManager
+* NuclearSmelterBlock
+* NuclearSmelterGUI
+* NuclearSmelterRecipeManager
+* MachineRadiationManager
+* TemperatureManager
+* Machine States
+* Events
+* Commands
+* Statistics Tracking
+* Config Integration
+
+All code must compile successfully and integrate perfectly with:
+
+* Radiation System
+* Ore System
+* Custom Block Framework
+* GUI Framework
+* Player Data System
+
+After completion, the project should be fully ready for Phase 6: Plutonium Tools, Weapons, Armor & Combat Systems.

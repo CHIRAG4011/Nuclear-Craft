@@ -1,0 +1,74 @@
+# NuclearCraft Radioactive Farming Configuration
+
+radioactive-farming:
+  enabled: true
+
+  farmland:
+    enabled: true
+    creation:
+      item: refined-plutonium-ingot
+      click-action: RIGHT_CLICK
+    radiation:
+      passive-exposure: 1.0
+      exposure-interval-ticks: 40
+    particles:
+      enabled: true
+      type: VILLAGER_HAPPY
+      color: "57,255,20"
+      interval-ticks: 20
+
+  crop-boosts:
+    enabled: true
+    growth-multiplier: 3.0
+    yield-multiplier: 2.0
+    mutation-chance: 0.10
+
+  mutated-crops:
+    mutated-wheat:
+      base-crop: WHEAT
+      drops:
+        - item: mutated-seed
+          chance: 0.25
+          min: 1
+          max: 2
+        - item: WHEAT
+          chance: 1.0
+          min: 2
+          max: 4
+      radiation-on-harvest: 3.0
+    mutated-carrots:
+      base-crop: CARROTS
+      drops:
+        - item: healing-petal
+          chance: 0.15
+          min: 1
+          max: 1
+        - item: CARROT
+          chance: 1.0
+          min: 2
+          max: 5
+      radiation-on-harvest: 2.0
+    mutated-potatoes:
+      base-crop: POTATOES
+      drops:
+        - item: POTATO
+          chance: 1.0
+          min: 3
+          max: 6
+        - item: POISONOUS_POTATO
+          chance: 0.30
+          min: 1
+          max: 2
+      radiation-on-harvest: 2.5
+
+  seeds:
+    mutated-seed:
+      plant-on: radioactive-farmland
+      grows-into: mutated-wheat
+      radiation-to-grow: 50.0
+
+  healing-petal:
+    consume-effect: REGENERATION
+    consume-amplifier: 1
+    consume-duration: 100
+    radiation-reduction: 25.0

@@ -11,6 +11,8 @@ import com.nuclearcraft.ore.PlutoniumOreManager;
 import com.nuclearcraft.ore.OreGenerationManager;
 import com.nuclearcraft.radiation.RadiationManager;
 import com.nuclearcraft.radiation.RadiationSource;
+import com.nuclearcraft.smelter.NuclearSmelterManager;
+import com.nuclearcraft.smelter.SmelterData;
 import com.nuclearcraft.utils.ColorUtil;
 import com.nuclearcraft.utils.NCLogger;
 import com.nuclearcraft.zombies.*;
@@ -34,11 +36,15 @@ import java.util.stream.Collectors;
  *          ore give fragment [amount]
  *          ore stats
  *          Permission: nuclearcraft.admin.ore
+ * Phase 5: smelter give [player]
+ *          smelter stats
+ *          smelter debug
+ *          Permission: nuclearcraft.admin.smelter
  */
 public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> TOP_SUBCOMMANDS =
-            List.of("help", "reload", "info", "debug", "give", "version", "radiation", "zombie", "ore");
+            List.of("help", "reload", "info", "debug", "give", "version", "radiation", "zombie", "ore", "smelter");
     private static final List<String> RADIATION_SUBCOMMANDS =
             List.of("check", "add", "remove", "set", "clear");
     private static final List<String> ZOMBIE_SUBCOMMANDS =
@@ -53,6 +59,8 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             List.of("plutonium");
     private static final List<String> ORE_GIVE_TYPES =
             List.of("fragment", "drill");
+    private static final List<String> SMELTER_SUBCOMMANDS =
+            List.of("give", "stats", "debug");
 
     private final NuclearCraftPlugin plugin;
     private final ConfigManager configManager;
@@ -66,6 +74,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     private final AdvancementManager advancementManager;
     private final PlutoniumOreManager plutoniumOreManager;
     private final OreMiningManager oreMiningManager;
+    private final NuclearSmelterManager nuclearSmelterManager;
 
     public NuclearCraftCommand(NuclearCraftPlugin plugin, ConfigManager configManager,
                                 PlayerDataManager playerDataManager, ItemManager itemManager,
@@ -76,7 +85,8 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                                 RadiationNightManager radiationNightManager,
                                 AdvancementManager advancementManager,
                                 PlutoniumOreManager plutoniumOreManager,
-                                OreMiningManager oreMiningManager) {
+                                OreMiningManager oreMiningManager,
+                                NuclearSmelterManager nuclearSmelterManager) {
         this.plugin = plugin;
         this.configManager = configManager;
         this.playerDataManager = playerDataManager;
@@ -89,6 +99,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         this.advancementManager = advancementManager;
         this.plutoniumOreManager = plutoniumOreManager;
         this.oreMiningManager = oreMiningManager;
+        this.nuclearSmelterManager = nuclearSmelterManager;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -109,6 +120,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             case "radiation" -> { handleRadiation(sender, args);   yield true; }
             case "zombie"    -> { handleZombie(sender, args);      yield true; }
             case "ore"       -> { handleOre(sender, args);         yield true; }
+            case "smelter"   -> { handleSmelter(sender, args);     yield true; }
             default -> {
                 sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.unknown-command")));
                 yield true;
@@ -146,10 +158,15 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             entries.put("nuclearcraft zombie surge start|stop", "Force-start or stop a Radiation Surge");
         }
         if (sender.hasPermission("nuclearcraft.admin.ore")) {
-            entries.put("nuclearcraft ore spawn plutonium",  "Spawn a Plutonium Ore block at your location");
+            entries.put("nuclearcraft ore spawn plutonium",   "Spawn a Plutonium Ore block at your location");
             entries.put("nuclearcraft ore give fragment [n]", "Give Raw Plutonium Fragments");
-            entries.put("nuclearcraft ore give drill",       "Give a Radiation Drill");
-            entries.put("nuclearcraft ore stats",            "Show ore system statistics");
+            entries.put("nuclearcraft ore give drill",        "Give a Radiation Drill");
+            entries.put("nuclearcraft ore stats",             "Show ore system statistics");
+        }
+        if (sender.hasPermission("nuclearcraft.admin.smelter")) {
+            entries.put("nuclearcraft smelter give [player]", "Give a Nuclear Smelter to self or target");
+            entries.put("nuclearcraft smelter stats",         "Show smelter system statistics");
+            entries.put("nuclearcraft smelter debug",         "List all active machines and their state");
         }
         entries.forEach((cmd, desc) ->
                 sender.sendMessage(ColorUtil.parse(
@@ -177,6 +194,9 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(ColorUtil.parse(
                 " <gray>Tracked Plutonium Ore:</gray> <white>"
                         + plutoniumOreManager.getTrackedCount() + "</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Active Smelters:</gray> <white>"
+                        + nuclearSmelterManager.getMachineCount() + "</white>"));
     }
 
     private void handleReload(CommandSender sender) {
@@ -288,7 +308,6 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         String[] stageColors = {"<green>", "<yellow>", "<gold>", "<red>", "<dark_red>"};
         String[] stageNames  = {"Healthy", "Minor Exposure", "Moderate Exposure", "Severe Exposure", "Critical Poisoning"};
         String stageColor = stageColors[Math.min(stage, 4)];
-        String stageName  = stageNames[Math.min(stage, 4)];
         boolean contagious = radiationManager.isContagious(target);
         long immunityLeft = Math.max(0, data.getImmunityTimerEndMs() - System.currentTimeMillis()) / 1000;
 
@@ -297,7 +316,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(ColorUtil.parse(
                 " <gray>Radiation:</gray> <white>" + (int) data.getRadiationLevel() + " / 1000</white>"));
         sender.sendMessage(ColorUtil.parse(
-                " <gray>Stage:</gray> " + stageColor + stage + " — " + stageName + "</" + stageColor.substring(1)));
+                " <gray>Stage:</gray> " + stageColor + stage + " — " + stageNames[Math.min(stage, 4)] + "</>")); 
         sender.sendMessage(ColorUtil.parse(
                 " <gray>Contagious:</gray> " + (contagious ? "<red>YES</red>" : "<green>NO</green>")));
         sender.sendMessage(ColorUtil.parse(
@@ -308,10 +327,14 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                 " <gray>Zombies Killed:</gray> <white>" + data.getIrradiatedZombiesKilled()
                 + " (" + data.getAlphaZombiesKilled() + " Alpha)</white>"));
         sender.sendMessage(ColorUtil.parse(
-                " <gray>Plutonium Ore Mined:</gray> <white>" + data.getPlutoniumOreMined()
+                " <gray>Ore Mined:</gray> <white>" + data.getPlutoniumOreMined()
                 + " (Found: " + data.getPlutoniumOreFound() + ")</white>"));
         sender.sendMessage(ColorUtil.parse(
                 " <gray>Fragments Collected:</gray> <white>" + data.getFragmentsCollected() + "</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Ingots Produced:</gray> <white>" + data.getIngotsProduced() + "</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Machines Built:</gray> <white>" + data.getMachinesBuilt() + "</white>"));
     }
 
     private void handleRadiationAdd(CommandSender sender, String[] args) {
@@ -395,8 +418,8 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             default      -> ZombieLevel.LEVEL_1;
         };
         IrradiatedZombie iz = zombieSpawnManager.spawnAt(player.getLocation().add(2, 0, 0), level);
-        String name = iz.getZombieLevel().getDisplayName();
-        sender.sendMessage(ColorUtil.parse("<green>Spawned <yellow>" + name + " [L" + level.getLevel() + "]</yellow> near you.</green>"));
+        sender.sendMessage(ColorUtil.parse("<green>Spawned <yellow>" + iz.getZombieLevel().getDisplayName()
+                + " [L" + level.getLevel() + "]</yellow> near you.</green>"));
     }
 
     private void handleZombieStats(CommandSender sender) {
@@ -467,16 +490,13 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         }
         var block = player.getTargetBlockExact(5);
         var spawnLoc = (block != null) ? block.getLocation() : player.getLocation();
-
         spawnLoc.getBlock().setType(OreGenerationManager.ORE_MATERIAL);
         plutoniumOreManager.registerOre(spawnLoc);
-
         sender.sendMessage(ColorUtil.parse(
                 "<green>☢ Plutonium Ore spawned at <white>"
                         + spawnLoc.getBlockX() + ", "
                         + spawnLoc.getBlockY() + ", "
                         + spawnLoc.getBlockZ() + "</white>.</green>"));
-        NCLogger.info("Admin " + sender.getName() + " spawned Plutonium Ore at " + spawnLoc.toVector());
     }
 
     private void handleOreGive(CommandSender sender, String[] args) {
@@ -489,7 +509,6 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(ColorUtil.parse("<red>Console cannot use ore give. Use /nc give instead.</red>"));
             return;
         }
-
         String itemId = switch (args[2].toLowerCase()) {
             case "fragment" -> "raw-plutonium-fragment";
             case "drill"    -> "radiation-drill";
@@ -499,17 +518,16 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(ColorUtil.parse("<red>Unknown item. Try: fragment, drill</red>"));
             return;
         }
-
         int amount = 1;
         if (args.length >= 4) {
             try { amount = Math.max(1, Math.min(64, Integer.parseInt(args[3]))); }
             catch (NumberFormatException ignored) {}
         }
-
+        final int finalAmount = amount;
         itemManager.getItem(itemId).ifPresentOrElse(item -> {
-            target.getInventory().addItem(item.build(amount));
+            target.getInventory().addItem(item.build(finalAmount));
             sender.sendMessage(ColorUtil.parse(
-                    "<green>Given <yellow>" + amount + "x " + args[2] + "</yellow> to <aqua>"
+                    "<green>Given <yellow>" + finalAmount + "x " + args[2] + "</yellow> to <aqua>"
                             + target.getName() + "</aqua>.</green>"));
         }, () -> sender.sendMessage(ColorUtil.parse("<red>Item '" + itemId + "' not found in registry.</red>")));
     }
@@ -519,7 +537,6 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(ColorUtil.parse(
                 " <gray>Tracked Ore Blocks:</gray> <white>" + plutoniumOreManager.getTrackedCount() + "</white>"));
 
-        // Aggregate stats across all loaded players
         int totalFound = 0, totalMined = 0, totalFragments = 0, totalBursts = 0, totalDrillUses = 0, totalUnsafe = 0;
         for (var player : plugin.getServer().getOnlinePlayers()) {
             var dataOpt = playerDataManager.get(player.getUniqueId());
@@ -532,19 +549,123 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             totalDrillUses += data.getDrillUses();
             totalUnsafe    += data.getUnsafeMiningAttempts();
         }
+        sender.sendMessage(ColorUtil.parse(" <gray>Ore Found (online):</gray> <white>" + totalFound + "</white>"));
+        sender.sendMessage(ColorUtil.parse(" <gray>Ore Mined (online):</gray> <white>" + totalMined + "</white>"));
+        sender.sendMessage(ColorUtil.parse(" <gray>Fragments Collected:</gray> <white>" + totalFragments + "</white>"));
+        sender.sendMessage(ColorUtil.parse(" <gray>Radiation Bursts:</gray> <red>" + totalBursts + "</red>"));
+        sender.sendMessage(ColorUtil.parse(" <gray>Drill Uses:</gray> <white>" + totalDrillUses + "</white>"));
+        sender.sendMessage(ColorUtil.parse(" <gray>Unsafe Mining Attempts:</gray> <red>" + totalUnsafe + "</red>"));
+    }
 
+    // ──────────────────────────────────────────────────────────────────────────
+    // Phase 5: /nc smelter ...
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private void handleSmelter(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("nuclearcraft.admin.smelter")) {
+            sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.no-permission")));
+            return;
+        }
+        if (args.length < 2) {
+            sender.sendMessage(ColorUtil.parse("<red>Usage: /nc smelter <give|stats|debug> [args...]</red>"));
+            return;
+        }
+        switch (args[1].toLowerCase()) {
+            case "give"  -> handleSmelterGive(sender, args);
+            case "stats" -> handleSmelterStats(sender);
+            case "debug" -> handleSmelterDebug(sender);
+            default -> sender.sendMessage(ColorUtil.parse(
+                    "<red>Unknown smelter subcommand. Try: give, stats, debug</red>"));
+        }
+    }
+
+    private void handleSmelterGive(CommandSender sender, String[] args) {
+        Player target;
+        if (args.length >= 3) {
+            target = plugin.getServer().getPlayer(args[2]);
+            if (target == null) {
+                sender.sendMessage(ColorUtil.parse(
+                        configManager.getMessage("general.player-not-found").replace("{player}", args[2])));
+                return;
+            }
+        } else if (sender instanceof Player p) {
+            target = p;
+        } else {
+            sender.sendMessage(ColorUtil.parse("<red>Console must specify a player: /nc smelter give <player></red>"));
+            return;
+        }
+
+        itemManager.getItem("nuclear-smelter").ifPresentOrElse(item -> {
+            target.getInventory().addItem(item.build());
+            sender.sendMessage(ColorUtil.parse(
+                    "<green>Given <gradient:#39ff14:#00bfff>Nuclear Smelter</gradient> to <aqua>"
+                            + target.getName() + "</aqua>.</green>"));
+        }, () -> sender.sendMessage(ColorUtil.parse(
+                "<red>Nuclear Smelter item not found in registry — check ItemManager.</red>")));
+    }
+
+    private void handleSmelterStats(CommandSender sender) {
         sender.sendMessage(ColorUtil.parse(
-                " <gray>Ore Found (online players):</gray> <white>" + totalFound + "</white>"));
+                "<dark_gray>── <gradient:#39ff14:#00bfff>Nuclear Smelter System Stats</gradient> ──</dark_gray>"));
         sender.sendMessage(ColorUtil.parse(
-                " <gray>Ore Mined (online players):</gray> <white>" + totalMined + "</white>"));
+                " <gray>Active Machines:</gray> <white>" + nuclearSmelterManager.getMachineCount() + "</white>"));
+
+        int totalMachinesBuilt = 0, totalFragProcessed = 0, totalIngots = 0, totalOverheats = 0;
+        for (var player : plugin.getServer().getOnlinePlayers()) {
+            var dataOpt = playerDataManager.get(player.getUniqueId());
+            if (dataOpt.isEmpty()) continue;
+            var data = dataOpt.get();
+            totalMachinesBuilt += data.getMachinesBuilt();
+            totalFragProcessed += data.getFragmentsProcessed();
+            totalIngots        += data.getIngotsProduced();
+            totalOverheats     += data.getOverheatsTriggered();
+        }
         sender.sendMessage(ColorUtil.parse(
-                " <gray>Fragments Collected:</gray> <white>" + totalFragments + "</white>"));
+                " <gray>Machines Built (online):</gray> <white>" + totalMachinesBuilt + "</white>"));
         sender.sendMessage(ColorUtil.parse(
-                " <gray>Radiation Bursts Triggered:</gray> <red>" + totalBursts + "</red>"));
+                " <gray>Fragments Processed (online):</gray> <white>" + totalFragProcessed + "</white>"));
         sender.sendMessage(ColorUtil.parse(
-                " <gray>Drill Uses:</gray> <white>" + totalDrillUses + "</white>"));
+                " <gray>Ingots Produced (online):</gray> <aqua>" + totalIngots + "</aqua>"));
         sender.sendMessage(ColorUtil.parse(
-                " <gray>Unsafe Mining Attempts:</gray> <red>" + totalUnsafe + "</red>"));
+                " <gray>Overheats Triggered (online):</gray> <red>" + totalOverheats + "</red>"));
+
+        // Live machine states summary
+        int offline = 0, heating = 0, active = 0, cooling = 0, overheated = 0;
+        for (SmelterData machine : nuclearSmelterManager.getAllMachines()) {
+            switch (machine.getState()) {
+                case OFFLINE    -> offline++;
+                case HEATING    -> heating++;
+                case ACTIVE     -> active++;
+                case COOLING    -> cooling++;
+                case OVERHEATED -> overheated++;
+                default -> {}
+            }
+        }
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Machine States —</gray>"
+                + " <green>Active: " + active + "</green>"
+                + " <gold>Heating: " + heating + "</gold>"
+                + " <aqua>Cooling: " + cooling + "</aqua>"
+                + " <gray>Offline: " + offline + "</gray>"
+                + " <red>Overheat: " + overheated + "</red>"));
+    }
+
+    private void handleSmelterDebug(CommandSender sender) {
+        sender.sendMessage(ColorUtil.parse(
+                "<dark_gray>── <gradient:#39ff14:#00bfff>Smelter Debug — " 
+                + nuclearSmelterManager.getMachineCount() + " machine(s)</gradient> ──</dark_gray>"));
+        if (nuclearSmelterManager.getMachineCount() == 0) {
+            sender.sendMessage(ColorUtil.parse(" <gray>No active machines.</gray>"));
+            return;
+        }
+        for (SmelterData machine : nuclearSmelterManager.getAllMachines()) {
+            sender.sendMessage(ColorUtil.parse(
+                    " <dark_gray>[</dark_gray><white>" + machine.getLocationKey() + "</white><dark_gray>]</dark_gray>"
+                    + " <" + machine.getState().getColor() + ">" + machine.getState().getDisplayName() + "</>"
+                    + " <gray>T:" + String.format("%.0f", machine.getTemperature()) + "°C"
+                    + " F:" + machine.getFuelRemaining()
+                    + " P:" + String.format("%.0f%%", machine.getProgressFraction() * 100) + "</gray>"));
+        }
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -569,6 +690,9 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             if ("ore".equalsIgnoreCase(args[0]) && sender.hasPermission("nuclearcraft.admin.ore")) {
                 return filter(ORE_SUBCOMMANDS, args[1]);
             }
+            if ("smelter".equalsIgnoreCase(args[0]) && sender.hasPermission("nuclearcraft.admin.smelter")) {
+                return filter(SMELTER_SUBCOMMANDS, args[1]);
+            }
         }
 
         if (args.length == 3) {
@@ -581,6 +705,12 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                 if ("give".equalsIgnoreCase(args[1]))  return filter(ORE_GIVE_TYPES, args[2]);
             }
             if ("give".equalsIgnoreCase(args[0]) && sender.hasPermission("nuclearcraft.give")) {
+                return plugin.getServer().getOnlinePlayers().stream()
+                        .map(Player::getName).filter(n -> n.startsWith(args[2]))
+                        .collect(Collectors.toList());
+            }
+            if ("smelter".equalsIgnoreCase(args[0]) && "give".equalsIgnoreCase(args[1])
+                    && sender.hasPermission("nuclearcraft.admin.smelter")) {
                 return plugin.getServer().getOnlinePlayers().stream()
                         .map(Player::getName).filter(n -> n.startsWith(args[2]))
                         .collect(Collectors.toList());

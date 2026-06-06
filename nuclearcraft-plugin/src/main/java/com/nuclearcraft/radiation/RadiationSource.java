@@ -36,6 +36,9 @@ public enum RadiationSource {
     /** Radiation from a Plutonium Titan boss attack. */
     BOSS_ATTACK("Boss Attack"),
 
+    /** Radiation emitted by an active Nuclear Smelter machine. */
+    NUCLEAR_SMELTER("Nuclear Smelter"),
+
     /** Radiation applied directly via admin command. */
     COMMAND("Command"),
 

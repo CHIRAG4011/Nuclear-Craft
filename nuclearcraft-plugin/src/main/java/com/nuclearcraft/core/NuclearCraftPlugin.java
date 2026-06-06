@@ -14,6 +14,9 @@ import com.nuclearcraft.radiation.ContagionManager;
 import com.nuclearcraft.radiation.RadiationManager;
 import com.nuclearcraft.radiation.RadiationVisualManager;
 import com.nuclearcraft.recipes.RecipeManager;
+import com.nuclearcraft.smelter.MachineRadiationManager;
+import com.nuclearcraft.smelter.NuclearSmelterManager;
+import com.nuclearcraft.smelter.NuclearSmelterRecipeManager;
 import com.nuclearcraft.tasks.TaskManager;
 import com.nuclearcraft.utils.NCLogger;
 import com.nuclearcraft.zombies.*;
@@ -33,6 +36,8 @@ import java.util.Objects;
  * Phase 4 additions: PlutoniumOreManager, OreGenerationManager, OreMiningManager,
  *                    OreRadiationManager, RadiationDrillManager,
  *                    OreListener, RadiationExposureListener.
+ * Phase 5 additions: NuclearSmelterManager, NuclearSmelterRecipeManager,
+ *                    MachineRadiationManager, SmelterListener.
  */
 public final class NuclearCraftPlugin extends JavaPlugin {
 
@@ -71,6 +76,12 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     private OreListener oreListener;
     private RadiationExposureListener radiationExposureListener;
 
+    // ── Phase 5 ──
+    private NuclearSmelterRecipeManager smelterRecipeManager;
+    private NuclearSmelterManager nuclearSmelterManager;
+    private MachineRadiationManager machineRadiationManager;
+    private SmelterListener smelterListener;
+
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
@@ -95,13 +106,18 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
 
-        // Phase 4 — shut down first (ore radiation task, exposure task, save ore locations)
+        // Phase 5 — shut down first
+        if (machineRadiationManager != null) machineRadiationManager.shutdown();
+        if (nuclearSmelterManager  != null)  nuclearSmelterManager.shutdown();  // saves smelter_data.yml
+        if (smelterRecipeManager   != null)  smelterRecipeManager.shutdown();
+
+        // Phase 4
         if (radiationExposureListener != null) radiationExposureListener.shutdown();
         if (oreRadiationManager != null)       oreRadiationManager.shutdown();
         if (oreMiningManager != null)          oreMiningManager.shutdown();
         if (radiationDrillManager != null)     radiationDrillManager.shutdown();
         if (oreGenerationManager != null)      oreGenerationManager.shutdown();
-        if (plutoniumOreManager != null)       plutoniumOreManager.shutdown(); // saves ore_data.yml
+        if (plutoniumOreManager != null)       plutoniumOreManager.shutdown();
 
         // Phase 3
         if (radiationNightManager != null)     radiationNightManager.shutdown();
@@ -215,6 +231,19 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 this, configManager, radiationManager, plutoniumOreManager);
         oreRadiationManager.initialize();
 
+        // ── Phase 5 ──
+        smelterRecipeManager = new NuclearSmelterRecipeManager(configManager);
+        smelterRecipeManager.initialize();
+
+        nuclearSmelterManager = new NuclearSmelterManager(
+                this, configManager, itemManager, playerDataManager,
+                advancementManager, smelterRecipeManager);
+        nuclearSmelterManager.initialize();
+
+        machineRadiationManager = new MachineRadiationManager(
+                this, configManager, radiationManager, nuclearSmelterManager);
+        machineRadiationManager.initialize();
+
         NCLogger.debug("All managers initialized successfully.");
     }
 
@@ -242,6 +271,12 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 this, configManager, radiationManager, itemManager, oreMiningManager);
         radiationExposureListener.initialize();
 
+        // Phase 5
+        smelterListener = new SmelterListener(
+                this, configManager, itemManager, playerDataManager,
+                advancementManager, nuclearSmelterManager);
+        pm.registerEvents(smelterListener, this);
+
         NCLogger.debug("Event listeners registered.");
     }
 
@@ -252,13 +287,17 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 this, configManager, playerDataManager, itemManager,
                 radiationManager, irradiatedZombieManager, zombieSpawnManager,
                 radiationCloudManager, radiationNightManager, advancementManager,
-                plutoniumOreManager, oreMiningManager);
+                plutoniumOreManager, oreMiningManager, nuclearSmelterManager);
         cmd.setExecutor(handler);
         cmd.setTabCompleter(handler);
         NCLogger.debug("Commands registered.");
     }
 
     public void reload() throws Exception {
+        // Shutdown Phase 5 tasks
+        if (machineRadiationManager != null) machineRadiationManager.shutdown();
+        if (nuclearSmelterManager   != null) nuclearSmelterManager.shutdown();
+
         // Shutdown Phase 4 tasks
         if (radiationExposureListener != null) radiationExposureListener.shutdown();
         if (oreRadiationManager != null)       oreRadiationManager.shutdown();
@@ -290,10 +329,15 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         radiationCloudManager.initialize();
         radiationNightManager.initialize();
 
-        // Restart Phase 4 tasks (drill recipe re-registered by RadiationDrillManager)
+        // Restart Phase 4 tasks
         radiationDrillManager.initialize();
         oreRadiationManager.initialize();
         radiationExposureListener.initialize();
+
+        // Restart Phase 5 tasks
+        smelterRecipeManager.reload();
+        nuclearSmelterManager.initialize();
+        machineRadiationManager.initialize();
 
         NCLogger.info("NuclearCraft reloaded successfully.");
     }
@@ -327,4 +371,8 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public RadiationDrillManager getRadiationDrillManager()       { return radiationDrillManager; }
     public OreListener getOreListener()                           { return oreListener; }
     public RadiationExposureListener getRadiationExposureListener() { return radiationExposureListener; }
+    public NuclearSmelterRecipeManager getSmelterRecipeManager()  { return smelterRecipeManager; }
+    public NuclearSmelterManager getNuclearSmelterManager()       { return nuclearSmelterManager; }
+    public MachineRadiationManager getMachineRadiationManager()   { return machineRadiationManager; }
+    public SmelterListener getSmelterListener()                   { return smelterListener; }
 }

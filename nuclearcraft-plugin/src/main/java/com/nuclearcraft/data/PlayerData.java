@@ -54,6 +54,13 @@ public class PlayerData {
     private volatile int drillUses;
     private volatile int unsafeMiningAttempts;
 
+    // Smelter statistics (Phase 5)
+    private volatile int machinesBuilt;
+    private volatile int fragmentsProcessed;
+    private volatile int ingotsProduced;
+    private volatile int fuelConsumed;
+    private volatile int overheatsTriggered;
+
     // Progression
     private volatile int bossKills;
     private final Set<String> unlockedUpgrades;
@@ -88,6 +95,11 @@ public class PlayerData {
         this.radiationBurstsTriggered = 0;
         this.drillUses = 0;
         this.unsafeMiningAttempts = 0;
+        this.machinesBuilt = 0;
+        this.fragmentsProcessed = 0;
+        this.ingotsProduced = 0;
+        this.fuelConsumed = 0;
+        this.overheatsTriggered = 0;
         this.bossKills = 0;
         this.unlockedUpgrades = new HashSet<>();
         this.dirty = false;
@@ -108,6 +120,8 @@ public class PlayerData {
                       int plutoniumOreFound, int plutoniumOreMined,
                       int fragmentsCollected, int radiationBurstsTriggered,
                       int drillUses, int unsafeMiningAttempts,
+                      int machinesBuilt, int fragmentsProcessed,
+                      int ingotsProduced, int fuelConsumed, int overheatsTriggered,
                       int bossKills,
                       Set<String> unlockedUpgrades) {
         this.uuid = uuid;
@@ -133,6 +147,11 @@ public class PlayerData {
         this.radiationBurstsTriggered = Math.max(0, radiationBurstsTriggered);
         this.drillUses = Math.max(0, drillUses);
         this.unsafeMiningAttempts = Math.max(0, unsafeMiningAttempts);
+        this.machinesBuilt = Math.max(0, machinesBuilt);
+        this.fragmentsProcessed = Math.max(0, fragmentsProcessed);
+        this.ingotsProduced = Math.max(0, ingotsProduced);
+        this.fuelConsumed = Math.max(0, fuelConsumed);
+        this.overheatsTriggered = Math.max(0, overheatsTriggered);
         this.bossKills = bossKills;
         this.unlockedUpgrades = new HashSet<>(unlockedUpgrades);
         this.dirty = false;
@@ -336,6 +355,30 @@ public class PlayerData {
         this.unsafeMiningAttempts = Math.max(0, count);
         this.dirty = true;
     }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Phase 5 smelter statistics
+    // ──────────────────────────────────────────────────────────────────────────
+
+    public int getMachinesBuilt() { return machinesBuilt; }
+    public void incrementMachinesBuilt() { this.machinesBuilt++; this.dirty = true; }
+    public void setMachinesBuilt(int count) { this.machinesBuilt = Math.max(0, count); this.dirty = true; }
+
+    public int getFragmentsProcessed() { return fragmentsProcessed; }
+    public void incrementFragmentsProcessed() { this.fragmentsProcessed++; this.dirty = true; }
+    public void setFragmentsProcessed(int count) { this.fragmentsProcessed = Math.max(0, count); this.dirty = true; }
+
+    public int getIngotsProduced() { return ingotsProduced; }
+    public void incrementIngotsProduced() { this.ingotsProduced++; this.dirty = true; }
+    public void setIngotsProduced(int count) { this.ingotsProduced = Math.max(0, count); this.dirty = true; }
+
+    public int getFuelConsumed() { return fuelConsumed; }
+    public void addFuelConsumed(int amount) { this.fuelConsumed += Math.max(0, amount); this.dirty = true; }
+    public void setFuelConsumed(int count) { this.fuelConsumed = Math.max(0, count); this.dirty = true; }
+
+    public int getOverheatsTriggered() { return overheatsTriggered; }
+    public void incrementOverheatsTriggered() { this.overheatsTriggered++; this.dirty = true; }
+    public void setOverheatsTriggered(int count) { this.overheatsTriggered = Math.max(0, count); this.dirty = true; }
 
     // ──────────────────────────────────────────────────────────────────────────
     // Progression

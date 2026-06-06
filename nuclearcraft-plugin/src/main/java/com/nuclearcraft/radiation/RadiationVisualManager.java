@@ -133,10 +133,10 @@ public class RadiationVisualManager {
         if (!RandomUtil.chance(chances[Math.min(stage, 4)])) return;
 
         float pitch = switch (stage) {
-            case 1 -> 0.5f + RandomUtil.nextDouble(0, 0.2).floatValue();
-            case 2 -> 0.8f + RandomUtil.nextDouble(0, 0.2).floatValue();
-            case 3 -> 1.1f + RandomUtil.nextDouble(0, 0.2).floatValue();
-            case 4 -> 1.5f + RandomUtil.nextDouble(0, 0.3).floatValue();
+            case 1 -> 0.5f + (float) RandomUtil.nextDouble(0, 0.2);
+            case 2 -> 0.8f + (float) RandomUtil.nextDouble(0, 0.2);
+            case 3 -> 1.1f + (float) RandomUtil.nextDouble(0, 0.2);
+            case 4 -> 1.5f + (float) RandomUtil.nextDouble(0, 0.3);
             default -> 1.0f;
         };
 

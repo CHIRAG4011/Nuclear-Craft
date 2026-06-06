@@ -88,7 +88,27 @@ public class AdvancementManager {
                 "☢ Radioactive Hoarder",
                 "Carrying 64 or more Raw Plutonium Fragments — use a Lead Crate!",
                 50,
-                Sound.BLOCK_ANVIL_LAND);
+                Sound.BLOCK_ANVIL_LAND),
+
+        // ── Phase 5: Nuclear Smelter ─────────────────────────────────────────
+
+        INDUSTRIAL_AGE("industrial_age",
+                "☢ The Industrial Age",
+                "You built your first Nuclear Smelter!",
+                500,
+                Sound.BLOCK_BEACON_ACTIVATE),
+
+        FIRST_REFINEMENT("first_refinement",
+                "☢ First Refinement",
+                "You refined your first Plutonium Ingot in the Nuclear Smelter.",
+                300,
+                Sound.BLOCK_AMETHYST_CLUSTER_PLACE),
+
+        MASTER_REFINER("master_refiner",
+                "☢ Master Refiner",
+                "You have produced 100 Refined Plutonium Ingots — true industrial power!",
+                1000,
+                Sound.UI_TOAST_CHALLENGE_COMPLETE);
 
         private final String key;
         private final String title;

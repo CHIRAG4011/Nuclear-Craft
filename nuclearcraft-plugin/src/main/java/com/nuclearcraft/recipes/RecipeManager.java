@@ -4,6 +4,7 @@ import com.nuclearcraft.core.NuclearCraftPlugin;
 import com.nuclearcraft.items.ItemManager;
 import com.nuclearcraft.utils.NCLogger;
 import org.bukkit.Keyed;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
 
@@ -41,24 +42,24 @@ public class RecipeManager {
     }
 
     private void registerAllRecipes() {
-        registerSmeltingRecipes();
+        registerNuclearSmelterRecipe();
+        // NOTE: vanilla furnace smelting for raw-plutonium-fragment is intentionally NOT
+        // registered here. Phase 5 requires using the Nuclear Smelter machine.
+        // FurnaceSmeltEvent cancellation in SmelterListener acts as a safety net.
     }
 
-    private void registerSmeltingRecipes() {
-        itemManager.getItem("raw-plutonium-fragment").ifPresent(rawFragment -> {
-            itemManager.getItem("refined-plutonium-ingot").ifPresent(refinedIngot -> {
-                NamespacedKey key = new NamespacedKey(plugin, "smelt_raw_plutonium");
-                FurnaceRecipe recipe = new FurnaceRecipe(
-                        key,
-                        refinedIngot.build(),
-                        rawFragment.getMaterial(),
-                        0.5f,
-                        200
-                );
-                plugin.getServer().addRecipe(recipe);
-                registeredKeys.add(key);
-                NCLogger.debug("Registered recipe: %s", key.getKey());
-            });
+    private void registerNuclearSmelterRecipe() {
+        itemManager.getItem("nuclear-smelter").ifPresent(smelterItem -> {
+            registerShaped(
+                    "craft_nuclear_smelter",
+                    smelterItem.build(),
+                    new String[]{"DOD", "OFO", "DOD"},
+                    Map.of(
+                            'D', new RecipeChoice.MaterialChoice(Material.DIAMOND),
+                            'O', new RecipeChoice.MaterialChoice(Material.OBSIDIAN),
+                            'F', new RecipeChoice.MaterialChoice(Material.FURNACE)
+                    )
+            );
         });
     }
 

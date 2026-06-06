@@ -1,0 +1,98 @@
+# NuclearCraft Tool Statistics Configuration
+
+plutonium-pickaxe:
+  display-name: "<gradient:#39ff14:#00ff88>Plutonium Pickaxe</gradient>"
+  lore:
+    - "<gray>Forged from refined plutonium.</gray>"
+    - "<dark_green>+{mining_speed}% Mining Speed</dark_green>"
+    - "<yellow>☢ Emits low radiation on use</yellow>"
+  material: NETHERITE_PICKAXE
+  custom-model-data: 2001
+  stats:
+    attack-damage: 6.0
+    attack-speed: 1.3
+    mining-speed: 2.5
+    durability: 3000
+  enchantments:
+    EFFICIENCY: 4
+    UNBREAKING: 3
+  radiation:
+    on-mine: true
+    exposure: 0.5
+  special:
+    instant-mine-plutonium-ore: true
+    auto-smelt: false
+
+plutonium-sword:
+  display-name: "<gradient:#39ff14:#00ff88>Plutonium Blade</gradient>"
+  lore:
+    - "<gray>Radiates lethal energy.</gray>"
+    - "<red>+{damage} Attack Damage</red>"
+    - "<yellow>☢ Irradiates targets on hit</yellow>"
+  material: NETHERITE_SWORD
+  custom-model-data: 2002
+  stats:
+    attack-damage: 12.0
+    attack-speed: 1.6
+    durability: 2500
+  enchantments:
+    SHARPNESS: 4
+    UNBREAKING: 3
+    FIRE_ASPECT: 1
+  radiation:
+    on-hit: true
+    exposure: 10.0
+  special:
+    execute-below-radiation: 800.0
+
+plutonium-axe:
+  display-name: "<gradient:#39ff14:#00ff88>Plutonium Axe</gradient>"
+  lore:
+    - "<gray>A heavy weapon of nuclear power.</gray>"
+    - "<red>+{damage} Attack Damage</red>"
+    - "<yellow>☢ AoE radiation on kill</yellow>"
+  material: NETHERITE_AXE
+  custom-model-data: 2003
+  stats:
+    attack-damage: 14.0
+    attack-speed: 0.9
+    durability: 2800
+  enchantments:
+    SHARPNESS: 3
+    UNBREAKING: 3
+  special:
+    aoe-radiation-on-kill:
+      radius: 5.0
+      exposure: 20.0
+
+plutonium-shovel:
+  display-name: "<gradient:#39ff14:#00ff88>Plutonium Shovel</gradient>"
+  lore:
+    - "<gray>Reshapes the earth with nuclear force.</gray>"
+  material: NETHERITE_SHOVEL
+  custom-model-data: 2004
+  stats:
+    attack-damage: 5.5
+    attack-speed: 1.0
+    durability: 3000
+  enchantments:
+    EFFICIENCY: 4
+    UNBREAKING: 3
+
+plutonium-hoe:
+  display-name: "<gradient:#39ff14:#00ff88>Plutonium Hoe</gradient>"
+  lore:
+    - "<gray>Tills soil with radioactive precision.</gray>"
+    - "<green>Instantly tills 3x3 area</green>"
+  material: NETHERITE_HOE
+  custom-model-data: 2005
+  stats:
+    attack-damage: 1.0
+    attack-speed: 4.0
+    durability: 2000
+  enchantments:
+    EFFICIENCY: 5
+    UNBREAKING: 3
+  special:
+    till-radius: 1
+    fertilize-radioactive-farmland: true

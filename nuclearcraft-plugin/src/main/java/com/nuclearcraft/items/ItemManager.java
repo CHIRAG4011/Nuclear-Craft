@@ -116,6 +116,20 @@ public class ItemManager {
                 Material.NETHER_STAR,
                 1107,
                 true));
+
+        // ── Phase 5: Nuclear Smelter ──────────────────────────────────────────
+
+        register(new CustomItem(plugin,
+                "nuclear-smelter",
+                "<gradient:#39ff14:#00bfff>Nuclear Smelter</gradient>",
+                List.of("<gray>Industrial-grade plutonium refining machine.</gray>",
+                        "<yellow>☢ Refines Raw Plutonium Fragments</yellow>",
+                        "<gray>into Refined Plutonium Ingots.</gray>",
+                        "<dark_gray>Requires fuel: Coal, Blaze Rod, or Lava Bucket</dark_gray>",
+                        "<green>Right-click to open machine interface</green>"),
+                Material.BLAST_FURNACE,
+                1201,
+                true));
     }
 
     private void register(CustomItem item) {

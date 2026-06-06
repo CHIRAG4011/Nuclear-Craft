@@ -106,7 +106,12 @@ public class DatabaseManager {
                     fragments_collected         INTEGER NOT NULL DEFAULT 0,
                     radiation_bursts_triggered  INTEGER NOT NULL DEFAULT 0,
                     drill_uses                  INTEGER NOT NULL DEFAULT 0,
-                    unsafe_mining_attempts      INTEGER NOT NULL DEFAULT 0
+                    unsafe_mining_attempts      INTEGER NOT NULL DEFAULT 0,
+                    machines_built              INTEGER NOT NULL DEFAULT 0,
+                    fragments_processed         INTEGER NOT NULL DEFAULT 0,
+                    ingots_produced             INTEGER NOT NULL DEFAULT 0,
+                    fuel_consumed               INTEGER NOT NULL DEFAULT 0,
+                    overheats_triggered         INTEGER NOT NULL DEFAULT 0
                 )
             """);
             stmt.execute("""
@@ -148,6 +153,13 @@ public class DatabaseManager {
             addColumnIfMissing(conn, "player_data", "radiation_bursts_triggered", "INTEGER NOT NULL DEFAULT 0");
             addColumnIfMissing(conn, "player_data", "drill_uses",                 "INTEGER NOT NULL DEFAULT 0");
             addColumnIfMissing(conn, "player_data", "unsafe_mining_attempts",     "INTEGER NOT NULL DEFAULT 0");
+
+            // Phase 5 columns
+            addColumnIfMissing(conn, "player_data", "machines_built",        "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "fragments_processed",   "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "ingots_produced",       "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "fuel_consumed",         "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "overheats_triggered",   "INTEGER NOT NULL DEFAULT 0");
         }
         NCLogger.debug("Database migrations complete.");
     }
@@ -203,6 +215,11 @@ public class DatabaseManager {
                             rs.getInt("radiation_bursts_triggered"),
                             rs.getInt("drill_uses"),
                             rs.getInt("unsafe_mining_attempts"),
+                            rs.getInt("machines_built"),
+                            rs.getInt("fragments_processed"),
+                            rs.getInt("ingots_produced"),
+                            rs.getInt("fuel_consumed"),
+                            rs.getInt("overheats_triggered"),
                             rs.getInt("boss_kills"),
                             upgrades
                     ));
@@ -223,8 +240,10 @@ public class DatabaseManager {
                 irradiated_zombies_killed, alpha_zombies_killed, radiation_clouds_survived,
                 radioactive_cores_collected, mutated_seeds_collected, irradiated_hearts_collected,
                 plutonium_ore_found, plutonium_ore_mined, fragments_collected,
-                radiation_bursts_triggered, drill_uses, unsafe_mining_attempts
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                radiation_bursts_triggered, drill_uses, unsafe_mining_attempts,
+                machines_built, fragments_processed, ingots_produced,
+                fuel_consumed, overheats_triggered
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(uuid) DO UPDATE SET
                 radiation_level             = excluded.radiation_level,
                 radiation_stage             = excluded.radiation_stage,
@@ -248,7 +267,12 @@ public class DatabaseManager {
                 fragments_collected         = excluded.fragments_collected,
                 radiation_bursts_triggered  = excluded.radiation_bursts_triggered,
                 drill_uses                  = excluded.drill_uses,
-                unsafe_mining_attempts      = excluded.unsafe_mining_attempts
+                unsafe_mining_attempts      = excluded.unsafe_mining_attempts,
+                machines_built              = excluded.machines_built,
+                fragments_processed         = excluded.fragments_processed,
+                ingots_produced             = excluded.ingots_produced,
+                fuel_consumed               = excluded.fuel_consumed,
+                overheats_triggered         = excluded.overheats_triggered
         """;
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1,  data.getUuid().toString());
@@ -275,6 +299,11 @@ public class DatabaseManager {
             ps.setInt(22,    data.getRadiationBurstsTriggered());
             ps.setInt(23,    data.getDrillUses());
             ps.setInt(24,    data.getUnsafeMiningAttempts());
+            ps.setInt(25,    data.getMachinesBuilt());
+            ps.setInt(26,    data.getFragmentsProcessed());
+            ps.setInt(27,    data.getIngotsProduced());
+            ps.setInt(28,    data.getFuelConsumed());
+            ps.setInt(29,    data.getOverheatsTriggered());
             ps.executeUpdate();
             saveUpgrades(conn, data);
             data.markClean();

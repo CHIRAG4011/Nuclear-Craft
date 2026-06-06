@@ -1,0 +1,141 @@
+# ============================================================
+# NuclearCraft — Nuclear Smelter Configuration
+# Phase 5: Industrial Processing System
+# ============================================================
+
+# ── Machine Limits ─────────────────────────────────────────
+machine:
+  # Maximum smelters allowed per player (0 = unlimited)
+  max-per-player: 0
+
+  # Tick period for the machine processing loop (lower = smoother but heavier)
+  # 4 ticks = 0.2 seconds. Recommended: 4–10.
+  tick-period: 4
+
+# ── Temperature System ──────────────────────────────────────
+temperature:
+  # Ambient temperature when idle (°C)
+  ambient: 20.0
+
+  # Temperature required before processing can begin (°C)
+  min-processing: 500.0
+
+  # Temperature at which the machine overheats and shuts down (°C)
+  max: 1500.0
+
+  # Temperature gained per tick-cycle while fueled and HEATING or ACTIVE
+  heating-rate: 5.0
+
+  # Temperature gained per tick-cycle while ACTIVE (slower rise = more stable)
+  active-heating-rate: 2.5
+
+  # Temperature lost per tick-cycle while COOLING
+  cooling-rate: 1.0
+
+  # Temperature lost per tick-cycle while OVERHEATED (faster cooldown)
+  overheat-cooling-rate: 2.0
+
+  # How long the machine stays OVERHEATED before transitioning to COOLING (ms)
+  overheat-duration-ms: 10000
+
+  # Fraction of min-processing temperature at which COOLING machines can restart
+  # (0.8 = machine restarts when temp is still at 80% of minimum; avoids full cold-start)
+  restart-threshold-fraction: 0.80
+
+# ── Fuel System ─────────────────────────────────────────────
+fuel:
+  # Fuel values — units of fuel energy each item provides.
+  # Fuel is drained at 1 unit per tick-cycle.
+  # Example: coal (100 units) at tick-period 4 lasts 100 × 4 = 400 ticks = 20 seconds.
+  values:
+    COAL: 100
+    CHARCOAL: 80
+    COAL_BLOCK: 900
+    BLAZE_ROD: 120
+    LAVA_BUCKET: 1000
+
+# ── Processing Recipes ──────────────────────────────────────
+processing:
+  # Ticks to refine one Raw Plutonium Fragment → Refined Plutonium Ingot
+  # 300 ticks = 15 seconds at 20 TPS
+  plutonium-fragment-ticks: 300
+
+  # Fuel units consumed per tick-cycle while processing
+  fuel-cost-per-cycle: 1
+
+# ── Radiation Emission ───────────────────────────────────────
+radiation:
+  # Check interval in ticks (100 = every 5 seconds)
+  check-interval-ticks: 100
+
+  # Radiation applied to players within radius (passive-radius blocks)
+  passive-amount: 8
+
+  # Radius in blocks around the machine that emits radiation when ACTIVE
+  passive-radius: 3.0
+
+# ── Sounds ──────────────────────────────────────────────────
+sounds:
+  # All sounds support standard Bukkit sound names.
+  # Set enabled: false to mute individual sounds.
+  heating:
+    enabled: true
+    sound: BLOCK_FURNACE_FIRE_CRACKLE
+    volume: 0.5
+    pitch: 0.7
+
+  processing:
+    enabled: true
+    sound: BLOCK_BEACON_POWER_SELECT
+    volume: 0.3
+    pitch: 1.0
+    interval-ticks: 40  # how often to play the ambient processing sound
+
+  completion:
+    enabled: true
+    sound: BLOCK_AMETHYST_CLUSTER_PLACE
+    volume: 1.0
+    pitch: 1.5
+
+  overheat-warning:
+    enabled: true
+    sound: BLOCK_ANVIL_BREAK
+    volume: 1.0
+    pitch: 0.5
+
+  cooling:
+    enabled: true
+    sound: BLOCK_FIRE_EXTINGUISH
+    volume: 0.4
+    pitch: 1.0
+
+# ── Particles ────────────────────────────────────────────────
+particles:
+  enabled: true
+
+  active:
+    # Interval between particle bursts while ACTIVE (ticks)
+    interval-ticks: 8
+    steam-count: 4
+    energy-count: 2
+
+  overheat:
+    smoke-count: 12
+    spark-count: 8
+
+# ── Upgrade Framework (future) ──────────────────────────────
+upgrades:
+  # Reserved for Phase 6+ upgrades.
+  # Slots in the GUI will be pre-allocated for these.
+  speed:
+    enabled: false
+    multiplier: 1.5
+  efficiency:
+    enabled: false
+    fuel-reduction: 0.75
+  cooling:
+    enabled: false
+    max-temp-bonus: 200.0
+  containment:
+    enabled: false
+    radiation-reduction: 0.50
