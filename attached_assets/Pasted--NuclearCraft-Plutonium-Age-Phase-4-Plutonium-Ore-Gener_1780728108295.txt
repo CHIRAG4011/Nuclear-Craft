@@ -1,0 +1,737 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 4 - Plutonium Ore Generation, Mining Progression & Radiation Extraction
+
+You are continuing development of NuclearCraft for PaperMC 1.21+ using Java 21.
+
+Completed Systems:
+
+### Phase 1
+
+* Core Framework
+* Managers
+* Commands
+* Data System
+* Config System
+* GUI Framework
+
+### Phase 2
+
+* Radiation System
+* Infection System
+* Radiation Events
+* Contagion System
+
+### Phase 3
+
+* Irradiated Zombies
+* Alpha Irradiated Zombies
+* Radiation Clouds
+* Radiation Surge Events
+* Loot System
+
+Now implement the complete **Plutonium Ore Progression System**.
+
+This is the first major technology progression system.
+
+Players should feel excited when discovering Plutonium Ore but also understand that it is extremely dangerous.
+
+Mining plutonium should require preparation and special equipment.
+
+---
+
+# SYSTEM OVERVIEW
+
+Progression Flow:
+
+Kill Irradiated Zombies
+
+↓
+
+Obtain Radioactive Cores
+
+↓
+
+Craft Radiation Drill Pickaxe
+
+↓
+
+Locate Plutonium Ore
+
+↓
+
+Safely Mine Ore
+
+↓
+
+Collect Raw Plutonium Fragments
+
+↓
+
+Process Through Nuclear Smelter
+
+↓
+
+Create Plutonium Technology
+
+This progression should feel similar in importance to discovering diamonds.
+
+---
+
+# PLUTONIUM ORE
+
+Create:
+
+PlutoniumOreManager
+
+OreGenerationManager
+
+OreMiningManager
+
+OreListener
+
+RadiationExposureListener
+
+---
+
+# ORE GENERATION
+
+Generate naturally during chunk generation.
+
+Biome Support:
+
+All Overworld biomes.
+
+Dimension:
+
+Overworld only.
+
+Spawn Height:
+
+Minimum:
+Y -64
+
+Maximum:
+Y -58
+
+Preferred Height:
+Y -61
+
+---
+
+# RARITY
+
+Diamond Ore Reference:
+
+Use diamond rarity as baseline.
+
+Plutonium Ore:
+
+40% rarer than diamonds.
+
+Target:
+
+Extremely valuable.
+
+Not common enough to flood economy.
+
+---
+
+# VEIN SIZE
+
+Minimum:
+1
+
+Maximum:
+2
+
+Average:
+1.5
+
+Configurable.
+
+---
+
+# WORLD LIMITS
+
+Create optional world restrictions.
+
+Allow:
+
+Overworld
+
+Deny:
+
+Nether
+
+End
+
+Configurable.
+
+---
+
+# ORE APPEARANCE
+
+Texture Design Requirements:
+
+Base:
+
+Dark Deepslate
+
+Veins:
+
+Bright Toxic Green
+
+Details:
+
+Yellow Radiation Warning Symbols
+
+Animated Glow
+
+Small Reactor-Like Cracks
+
+Visual Goal:
+
+Immediately recognizable.
+
+Looks dangerous.
+
+Looks valuable.
+
+Looks unnatural.
+
+---
+
+# ORE RADIATION
+
+Plutonium Ore emits radiation continuously.
+
+Create:
+
+OreRadiationManager
+
+---
+
+# PASSIVE EXPOSURE
+
+Players within:
+
+3 Blocks
+
+Gain:
+
+1 Radiation every 5 seconds
+
+Players within:
+
+2 Blocks
+
+Gain:
+
+2 Radiation every 5 seconds
+
+Players within:
+
+1 Block
+
+Gain:
+
+5 Radiation every 5 seconds
+
+Source:
+
+PLUTONIUM_ORE
+
+---
+
+# PROTECTION INTERACTION
+
+Hazmat Armor
+
+Reduces exposure by:
+80%
+
+Plutonium Armor
+
+Reduces exposure by:
+100%
+
+Must integrate with Phase 2 armor calculations.
+
+---
+
+# ORE DISCOVERY SYSTEM
+
+First time a player discovers Plutonium Ore:
+
+Display Title:
+
+☢ WARNING ☢
+
+Subtitle:
+
+Radioactive Material Detected
+
+Play custom sound.
+
+Unlock advancement:
+
+"Nuclear Discovery"
+
+Track statistic:
+
+First Plutonium Found
+
+---
+
+# MINING REQUIREMENTS
+
+Plutonium Ore CANNOT be mined using:
+
+Wood
+
+Stone
+
+Iron
+
+Gold
+
+Diamond
+
+Netherite
+
+Any Vanilla Pickaxe
+
+---
+
+# WRONG TOOL CONSEQUENCES
+
+If player attempts mining with invalid tool:
+
+Ore remains.
+
+No drops.
+
+Radiation Burst occurs.
+
+Player gains:
+
+25 Radiation
+
+Green particles released.
+
+Warning message shown.
+
+Cooldown:
+5 Seconds
+
+Prevent spam.
+
+---
+
+# RADIATION DRILL PICKAXE
+
+Create:
+
+RadiationDrillManager
+
+RadiationDrillListener
+
+Custom Item
+
+---
+
+# PURPOSE
+
+The ONLY tool capable of safely mining Plutonium Ore.
+
+Without it:
+
+Mining fails.
+
+---
+
+# CRAFTING RECIPE
+
+Use Radioactive Cores.
+
+Create balanced recipe.
+
+Requirements:
+
+Early-Mid Game
+
+Not Too Easy
+
+Not Too Difficult
+
+Use:
+
+* Radioactive Core
+* Diamond Components
+* Reinforced Materials
+
+Generate complete recipe.
+
+---
+
+# TOOL DESIGN
+
+Appearance:
+
+Industrial Drill
+
+Green Reactor Core
+
+Mechanical Head
+
+Animated Glow
+
+Heavy Engineering Theme
+
+---
+
+# DRILL STATS
+
+Mining Speed:
+
+Diamond+
+
+Durability:
+
+Higher Than Diamond
+
+Lower Than Netherite
+
+---
+
+# SPECIAL ABILITY
+
+Safe Extraction
+
+When mining plutonium:
+
+No radiation burst.
+
+No ore destruction.
+
+Full drop rewards.
+
+---
+
+# MINING PROCESS
+
+When mined correctly:
+
+Play custom sound.
+
+Spawn particles.
+
+Generate extraction effects.
+
+Grant advancement progress.
+
+---
+
+# ORE DROP
+
+Drops:
+
+Raw Plutonium Fragment
+
+---
+
+# RAW PLUTONIUM FRAGMENT
+
+Create:
+
+Custom Item
+
+Appearance:
+
+Jagged Crystal
+
+Bright Green Core
+
+Dark Metallic Shell
+
+Animated Glow
+
+---
+
+# DROP AMOUNT
+
+Base:
+
+1 Fragment
+
+Fortune:
+
+Supported
+
+Fortune I:
+1-2
+
+Fortune II:
+1-3
+
+Fortune III:
+1-4
+
+Configurable.
+
+---
+
+# RADIOACTIVE ITEM HANDLING
+
+Raw Plutonium Fragment emits radiation.
+
+If carried:
+
+Without Protection:
+
+Gain:
+
+1 Radiation every 30 seconds
+
+Source:
+
+PLUTONIUM_FRAGMENT
+
+---
+
+# STACK INTERACTION
+
+More Fragments:
+
+Higher Radiation.
+
+Formula configurable.
+
+Must support inventory scanning.
+
+Optimize heavily.
+
+Avoid lag.
+
+---
+
+# STORAGE SYSTEM
+
+Normal Chests:
+
+Allowed
+
+Radiation leaks slowly.
+
+Players near chest receive small exposure.
+
+Create optional config.
+
+---
+
+# LEAD-LINED STORAGE
+
+Create:
+
+Lead Storage Crate
+
+Special storage block.
+
+Stores radioactive materials safely.
+
+No radiation leakage.
+
+Future progression item.
+
+---
+
+# PLUTONIUM BLOCK
+
+Create:
+
+Compressed storage block.
+
+Crafting:
+
+9 Refined Plutonium Ingots
+
+Appearance:
+
+Solid Reactor Metal
+
+Green Energy Veins
+
+Animated Glow
+
+---
+
+# BLOCK EFFECTS
+
+Radiation Emission
+
+Higher than Ore.
+
+Dangerous to stand near.
+
+Used later for:
+
+Boss Summoning
+
+Forge Upgrades
+
+Advanced Machines
+
+---
+
+# ADVANCEMENTS
+
+Create:
+
+Nuclear Discovery
+
+Find Plutonium Ore
+
+---
+
+Unsafe Miner
+
+Attempt Mining Without Drill
+
+---
+
+Safe Extraction
+
+Successfully Mine Plutonium Ore
+
+---
+
+Radioactive Hoarder
+
+Carry 64 Fragments
+
+---
+
+# STATISTICS
+
+Track:
+
+Plutonium Ore Found
+
+Plutonium Ore Mined
+
+Fragments Collected
+
+Radiation Bursts Triggered
+
+Drill Uses
+
+Unsafe Mining Attempts
+
+Store permanently.
+
+---
+
+# COMMANDS
+
+Admin:
+
+/nuclearcraft ore spawn plutonium
+
+Spawn ore block.
+
+---
+
+/nuclearcraft ore give fragment
+
+Give Raw Plutonium Fragment.
+
+---
+
+/nuclearcraft ore stats
+
+Display statistics.
+
+Permissions:
+
+nuclearcraft.admin.ore
+
+---
+
+# CONFIGURATION
+
+Create:
+
+ore.yml
+
+Include:
+
+Generation Rates
+
+Heights
+
+Vein Sizes
+
+Radiation Values
+
+Burst Damage
+
+Fragment Radiation
+
+Storage Radiation
+
+Drill Stats
+
+Everything configurable.
+
+---
+
+# PERFORMANCE REQUIREMENTS
+
+Must support:
+
+Large SMP Servers
+
+Millions of Generated Chunks
+
+Hundreds of Active Ore Blocks
+
+Thousands of Stored Fragments
+
+Avoid:
+
+Scanning entire worlds.
+
+Chunk memory leaks.
+
+Excessive inventory loops.
+
+Use efficient tracking systems.
+
+---
+
+# DELIVERABLES
+
+Generate complete production-ready code for:
+
+* OreGenerationManager
+* PlutoniumOreManager
+* OreMiningManager
+* OreRadiationManager
+* RadiationDrillManager
+* RadiationDrillListener
+* RawPlutoniumFragment Item
+* Lead Storage Crate
+* Advancements
+* Statistics Tracking
+* Commands
+* Config Integration
+
+All code must compile successfully and integrate perfectly with:
+
+* Radiation System
+* Player Data System
+* Item Framework
+* Custom Block Framework
+
+After completion, the project should be fully ready for Phase 5: Nuclear Smelter, Plutonium Refining & Industrial Processing.

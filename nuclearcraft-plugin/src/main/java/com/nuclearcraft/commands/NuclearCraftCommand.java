@@ -6,10 +6,12 @@ import com.nuclearcraft.core.NuclearCraftPlugin;
 import com.nuclearcraft.data.PlayerData;
 import com.nuclearcraft.data.PlayerDataManager;
 import com.nuclearcraft.items.ItemManager;
+import com.nuclearcraft.ore.OreMiningManager;
+import com.nuclearcraft.ore.PlutoniumOreManager;
+import com.nuclearcraft.ore.OreGenerationManager;
 import com.nuclearcraft.radiation.RadiationManager;
 import com.nuclearcraft.radiation.RadiationSource;
 import com.nuclearcraft.utils.ColorUtil;
-import com.nuclearcraft.utils.MathHelper;
 import com.nuclearcraft.utils.NCLogger;
 import com.nuclearcraft.zombies.*;
 import org.bukkit.command.Command;
@@ -28,11 +30,15 @@ import java.util.stream.Collectors;
  * Phase 3: zombie spawn irradiated|alpha
  *          zombie stats
  *          zombie surge start|stop
+ * Phase 4: ore spawn plutonium
+ *          ore give fragment [amount]
+ *          ore stats
+ *          Permission: nuclearcraft.admin.ore
  */
 public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> TOP_SUBCOMMANDS =
-            List.of("help", "reload", "info", "debug", "give", "version", "radiation", "zombie");
+            List.of("help", "reload", "info", "debug", "give", "version", "radiation", "zombie", "ore");
     private static final List<String> RADIATION_SUBCOMMANDS =
             List.of("check", "add", "remove", "set", "clear");
     private static final List<String> ZOMBIE_SUBCOMMANDS =
@@ -41,6 +47,12 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             List.of("irradiated", "alpha");
     private static final List<String> ZOMBIE_SURGE_ACTIONS =
             List.of("start", "stop");
+    private static final List<String> ORE_SUBCOMMANDS =
+            List.of("spawn", "give", "stats");
+    private static final List<String> ORE_SPAWN_TYPES =
+            List.of("plutonium");
+    private static final List<String> ORE_GIVE_TYPES =
+            List.of("fragment", "drill");
 
     private final NuclearCraftPlugin plugin;
     private final ConfigManager configManager;
@@ -52,6 +64,8 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     private final RadiationCloudManager radiationCloudManager;
     private final RadiationNightManager radiationNightManager;
     private final AdvancementManager advancementManager;
+    private final PlutoniumOreManager plutoniumOreManager;
+    private final OreMiningManager oreMiningManager;
 
     public NuclearCraftCommand(NuclearCraftPlugin plugin, ConfigManager configManager,
                                 PlayerDataManager playerDataManager, ItemManager itemManager,
@@ -60,7 +74,9 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                                 ZombieSpawnManager zombieSpawnManager,
                                 RadiationCloudManager radiationCloudManager,
                                 RadiationNightManager radiationNightManager,
-                                AdvancementManager advancementManager) {
+                                AdvancementManager advancementManager,
+                                PlutoniumOreManager plutoniumOreManager,
+                                OreMiningManager oreMiningManager) {
         this.plugin = plugin;
         this.configManager = configManager;
         this.playerDataManager = playerDataManager;
@@ -71,6 +87,8 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         this.radiationCloudManager = radiationCloudManager;
         this.radiationNightManager = radiationNightManager;
         this.advancementManager = advancementManager;
+        this.plutoniumOreManager = plutoniumOreManager;
+        this.oreMiningManager = oreMiningManager;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -90,6 +108,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             case "give"      -> { handleGive(sender, args);        yield true; }
             case "radiation" -> { handleRadiation(sender, args);   yield true; }
             case "zombie"    -> { handleZombie(sender, args);      yield true; }
+            case "ore"       -> { handleOre(sender, args);         yield true; }
             default -> {
                 sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.unknown-command")));
                 yield true;
@@ -126,6 +145,12 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             entries.put("nuclearcraft zombie stats",            "Show zombie system statistics");
             entries.put("nuclearcraft zombie surge start|stop", "Force-start or stop a Radiation Surge");
         }
+        if (sender.hasPermission("nuclearcraft.admin.ore")) {
+            entries.put("nuclearcraft ore spawn plutonium",  "Spawn a Plutonium Ore block at your location");
+            entries.put("nuclearcraft ore give fragment [n]", "Give Raw Plutonium Fragments");
+            entries.put("nuclearcraft ore give drill",       "Give a Radiation Drill");
+            entries.put("nuclearcraft ore stats",            "Show ore system statistics");
+        }
         entries.forEach((cmd, desc) ->
                 sender.sendMessage(ColorUtil.parse(
                         configManager.getRawMessage("commands.help-entry")
@@ -149,6 +174,9 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                 ? "<green>ENABLED</green>" : "<red>DISABLED</red>";
         sender.sendMessage(ColorUtil.parse(configManager.getRawMessage("commands.info-debug")
                 .replace("{status}", debugStatus)));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Tracked Plutonium Ore:</gray> <white>"
+                        + plutoniumOreManager.getTrackedCount() + "</white>"));
     }
 
     private void handleReload(CommandSender sender) {
@@ -279,6 +307,11 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(ColorUtil.parse(
                 " <gray>Zombies Killed:</gray> <white>" + data.getIrradiatedZombiesKilled()
                 + " (" + data.getAlphaZombiesKilled() + " Alpha)</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Plutonium Ore Mined:</gray> <white>" + data.getPlutoniumOreMined()
+                + " (Found: " + data.getPlutoniumOreFound() + ")</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Fragments Collected:</gray> <white>" + data.getFragmentsCollected() + "</white>"));
     }
 
     private void handleRadiationAdd(CommandSender sender, String[] args) {
@@ -402,6 +435,119 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // Phase 4: /nc ore ...
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private void handleOre(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("nuclearcraft.admin.ore")) {
+            sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.no-permission")));
+            return;
+        }
+        if (args.length < 2) {
+            sender.sendMessage(ColorUtil.parse("<red>Usage: /nc ore <spawn|give|stats> [args...]</red>"));
+            return;
+        }
+        switch (args[1].toLowerCase()) {
+            case "spawn" -> handleOreSpawn(sender, args);
+            case "give"  -> handleOreGive(sender, args);
+            case "stats" -> handleOreStats(sender);
+            default -> sender.sendMessage(ColorUtil.parse(
+                    "<red>Unknown ore subcommand. Try: spawn, give, stats</red>"));
+        }
+    }
+
+    private void handleOreSpawn(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ColorUtil.parse("<red>This command can only be used by players.</red>"));
+            return;
+        }
+        if (args.length < 3 || !args[2].equalsIgnoreCase("plutonium")) {
+            sender.sendMessage(ColorUtil.parse("<red>Usage: /nc ore spawn plutonium</red>"));
+            return;
+        }
+        var block = player.getTargetBlockExact(5);
+        var spawnLoc = (block != null) ? block.getLocation() : player.getLocation();
+
+        spawnLoc.getBlock().setType(OreGenerationManager.ORE_MATERIAL);
+        plutoniumOreManager.registerOre(spawnLoc);
+
+        sender.sendMessage(ColorUtil.parse(
+                "<green>☢ Plutonium Ore spawned at <white>"
+                        + spawnLoc.getBlockX() + ", "
+                        + spawnLoc.getBlockY() + ", "
+                        + spawnLoc.getBlockZ() + "</white>.</green>"));
+        NCLogger.info("Admin " + sender.getName() + " spawned Plutonium Ore at " + spawnLoc.toVector());
+    }
+
+    private void handleOreGive(CommandSender sender, String[] args) {
+        if (args.length < 3) {
+            sender.sendMessage(ColorUtil.parse("<red>Usage: /nc ore give <fragment|drill> [amount]</red>"));
+            return;
+        }
+        Player target = (sender instanceof Player p) ? p : null;
+        if (target == null) {
+            sender.sendMessage(ColorUtil.parse("<red>Console cannot use ore give. Use /nc give instead.</red>"));
+            return;
+        }
+
+        String itemId = switch (args[2].toLowerCase()) {
+            case "fragment" -> "raw-plutonium-fragment";
+            case "drill"    -> "radiation-drill";
+            default -> null;
+        };
+        if (itemId == null) {
+            sender.sendMessage(ColorUtil.parse("<red>Unknown item. Try: fragment, drill</red>"));
+            return;
+        }
+
+        int amount = 1;
+        if (args.length >= 4) {
+            try { amount = Math.max(1, Math.min(64, Integer.parseInt(args[3]))); }
+            catch (NumberFormatException ignored) {}
+        }
+
+        itemManager.getItem(itemId).ifPresentOrElse(item -> {
+            target.getInventory().addItem(item.build(amount));
+            sender.sendMessage(ColorUtil.parse(
+                    "<green>Given <yellow>" + amount + "x " + args[2] + "</yellow> to <aqua>"
+                            + target.getName() + "</aqua>.</green>"));
+        }, () -> sender.sendMessage(ColorUtil.parse("<red>Item '" + itemId + "' not found in registry.</red>")));
+    }
+
+    private void handleOreStats(CommandSender sender) {
+        sender.sendMessage(ColorUtil.parse("<dark_gray>── <gradient:#39ff14:#00bfff>Plutonium Ore System Stats</gradient> ──</dark_gray>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Tracked Ore Blocks:</gray> <white>" + plutoniumOreManager.getTrackedCount() + "</white>"));
+
+        // Aggregate stats across all loaded players
+        int totalFound = 0, totalMined = 0, totalFragments = 0, totalBursts = 0, totalDrillUses = 0, totalUnsafe = 0;
+        for (var player : plugin.getServer().getOnlinePlayers()) {
+            var dataOpt = playerDataManager.get(player.getUniqueId());
+            if (dataOpt.isEmpty()) continue;
+            var data = dataOpt.get();
+            totalFound     += data.getPlutoniumOreFound();
+            totalMined     += data.getPlutoniumOreMined();
+            totalFragments += data.getFragmentsCollected();
+            totalBursts    += data.getRadiationBurstsTriggered();
+            totalDrillUses += data.getDrillUses();
+            totalUnsafe    += data.getUnsafeMiningAttempts();
+        }
+
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Ore Found (online players):</gray> <white>" + totalFound + "</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Ore Mined (online players):</gray> <white>" + totalMined + "</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Fragments Collected:</gray> <white>" + totalFragments + "</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Radiation Bursts Triggered:</gray> <red>" + totalBursts + "</red>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Drill Uses:</gray> <white>" + totalDrillUses + "</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Unsafe Mining Attempts:</gray> <red>" + totalUnsafe + "</red>"));
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // Tab completion
     // ──────────────────────────────────────────────────────────────────────────
 
@@ -420,6 +566,9 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             if ("zombie".equalsIgnoreCase(args[0]) && sender.hasPermission("nuclearcraft.admin.zombies")) {
                 return filter(ZOMBIE_SUBCOMMANDS, args[1]);
             }
+            if ("ore".equalsIgnoreCase(args[0]) && sender.hasPermission("nuclearcraft.admin.ore")) {
+                return filter(ORE_SUBCOMMANDS, args[1]);
+            }
         }
 
         if (args.length == 3) {
@@ -427,58 +576,45 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                 if ("spawn".equalsIgnoreCase(args[1])) return filter(ZOMBIE_SPAWN_TYPES, args[2]);
                 if ("surge".equalsIgnoreCase(args[1])) return filter(ZOMBIE_SURGE_ACTIONS, args[2]);
             }
-            if ("radiation".equalsIgnoreCase(args[0]) && !args[1].equalsIgnoreCase("check")) {
-                return onlinePlayers(args[2]);
+            if ("ore".equalsIgnoreCase(args[0])) {
+                if ("spawn".equalsIgnoreCase(args[1])) return filter(ORE_SPAWN_TYPES, args[2]);
+                if ("give".equalsIgnoreCase(args[1]))  return filter(ORE_GIVE_TYPES, args[2]);
             }
-        }
-
-        if ("give".equalsIgnoreCase(args[0])) {
-            if (args.length == 2) return onlinePlayers(args[1]);
-            if (args.length == 3) return itemManager.getRegistry().getIds().stream()
-                    .filter(id -> id.startsWith(args[2].toLowerCase())).collect(Collectors.toList());
+            if ("give".equalsIgnoreCase(args[0]) && sender.hasPermission("nuclearcraft.give")) {
+                return plugin.getServer().getOnlinePlayers().stream()
+                        .map(Player::getName).filter(n -> n.startsWith(args[2]))
+                        .collect(Collectors.toList());
+            }
         }
 
         return Collections.emptyList();
     }
 
     // ──────────────────────────────────────────────────────────────────────────
-    // Helpers
+    // Utility
     // ──────────────────────────────────────────────────────────────────────────
 
-    private List<String> filter(List<String> list, String partial) {
-        return list.stream()
-                .filter(s -> s.startsWith(partial.toLowerCase()))
-                .collect(Collectors.toList());
-    }
-
-    private List<String> onlinePlayers(String partial) {
-        return plugin.getServer().getOnlinePlayers().stream()
-                .map(Player::getName)
-                .filter(name -> name.toLowerCase().startsWith(partial.toLowerCase()))
-                .collect(Collectors.toList());
-    }
-
     private Player resolvePlayer(CommandSender sender, String name) {
-        Player p = plugin.getServer().getPlayer(name);
-        if (p == null) {
+        Player target = plugin.getServer().getPlayer(name);
+        if (target == null) {
             sender.sendMessage(ColorUtil.parse(
                     configManager.getMessage("general.player-not-found").replace("{player}", name)));
         }
-        return p;
+        return target;
     }
 
     private int parseAmount(CommandSender sender, String input) {
-        try {
-            int v = Integer.parseInt(input);
-            if (v < 0) {
-                sender.sendMessage(ColorUtil.parse("<red>Amount must be a positive integer.</red>"));
-                return -1;
-            }
-            return (int) MathHelper.clamp(v, 0, RadiationManager.MAX_RADIATION);
-        } catch (NumberFormatException e) {
+        try { return Integer.parseInt(input); }
+        catch (NumberFormatException e) {
             sender.sendMessage(ColorUtil.parse(
                     configManager.getMessage("general.invalid-number").replace("{input}", input)));
             return -1;
         }
+    }
+
+    private List<String> filter(List<String> options, String prefix) {
+        return options.stream()
+                .filter(s -> s.startsWith(prefix.toLowerCase()))
+                .collect(Collectors.toList());
     }
 }

@@ -11,9 +11,11 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * Manages database connectivity and schema (Phase 1 + Phase 2 + Phase 3 extended schema).
+ * Manages database connectivity and schema (Phase 1–4 extended schema).
  * Supports SQLite (default) and MySQL via HikariCP.
  * Migration-safe: uses ALTER TABLE approach for new columns so existing data is preserved.
+ *
+ * Phase 4 additions: 6 ore-statistics columns.
  */
 public class DatabaseManager {
 
@@ -78,7 +80,7 @@ public class DatabaseManager {
 
     private void createTables() throws SQLException {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
-            // Full Phase 1 + 2 + 3 schema
+            // Full Phase 1–4 schema
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS player_data (
                     uuid                        TEXT    PRIMARY KEY,
@@ -98,7 +100,13 @@ public class DatabaseManager {
                     radiation_clouds_survived   INTEGER NOT NULL DEFAULT 0,
                     radioactive_cores_collected INTEGER NOT NULL DEFAULT 0,
                     mutated_seeds_collected     INTEGER NOT NULL DEFAULT 0,
-                    irradiated_hearts_collected INTEGER NOT NULL DEFAULT 0
+                    irradiated_hearts_collected INTEGER NOT NULL DEFAULT 0,
+                    plutonium_ore_found         INTEGER NOT NULL DEFAULT 0,
+                    plutonium_ore_mined         INTEGER NOT NULL DEFAULT 0,
+                    fragments_collected         INTEGER NOT NULL DEFAULT 0,
+                    radiation_bursts_triggered  INTEGER NOT NULL DEFAULT 0,
+                    drill_uses                  INTEGER NOT NULL DEFAULT 0,
+                    unsafe_mining_attempts      INTEGER NOT NULL DEFAULT 0
                 )
             """);
             stmt.execute("""
@@ -113,7 +121,7 @@ public class DatabaseManager {
     }
 
     /**
-     * Applies migrations for databases created with Phase 1 or Phase 2 schema.
+     * Applies migrations for databases created with an older schema.
      * Adds missing columns safely — no data loss.
      */
     private void runMigrations() throws SQLException {
@@ -132,6 +140,14 @@ public class DatabaseManager {
             addColumnIfMissing(conn, "player_data", "radioactive_cores_collected", "INTEGER NOT NULL DEFAULT 0");
             addColumnIfMissing(conn, "player_data", "mutated_seeds_collected",     "INTEGER NOT NULL DEFAULT 0");
             addColumnIfMissing(conn, "player_data", "irradiated_hearts_collected", "INTEGER NOT NULL DEFAULT 0");
+
+            // Phase 4 columns
+            addColumnIfMissing(conn, "player_data", "plutonium_ore_found",        "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "plutonium_ore_mined",        "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "fragments_collected",        "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "radiation_bursts_triggered", "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "drill_uses",                 "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "unsafe_mining_attempts",     "INTEGER NOT NULL DEFAULT 0");
         }
         NCLogger.debug("Database migrations complete.");
     }
@@ -181,6 +197,12 @@ public class DatabaseManager {
                             rs.getInt("radioactive_cores_collected"),
                             rs.getInt("mutated_seeds_collected"),
                             rs.getInt("irradiated_hearts_collected"),
+                            rs.getInt("plutonium_ore_found"),
+                            rs.getInt("plutonium_ore_mined"),
+                            rs.getInt("fragments_collected"),
+                            rs.getInt("radiation_bursts_triggered"),
+                            rs.getInt("drill_uses"),
+                            rs.getInt("unsafe_mining_attempts"),
                             rs.getInt("boss_kills"),
                             upgrades
                     ));
@@ -199,8 +221,10 @@ public class DatabaseManager {
                 infection_progress, last_radiation_recv_ms, last_radiation_source,
                 times_infected, boss_kills, total_exposure, total_cured, radiation_deaths,
                 irradiated_zombies_killed, alpha_zombies_killed, radiation_clouds_survived,
-                radioactive_cores_collected, mutated_seeds_collected, irradiated_hearts_collected
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                radioactive_cores_collected, mutated_seeds_collected, irradiated_hearts_collected,
+                plutonium_ore_found, plutonium_ore_mined, fragments_collected,
+                radiation_bursts_triggered, drill_uses, unsafe_mining_attempts
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(uuid) DO UPDATE SET
                 radiation_level             = excluded.radiation_level,
                 radiation_stage             = excluded.radiation_stage,
@@ -218,7 +242,13 @@ public class DatabaseManager {
                 radiation_clouds_survived   = excluded.radiation_clouds_survived,
                 radioactive_cores_collected = excluded.radioactive_cores_collected,
                 mutated_seeds_collected     = excluded.mutated_seeds_collected,
-                irradiated_hearts_collected = excluded.irradiated_hearts_collected
+                irradiated_hearts_collected = excluded.irradiated_hearts_collected,
+                plutonium_ore_found         = excluded.plutonium_ore_found,
+                plutonium_ore_mined         = excluded.plutonium_ore_mined,
+                fragments_collected         = excluded.fragments_collected,
+                radiation_bursts_triggered  = excluded.radiation_bursts_triggered,
+                drill_uses                  = excluded.drill_uses,
+                unsafe_mining_attempts      = excluded.unsafe_mining_attempts
         """;
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1,  data.getUuid().toString());
@@ -239,6 +269,12 @@ public class DatabaseManager {
             ps.setInt(16,    data.getRadioactiveCoresCollected());
             ps.setInt(17,    data.getMutatedSeedsCollected());
             ps.setInt(18,    data.getIrradiatedHeartsCollected());
+            ps.setInt(19,    data.getPlutoniumOreFound());
+            ps.setInt(20,    data.getPlutoniumOreMined());
+            ps.setInt(21,    data.getFragmentsCollected());
+            ps.setInt(22,    data.getRadiationBurstsTriggered());
+            ps.setInt(23,    data.getDrillUses());
+            ps.setInt(24,    data.getUnsafeMiningAttempts());
             ps.executeUpdate();
             saveUpgrades(conn, data);
             data.markClean();

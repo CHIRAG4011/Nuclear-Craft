@@ -27,6 +27,9 @@ public enum RadiationSource {
     /** Radiation from a Plutonium-tipped arrow. */
     PLUTONIUM_ARROW("Plutonium Arrow"),
 
+    /** Radiation emitted by carrying Raw Plutonium Fragments in inventory. */
+    PLUTONIUM_FRAGMENT("Plutonium Fragment"),
+
     /** Radiation from walking through a radiation cloud. */
     RADIATION_CLOUD("Radiation Cloud"),
 

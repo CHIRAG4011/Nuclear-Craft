@@ -18,22 +18,28 @@ import org.bukkit.entity.Player;
  *
  * When unlocked:
  *   - A Minecraft-style toast title + subtitle is displayed.
- *   - A sound plays (ENTITY_PLAYER_LEVELUP or similar).
+ *   - A sound plays.
  *   - XP is awarded.
  *   - The achievement is persisted via PlayerData.
  *
- * This approach is fully functional without requiring server restarts,
- * data pack reloads, or client-side resource changes.
- *
  * Advancement keys (stored as "adv:<key>" in unlockedUpgrades):
- *   first_exposure    — first radiation gained
- *   mutant_hunter     — first irradiated zombie killed
- *   core_collector    — first radioactive core obtained
- *   alpha_slayer      — first alpha zombie killed
+ *   Phase 2/3:
+ *     first_exposure    — first radiation gained
+ *     mutant_hunter     — first irradiated zombie killed
+ *     core_collector    — first radioactive core obtained
+ *     alpha_slayer      — first alpha zombie killed
+ *
+ *   Phase 4:
+ *     nuclear_discovery — found Plutonium Ore for the first time
+ *     unsafe_miner      — attempted to mine without Radiation Drill
+ *     safe_extraction   — successfully mined Plutonium Ore with Drill
+ *     radioactive_hoarder — carried 64+ Plutonium Fragments
  */
 public class AdvancementManager {
 
     public enum Advancement {
+        // ── Phase 2 / 3 ──────────────────────────────────────────────────────
+
         FIRST_EXPOSURE("first_exposure",
                 "☢ First Exposure",
                 "You gained radiation for the first time.",
@@ -56,7 +62,33 @@ public class AdvancementManager {
                 "☢ Alpha Slayer",
                 "Defeated an Alpha Irradiated Zombie!",
                 500,
-                Sound.UI_TOAST_CHALLENGE_COMPLETE);
+                Sound.UI_TOAST_CHALLENGE_COMPLETE),
+
+        // ── Phase 4: Plutonium Ore ────────────────────────────────────────────
+
+        NUCLEAR_DISCOVERY("nuclear_discovery",
+                "☢ Nuclear Discovery",
+                "Plutonium Ore detected! A new age of power begins...",
+                200,
+                Sound.BLOCK_BEACON_ACTIVATE),
+
+        UNSAFE_MINER("unsafe_miner",
+                "☢ Unsafe Miner",
+                "You tried mining Plutonium Ore without a Radiation Drill!",
+                25,
+                Sound.ENTITY_CREEPER_PRIMED),
+
+        SAFE_EXTRACTION("safe_extraction",
+                "☢ Safe Extraction",
+                "Successfully extracted Plutonium Ore with the Radiation Drill.",
+                300,
+                Sound.BLOCK_AMETHYST_CLUSTER_PLACE),
+
+        RADIOACTIVE_HOARDER("radioactive_hoarder",
+                "☢ Radioactive Hoarder",
+                "Carrying 64 or more Raw Plutonium Fragments — use a Lead Crate!",
+                50,
+                Sound.BLOCK_ANVIL_LAND);
 
         private final String key;
         private final String title;
@@ -129,14 +161,12 @@ public class AdvancementManager {
     // ──────────────────────────────────────────────────────────────────────────
 
     private void showToast(Player player, Advancement advancement) {
-        // Title line (advancement name in gold)
         player.sendTitle(
                 "§6§l" + advancement.getTitle(),
                 "§7" + advancement.getDescription(),
                 10, 70, 20
         );
 
-        // Chat message
         player.sendMessage(Component.text()
                 .append(Component.text("[", NamedTextColor.DARK_GRAY))
                 .append(Component.text("Advancement Unlocked!", NamedTextColor.GOLD, TextDecoration.BOLD))
@@ -146,7 +176,6 @@ public class AdvancementManager {
 
         player.sendMessage(Component.text("  " + advancement.getDescription(), NamedTextColor.GRAY));
 
-        // Sound
         player.playSound(player.getLocation(), advancement.getSound(), 1.0f, 1.0f);
     }
 

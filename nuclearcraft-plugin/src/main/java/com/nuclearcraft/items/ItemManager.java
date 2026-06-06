@@ -97,6 +97,17 @@ public class ItemManager {
                 true));
 
         register(new CustomItem(plugin,
+                "radiation-drill",
+                "<gradient:#39ff14:#00bfff>Radiation Drill</gradient>",
+                List.of("The only tool that can safely mine Plutonium Ore.",
+                        "<green>▸ Diamond+ mining speed</green>",
+                        "<yellow>☢ Safe Extraction — no radiation burst</yellow>",
+                        "<gray>Crafted from Radioactive Cores & Diamonds</gray>"),
+                Material.DIAMOND_PICKAXE,
+                1108,
+                true));
+
+        register(new CustomItem(plugin,
                 "titan-core",
                 "<gradient:#7700ff:#39ff14>Titan Core</gradient>",
                 List.of("The crystallized essence of the Plutonium Titan.",

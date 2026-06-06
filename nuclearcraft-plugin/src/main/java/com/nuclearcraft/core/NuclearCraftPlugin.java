@@ -8,9 +8,8 @@ import com.nuclearcraft.data.DatabaseManager;
 import com.nuclearcraft.data.PlayerDataManager;
 import com.nuclearcraft.gui.GUIManager;
 import com.nuclearcraft.items.ItemManager;
-import com.nuclearcraft.listeners.CoreListener;
-import com.nuclearcraft.listeners.RadiationListener;
-import com.nuclearcraft.listeners.ZombieSpawnListener;
+import com.nuclearcraft.listeners.*;
+import com.nuclearcraft.ore.*;
 import com.nuclearcraft.radiation.ContagionManager;
 import com.nuclearcraft.radiation.RadiationManager;
 import com.nuclearcraft.radiation.RadiationVisualManager;
@@ -31,6 +30,9 @@ import java.util.Objects;
  * Phase 3 additions: IrradiatedZombieManager, ZombieSpawnManager, ZombieCombatManager,
  *                    ZombieLootManager, RadiationCloudManager, RadiationNightManager,
  *                    AdvancementManager, ZombieSpawnListener registration.
+ * Phase 4 additions: PlutoniumOreManager, OreGenerationManager, OreMiningManager,
+ *                    OreRadiationManager, RadiationDrillManager,
+ *                    OreListener, RadiationExposureListener.
  */
 public final class NuclearCraftPlugin extends JavaPlugin {
 
@@ -60,6 +62,15 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     private AdvancementManager advancementManager;
     private ZombieSpawnListener zombieSpawnListener;
 
+    // ── Phase 4 ──
+    private PlutoniumOreManager plutoniumOreManager;
+    private OreGenerationManager oreGenerationManager;
+    private OreMiningManager oreMiningManager;
+    private OreRadiationManager oreRadiationManager;
+    private RadiationDrillManager radiationDrillManager;
+    private OreListener oreListener;
+    private RadiationExposureListener radiationExposureListener;
+
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
@@ -84,29 +95,37 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
 
-        // Phase 3 — shut down first (depends on Phase 2)
-        if (radiationNightManager != null)  radiationNightManager.shutdown();
-        if (radiationCloudManager != null)  radiationCloudManager.shutdown();
-        if (zombieLootManager != null)      zombieLootManager.shutdown();
-        if (zombieCombatManager != null)    zombieCombatManager.shutdown();
-        if (zombieSpawnManager != null)     zombieSpawnManager.shutdown();
-        if (irradiatedZombieManager != null) irradiatedZombieManager.shutdown();
-        if (advancementManager != null)     advancementManager.shutdown();
+        // Phase 4 — shut down first (ore radiation task, exposure task, save ore locations)
+        if (radiationExposureListener != null) radiationExposureListener.shutdown();
+        if (oreRadiationManager != null)       oreRadiationManager.shutdown();
+        if (oreMiningManager != null)          oreMiningManager.shutdown();
+        if (radiationDrillManager != null)     radiationDrillManager.shutdown();
+        if (oreGenerationManager != null)      oreGenerationManager.shutdown();
+        if (plutoniumOreManager != null)       plutoniumOreManager.shutdown(); // saves ore_data.yml
+
+        // Phase 3
+        if (radiationNightManager != null)     radiationNightManager.shutdown();
+        if (radiationCloudManager != null)     radiationCloudManager.shutdown();
+        if (zombieLootManager != null)         zombieLootManager.shutdown();
+        if (zombieCombatManager != null)       zombieCombatManager.shutdown();
+        if (zombieSpawnManager != null)        zombieSpawnManager.shutdown();
+        if (irradiatedZombieManager != null)   irradiatedZombieManager.shutdown();
+        if (advancementManager != null)        advancementManager.shutdown();
 
         // Phase 2
-        if (taskManager != null)            taskManager.shutdown();
-        if (radiationVisualManager != null) radiationVisualManager.shutdown();
-        if (contagionManager != null)       contagionManager.shutdown();
-        if (radiationManager != null)       radiationManager.shutdown();
+        if (taskManager != null)              taskManager.shutdown();
+        if (radiationVisualManager != null)   radiationVisualManager.shutdown();
+        if (contagionManager != null)         contagionManager.shutdown();
+        if (radiationManager != null)         radiationManager.shutdown();
 
         // Phase 1
-        if (playerDataManager != null)      playerDataManager.shutdown();
-        if (databaseManager != null)        databaseManager.shutdown();
-        if (guiManager != null)             guiManager.shutdown();
-        if (recipeManager != null)          recipeManager.shutdown();
-        if (blockManager != null)           blockManager.shutdown();
-        if (itemManager != null)            itemManager.shutdown();
-        if (configManager != null)          configManager.shutdown();
+        if (playerDataManager != null)        playerDataManager.shutdown();
+        if (databaseManager != null)          databaseManager.shutdown();
+        if (guiManager != null)               guiManager.shutdown();
+        if (recipeManager != null)            recipeManager.shutdown();
+        if (blockManager != null)             blockManager.shutdown();
+        if (itemManager != null)              itemManager.shutdown();
+        if (configManager != null)            configManager.shutdown();
 
         NCLogger.info("NuclearCraft has been disabled.");
     }
@@ -177,6 +196,25 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         advancementManager = new AdvancementManager(this, playerDataManager);
         advancementManager.initialize();
 
+        // ── Phase 4 ──
+        plutoniumOreManager = new PlutoniumOreManager(this, playerDataManager);
+        plutoniumOreManager.initialize();
+
+        oreGenerationManager = new OreGenerationManager(configManager, plutoniumOreManager);
+        oreGenerationManager.initialize();
+
+        radiationDrillManager = new RadiationDrillManager(this, itemManager);
+        radiationDrillManager.initialize();
+
+        oreMiningManager = new OreMiningManager(
+                this, configManager, plutoniumOreManager, radiationDrillManager,
+                radiationManager, playerDataManager, itemManager, advancementManager);
+        oreMiningManager.initialize();
+
+        oreRadiationManager = new OreRadiationManager(
+                this, configManager, radiationManager, plutoniumOreManager);
+        oreRadiationManager.initialize();
+
         NCLogger.debug("All managers initialized successfully.");
     }
 
@@ -194,6 +232,16 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 playerDataManager, advancementManager);
         pm.registerEvents(zombieSpawnListener, this);
 
+        // Phase 4
+        oreListener = new OreListener(
+                oreGenerationManager, oreMiningManager, plutoniumOreManager,
+                radiationDrillManager, advancementManager);
+        pm.registerEvents(oreListener, this);
+
+        radiationExposureListener = new RadiationExposureListener(
+                this, configManager, radiationManager, itemManager, oreMiningManager);
+        radiationExposureListener.initialize();
+
         NCLogger.debug("Event listeners registered.");
     }
 
@@ -203,13 +251,18 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         var handler = new NuclearCraftCommand(
                 this, configManager, playerDataManager, itemManager,
                 radiationManager, irradiatedZombieManager, zombieSpawnManager,
-                radiationCloudManager, radiationNightManager, advancementManager);
+                radiationCloudManager, radiationNightManager, advancementManager,
+                plutoniumOreManager, oreMiningManager);
         cmd.setExecutor(handler);
         cmd.setTabCompleter(handler);
         NCLogger.debug("Commands registered.");
     }
 
     public void reload() throws Exception {
+        // Shutdown Phase 4 tasks
+        if (radiationExposureListener != null) radiationExposureListener.shutdown();
+        if (oreRadiationManager != null)       oreRadiationManager.shutdown();
+
         // Shutdown Phase 3 tasks
         if (radiationNightManager != null)  radiationNightManager.shutdown();
         if (radiationCloudManager != null)  radiationCloudManager.shutdown();
@@ -237,6 +290,11 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         radiationCloudManager.initialize();
         radiationNightManager.initialize();
 
+        // Restart Phase 4 tasks (drill recipe re-registered by RadiationDrillManager)
+        radiationDrillManager.initialize();
+        oreRadiationManager.initialize();
+        radiationExposureListener.initialize();
+
         NCLogger.info("NuclearCraft reloaded successfully.");
     }
 
@@ -262,4 +320,11 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public RadiationNightManager getRadiationNightManager()       { return radiationNightManager; }
     public AdvancementManager getAdvancementManager()             { return advancementManager; }
     public ZombieSpawnListener getZombieSpawnListener()           { return zombieSpawnListener; }
+    public PlutoniumOreManager getPlutoniumOreManager()           { return plutoniumOreManager; }
+    public OreGenerationManager getOreGenerationManager()         { return oreGenerationManager; }
+    public OreMiningManager getOreMiningManager()                 { return oreMiningManager; }
+    public OreRadiationManager getOreRadiationManager()           { return oreRadiationManager; }
+    public RadiationDrillManager getRadiationDrillManager()       { return radiationDrillManager; }
+    public OreListener getOreListener()                           { return oreListener; }
+    public RadiationExposureListener getRadiationExposureListener() { return radiationExposureListener; }
 }

@@ -14,6 +14,9 @@ import java.util.UUID;
  *                    radiationCloudsSurvived, radioactiveCoresCollected,
  *                    mutatedSeedsCollected, irradiatedHeartsCollected.
  *
+ * Phase 4 additions: plutoniumOreFound, plutoniumOreMined, fragmentsCollected,
+ *                    radiationBurstsTriggered, drillUses, unsafeMiningAttempts.
+ *
  * Thread-safety: volatile for primitive fields read across threads;
  * writes must be done on the main thread or with external synchronization.
  */
@@ -43,6 +46,14 @@ public class PlayerData {
     private volatile int mutatedSeedsCollected;
     private volatile int irradiatedHeartsCollected;
 
+    // Ore statistics (Phase 4)
+    private volatile int plutoniumOreFound;
+    private volatile int plutoniumOreMined;
+    private volatile int fragmentsCollected;
+    private volatile int radiationBurstsTriggered;
+    private volatile int drillUses;
+    private volatile int unsafeMiningAttempts;
+
     // Progression
     private volatile int bossKills;
     private final Set<String> unlockedUpgrades;
@@ -71,6 +82,12 @@ public class PlayerData {
         this.radioactiveCoresCollected = 0;
         this.mutatedSeedsCollected = 0;
         this.irradiatedHeartsCollected = 0;
+        this.plutoniumOreFound = 0;
+        this.plutoniumOreMined = 0;
+        this.fragmentsCollected = 0;
+        this.radiationBurstsTriggered = 0;
+        this.drillUses = 0;
+        this.unsafeMiningAttempts = 0;
         this.bossKills = 0;
         this.unlockedUpgrades = new HashSet<>();
         this.dirty = false;
@@ -88,6 +105,9 @@ public class PlayerData {
                       int radiationCloudsSurvived,
                       int radioactiveCoresCollected, int mutatedSeedsCollected,
                       int irradiatedHeartsCollected,
+                      int plutoniumOreFound, int plutoniumOreMined,
+                      int fragmentsCollected, int radiationBurstsTriggered,
+                      int drillUses, int unsafeMiningAttempts,
                       int bossKills,
                       Set<String> unlockedUpgrades) {
         this.uuid = uuid;
@@ -107,6 +127,12 @@ public class PlayerData {
         this.radioactiveCoresCollected = radioactiveCoresCollected;
         this.mutatedSeedsCollected = mutatedSeedsCollected;
         this.irradiatedHeartsCollected = irradiatedHeartsCollected;
+        this.plutoniumOreFound = Math.max(0, plutoniumOreFound);
+        this.plutoniumOreMined = Math.max(0, plutoniumOreMined);
+        this.fragmentsCollected = Math.max(0, fragmentsCollected);
+        this.radiationBurstsTriggered = Math.max(0, radiationBurstsTriggered);
+        this.drillUses = Math.max(0, drillUses);
+        this.unsafeMiningAttempts = Math.max(0, unsafeMiningAttempts);
         this.bossKills = bossKills;
         this.unlockedUpgrades = new HashSet<>(unlockedUpgrades);
         this.dirty = false;
@@ -248,6 +274,70 @@ public class PlayerData {
     }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // Phase 4 ore statistics
+    // ──────────────────────────────────────────────────────────────────────────
+
+    public int getPlutoniumOreFound() { return plutoniumOreFound; }
+    public void incrementPlutoniumOreFound() {
+        this.plutoniumOreFound++;
+        this.dirty = true;
+    }
+    public void setPlutoniumOreFound(int count) {
+        this.plutoniumOreFound = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    public int getPlutoniumOreMined() { return plutoniumOreMined; }
+    public void incrementPlutoniumOreMined() {
+        this.plutoniumOreMined++;
+        this.dirty = true;
+    }
+    public void setPlutoniumOreMined(int count) {
+        this.plutoniumOreMined = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    public int getFragmentsCollected() { return fragmentsCollected; }
+    public void addFragmentsCollected(int amount) {
+        this.fragmentsCollected += Math.max(0, amount);
+        this.dirty = true;
+    }
+    public void setFragmentsCollected(int count) {
+        this.fragmentsCollected = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    public int getRadiationBurstsTriggered() { return radiationBurstsTriggered; }
+    public void incrementRadiationBurstsTriggered() {
+        this.radiationBurstsTriggered++;
+        this.dirty = true;
+    }
+    public void setRadiationBurstsTriggered(int count) {
+        this.radiationBurstsTriggered = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    public int getDrillUses() { return drillUses; }
+    public void incrementDrillUses() {
+        this.drillUses++;
+        this.dirty = true;
+    }
+    public void setDrillUses(int count) {
+        this.drillUses = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    public int getUnsafeMiningAttempts() { return unsafeMiningAttempts; }
+    public void incrementUnsafeMiningAttempts() {
+        this.unsafeMiningAttempts++;
+        this.dirty = true;
+    }
+    public void setUnsafeMiningAttempts(int count) {
+        this.unsafeMiningAttempts = Math.max(0, count);
+        this.dirty = true;
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // Progression
     // ──────────────────────────────────────────────────────────────────────────
 
@@ -276,6 +366,8 @@ public class PlayerData {
                 + ", radiation=" + radiationLevel
                 + ", stage=" + radiationStage
                 + ", izKills=" + irradiatedZombiesKilled
+                + ", oreFound=" + plutoniumOreFound
+                + ", oreMined=" + plutoniumOreMined
                 + ", source=" + lastRadiationSource + "}";
     }
 }

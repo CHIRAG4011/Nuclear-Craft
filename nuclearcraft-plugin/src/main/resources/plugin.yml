@@ -32,6 +32,7 @@ permissions:
       nuclearcraft.give: true
       nuclearcraft.admin.radiation: true
       nuclearcraft.admin.zombies: true
+      nuclearcraft.admin.ore: true
 
   nuclearcraft.reload:
     description: Allows reloading NuclearCraft configuration
@@ -51,4 +52,8 @@ permissions:
 
   nuclearcraft.admin.zombies:
     description: Allows admin-level zombie commands (spawn, stats, surge control)
+    default: op
+
+  nuclearcraft.admin.ore:
+    description: Allows admin-level ore commands (spawn plutonium ore, give fragments, view stats)
     default: op
