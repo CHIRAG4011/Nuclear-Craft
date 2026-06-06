@@ -6,3 +6,9 @@ id = "RY30P058f9zN9cYbxBp66"
 uri = "file://NuclearCraft-ResourcePack.zip"
 type = "unspecified"
 title = "NuclearCraft Resource Pack"
+
+[[outputs]]
+id = "hOE5TX6saNXQg6PRCwLA4"
+uri = "file://NuclearCraft_ResourcePack.zip"
+type = "unspecified"
+title = "NuclearCraft Resource Pack"

@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:item/magma_cream",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1101
+      },
+      "model": "minecraft:item/nuclearcraft/radioactive_core"
+    }
+  ]
+}

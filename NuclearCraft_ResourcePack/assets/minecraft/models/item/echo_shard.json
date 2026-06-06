@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:item/echo_shard",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1103
+      },
+      "model": "minecraft:item/nuclearcraft/refined_plutonium_ingot"
+    }
+  ]
+}

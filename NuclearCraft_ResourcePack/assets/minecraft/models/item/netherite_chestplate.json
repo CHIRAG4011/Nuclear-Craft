@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:item/netherite_chestplate",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1311
+      },
+      "model": "minecraft:item/nuclearcraft/plutonium_chestplate"
+    }
+  ]
+}

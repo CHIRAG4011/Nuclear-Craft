@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:item/leather_helmet",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1306
+      },
+      "model": "minecraft:item/nuclearcraft/hazmat_helmet"
+    }
+  ]
+}

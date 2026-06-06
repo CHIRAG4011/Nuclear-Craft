@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:item/netherite_sword",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1301
+      },
+      "model": "minecraft:item/nuclearcraft/plutonium_sword"
+    }
+  ]
+}

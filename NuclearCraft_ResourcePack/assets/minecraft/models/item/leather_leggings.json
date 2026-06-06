@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:item/leather_leggings",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1308
+      },
+      "model": "minecraft:item/nuclearcraft/hazmat_leggings"
+    }
+  ]
+}

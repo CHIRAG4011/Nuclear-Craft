@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:item/pink_petals",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1105
+      },
+      "model": "minecraft:item/nuclearcraft/healing_petal"
+    }
+  ]
+}

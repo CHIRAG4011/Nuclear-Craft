@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:item/honey_bottle",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1316
+      },
+      "model": "minecraft:item/nuclearcraft/radiation_antidote"
+    }
+  ]
+}

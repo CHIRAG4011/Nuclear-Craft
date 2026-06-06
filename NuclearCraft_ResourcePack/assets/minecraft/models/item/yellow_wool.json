@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:item/yellow_wool",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1315
+      },
+      "model": "minecraft:item/nuclearcraft/industrial_fabric"
+    }
+  ]
+}

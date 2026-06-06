@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:item/netherite_boots",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1313
+      },
+      "model": "minecraft:item/nuclearcraft/plutonium_boots"
+    }
+  ]
+}
