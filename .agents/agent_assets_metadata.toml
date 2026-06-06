@@ -12,3 +12,9 @@ id = "hOE5TX6saNXQg6PRCwLA4"
 uri = "file://NuclearCraft_ResourcePack.zip"
 type = "unspecified"
 title = "NuclearCraft Resource Pack"
+
+[[outputs]]
+id = "53aHQL-lguX71_hpTq5gP"
+uri = "file://NuclearCraft_Recipes.pdf"
+type = "pdf"
+title = "NuclearCraft_Recipes.pdf"
