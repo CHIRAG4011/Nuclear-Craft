@@ -1,3 +1,4 @@
-- [Java 21 build setup](java21-build.md) — JDK 16 is in Nix; download Adoptium JDK 21 to /tmp to compile.
+- [Java 21 build setup](java21-build.md) — JDK 16 is in Nix; download Adoptium JDK 21 to /tmp to compile. Use curl, not wget. Temurin 21.0.7+6 works.
 - [Paper API compile quirk](paper-api-compile.md) — Paper API jar targets Java 21; compiling with JDK < 21 gives "cannot access" errors on all Bukkit classes.
 - [Smelter data persistence](smelter-persistence.md) — Save with numbered keys (m0, m1…) and location-key as a sub-value; never use location string as a YAML path key.
+- [Phase 6 equipment architecture](phase6-equipment.md) — EquipmentManager orchestrates 10 sub-managers; RadiationResistanceManager is injected into RadiationManager via setResistanceManager() after init; WeaponEffectManager requires plugin instance for PDC key lookup.

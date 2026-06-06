@@ -1,0 +1,884 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 6 - Plutonium Tools, Weapons, Armor & Combat Systems
+
+You are continuing development of NuclearCraft for PaperMC 1.21+ using Java 21.
+
+Completed Systems:
+
+### Phase 1
+
+* Core Framework
+* Data System
+* GUI System
+* Config System
+* Item Framework
+* Block Framework
+
+### Phase 2
+
+* Radiation System
+* Infection System
+* Contagion System
+
+### Phase 3
+
+* Irradiated Zombies
+* Alpha Irradiated Zombies
+* Radiation Clouds
+* Radiation Surge Events
+
+### Phase 4
+
+* Plutonium Ore
+* Radiation Drill
+* Ore Radiation
+* Raw Plutonium Fragments
+
+### Phase 5
+
+* Nuclear Smelter
+* Refined Plutonium Ingots
+* Industrial Processing
+* Machine Framework
+
+Now implement the complete **Plutonium Equipment System**.
+
+This phase introduces the first true end-game equipment tier.
+
+Plutonium equipment should feel stronger than Netherite but come with risk.
+
+Using radioactive technology should be powerful but dangerous.
+
+Players should constantly balance power versus radiation.
+
+---
+
+# SYSTEM OVERVIEW
+
+Progression:
+
+Mine Plutonium
+
+↓
+
+Refine Plutonium
+
+↓
+
+Craft Plutonium Equipment
+
+↓
+
+Gain Powerful Abilities
+
+↓
+
+Risk Radiation Exposure
+
+↓
+
+Advance Toward Titan Technology
+
+---
+
+# EQUIPMENT FRAMEWORK
+
+Create:
+
+EquipmentManager
+
+PlutoniumToolManager
+
+PlutoniumArmorManager
+
+CombatManager
+
+ArmorEffectManager
+
+WeaponEffectManager
+
+EquipmentStatsManager
+
+All equipment should use the custom item framework from Phase 1.
+
+---
+
+# PLUTONIUM TOOL SET
+
+Create:
+
+Plutonium Sword
+
+Plutonium Axe
+
+Plutonium Pickaxe
+
+Plutonium Shovel
+
+Plutonium Hoe
+
+All tools must have:
+
+Custom Item IDs
+
+Custom Model Data
+
+Custom Lore
+
+PersistentDataContainer Integration
+
+Upgradeable Architecture
+
+Future Titan Upgrades Support
+
+---
+
+# VISUAL DESIGN
+
+Theme:
+
+Advanced Nuclear Technology
+
+Appearance:
+
+Black Metal
+
+Dark Titanium Base
+
+Glowing Toxic Green Lines
+
+Energy Veins
+
+Animated Reactor Core Elements
+
+Subtle Glow Effect
+
+Radiation Symbols
+
+Visual Goal:
+
+Immediately recognizable as nuclear technology.
+
+More advanced than Netherite.
+
+---
+
+# PLUTONIUM SWORD
+
+Create:
+
+PlutoniumSwordManager
+
+---
+
+# STATS
+
+Base Damage:
+
++10
+
+Attack Speed:
+
+Slightly Faster Than Netherite
+
+Durability:
+
+2500
+
+Configurable.
+
+---
+
+# SPECIAL ABILITY
+
+Radiation Strike
+
+Every successful hit:
+
+Apply Radiation
+
+Source:
+
+PLUTONIUM_WEAPON
+
+Radiation Applied:
+
+10
+
+Configurable.
+
+---
+
+# CRITICAL HIT EFFECT
+
+When critical hit occurs:
+
+Extra Radiation Burst
+
+Apply:
+
++20 Radiation
+
+Green Explosion Particles
+
+Custom Sound
+
+---
+
+# COMBAT VISUALS
+
+On Hit:
+
+Green Energy Slash
+
+Radiation Particles
+
+Small Reactor Sparks
+
+---
+
+# PLUTONIUM AXE
+
+Create:
+
+PlutoniumAxeManager
+
+---
+
+# STATS
+
+Damage:
+
+12
+
+Durability:
+
+2600
+
+---
+
+# SPECIAL ABILITY
+
+Radiation Shockwave
+
+When attacking:
+
+15% Chance
+
+Create Shockwave
+
+Radius:
+
+3 Blocks
+
+Nearby Entities:
+
+Receive Radiation
+
+Knockback
+
+Green Energy Burst
+
+---
+
+# PLUTONIUM PICKAXE
+
+Create:
+
+PlutoniumPickaxeManager
+
+---
+
+# STATS
+
+Mining Speed:
+
+20% Faster Than Netherite
+
+Durability:
+
+2800
+
+---
+
+# SPECIAL ABILITY
+
+Radioactive Extraction
+
+10% Chance:
+
+Mined Block Becomes
+
+Radioactive Debris
+
+---
+
+# RADIOACTIVE DEBRIS
+
+Create:
+
+RadioactiveDebrisManager
+
+Custom Block
+
+Appearance:
+
+Broken Radioactive Stone
+
+Green Cracks
+
+Particle Emission
+
+---
+
+# EFFECTS
+
+Nearby Players:
+
+Gain Radiation
+
+Radius:
+
+2 Blocks
+
+Duration:
+
+Until Removed
+
+Can Be Collected With Silk Touch.
+
+---
+
+# PLUTONIUM SHOVEL
+
+Create:
+
+PlutoniumShovelManager
+
+---
+
+# STATS
+
+Mining Speed:
+
+20% Faster Than Netherite
+
+Durability:
+
+2500
+
+---
+
+# SPECIAL ABILITY
+
+Radioactive Soil Conversion
+
+Chance:
+
+15%
+
+When Digging:
+
+Creates Radioactive Soil
+
+---
+
+# RADIOACTIVE SOIL
+
+Appearance:
+
+Dark Soil
+
+Green Energy Cracks
+
+Particles
+
+---
+
+# EFFECTS
+
+Walking On Soil:
+
+Radiation Exposure
+
+Source:
+
+RADIOACTIVE_SOIL
+
+---
+
+# PLUTONIUM HOE
+
+Create:
+
+PlutoniumHoeManager
+
+---
+
+# SPECIAL FUNCTION
+
+Unlike normal hoes.
+
+Right Click:
+
+Grass Block
+
+↓
+
+Radioactive Farmland
+
+Dirt
+
+↓
+
+Radioactive Farmland
+
+Coarse Dirt
+
+↓
+
+Radioactive Farmland
+
+Normal Farmland is NEVER created.
+
+---
+
+# RADIOACTIVE FARMLAND
+
+Appearance:
+
+Black Agricultural Soil
+
+Glowing Green Cracks
+
+Toxic Particles
+
+---
+
+# EFFECTS
+
+Crop Growth:
+
++50%
+
+Standing On Farmland:
+
+Radiation Exposure
+
+Unless protected.
+
+Future Mutated Plants use this block.
+
+---
+
+# ARMOR SYSTEM
+
+Create:
+
+Hazmat Armor
+
+Plutonium Armor
+
+---
+
+# HAZMAT ARMOR
+
+Purpose:
+
+Radiation Protection
+
+---
+
+# PIECES
+
+Helmet
+
+Chestplate
+
+Leggings
+
+Boots
+
+---
+
+# APPEARANCE
+
+Yellow Hazmat Suit
+
+Black Visor
+
+Protective Equipment
+
+Industrial Theme
+
+---
+
+# PROTECTION
+
+Full Set:
+
+80% Radiation Reduction
+
+Partial Set:
+
+Scale Protection
+
+Helmet:
+20%
+
+Chestplate:
+30%
+
+Leggings:
+20%
+
+Boots:
+10%
+
+---
+
+# PLUTONIUM ARMOR
+
+Create:
+
+PlutoniumArmorManager
+
+---
+
+# APPEARANCE
+
+Black Reactor Armor
+
+Glowing Green Energy Veins
+
+Core Reactor Chestplate
+
+Advanced Nuclear Technology
+
+---
+
+# STATS
+
+Stronger Than Netherite
+
+Higher Durability
+
+Radiation Resistant
+
+---
+
+# SET BONUS
+
+Full Set:
+
+100% Environmental Radiation Immunity
+
+Environmental Sources:
+
+Ore
+
+Farmland
+
+Debris
+
+Fragments
+
+Machines
+
+Clouds
+
+---
+
+# COMBAT RADIATION
+
+Players can still receive:
+
+Sword Radiation
+
+Boss Radiation
+
+Direct Attacks
+
+This keeps PvP balanced.
+
+---
+
+# ARMOR PASSIVES
+
+Helmet:
+
+Night Vision
+
+---
+
+Chestplate:
+
+Minor Regeneration
+
+---
+
+Leggings:
+
+Movement Speed
+
+---
+
+Boots:
+
+Fall Damage Reduction
+
+---
+
+# PLUTONIUM ARROW
+
+Create:
+
+PlutoniumArrowManager
+
+Custom Projectile System
+
+---
+
+# CRAFTING
+
+Uses:
+
+Refined Plutonium
+
+Arrow
+
+Radioactive Components
+
+---
+
+# EFFECTS
+
+On Hit:
+
+Apply Radiation
+
+Apply Poison
+
+Apply Glowing
+
+Create Green Impact Particles
+
+---
+
+# RADIATION RESISTANCE SYSTEM
+
+Create:
+
+RadiationResistanceManager
+
+---
+
+# CALCULATIONS
+
+Determine:
+
+Armor Protection
+
+Source Type
+
+Resistance Value
+
+Final Radiation Applied
+
+All radiation systems must use this manager.
+
+No duplicate calculations.
+
+---
+
+# REPAIR SYSTEM
+
+Create:
+
+EquipmentRepairManager
+
+---
+
+# REPAIR METHODS
+
+Plutonium Equipment
+
+↓
+
+Refined Plutonium Ingots
+
+---
+
+Hazmat Armor
+
+↓
+
+Industrial Fabric
+
+Future Item
+
+Architecture must support it.
+
+---
+
+# ADVANCEMENTS
+
+Create:
+
+Nuclear Warrior
+
+Craft First Plutonium Sword
+
+---
+
+Protected Worker
+
+Craft Full Hazmat Set
+
+---
+
+Nuclear Knight
+
+Craft Full Plutonium Armor
+
+---
+
+Radioactive Arsenal
+
+Craft All Plutonium Tools
+
+---
+
+# STATISTICS
+
+Track:
+
+Sword Hits
+
+Radiation Damage Inflicted
+
+Armor Usage Time
+
+Blocks Converted
+
+Farmland Created
+
+Debris Generated
+
+Arrows Fired
+
+Store permanently.
+
+---
+
+# COMMANDS
+
+Admin:
+
+/nuclearcraft equipment give sword
+
+/nuclearcraft equipment give axe
+
+/nuclearcraft equipment give pickaxe
+
+/nuclearcraft equipment give shovel
+
+/nuclearcraft equipment give hoe
+
+/nuclearcraft equipment give hazmat
+
+/nuclearcraft equipment give plutonium
+
+---
+
+/nuclearcraft equipment stats
+
+Permissions:
+
+nuclearcraft.admin.equipment
+
+---
+
+# CONFIGURATION
+
+Create:
+
+equipment.yml
+
+armor.yml
+
+weapons.yml
+
+Include:
+
+Durability
+
+Damage
+
+Speed
+
+Radiation Values
+
+Passive Effects
+
+Armor Bonuses
+
+Arrow Effects
+
+Repair Costs
+
+Everything configurable.
+
+---
+
+# PERFORMANCE REQUIREMENTS
+
+Must support:
+
+100+ Players
+
+Heavy PvP
+
+Large SMP Servers
+
+Avoid:
+
+Excessive event processing
+
+Duplicate radiation calculations
+
+Memory leaks
+
+Store equipment metadata efficiently.
+
+---
+
+# DELIVERABLES
+
+Generate complete production-ready code for:
+
+* EquipmentManager
+* PlutoniumToolManager
+* PlutoniumArmorManager
+* WeaponEffectManager
+* ArmorEffectManager
+* RadiationResistanceManager
+* RadioactiveDebrisManager
+* RadioactiveSoilManager
+* PlutoniumArrowManager
+* EquipmentRepairManager
+* Statistics Tracking
+* Commands
+* Advancements
+* Config Integration
+
+All code must compile successfully and integrate perfectly with:
+
+* Radiation System
+* Ore System
+* Smelter System
+* Item Framework
+* Block Framework
+
+After completion, the project should be fully ready for Phase 7: Radioactive Farming, Mutated Crops & Cure Systems.

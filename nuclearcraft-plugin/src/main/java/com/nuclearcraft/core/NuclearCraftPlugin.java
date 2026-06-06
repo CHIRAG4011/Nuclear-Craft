@@ -6,6 +6,7 @@ import com.nuclearcraft.commands.NuclearCraftCommand;
 import com.nuclearcraft.config.ConfigManager;
 import com.nuclearcraft.data.DatabaseManager;
 import com.nuclearcraft.data.PlayerDataManager;
+import com.nuclearcraft.equipment.EquipmentManager;
 import com.nuclearcraft.gui.GUIManager;
 import com.nuclearcraft.items.ItemManager;
 import com.nuclearcraft.listeners.*;
@@ -38,6 +39,8 @@ import java.util.Objects;
  *                    OreListener, RadiationExposureListener.
  * Phase 5 additions: NuclearSmelterManager, NuclearSmelterRecipeManager,
  *                    MachineRadiationManager, SmelterListener.
+ * Phase 6 additions: EquipmentManager (orchestrates all Phase 6 sub-managers),
+ *                    EquipmentListener registration.
  */
 public final class NuclearCraftPlugin extends JavaPlugin {
 
@@ -82,6 +85,10 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     private MachineRadiationManager machineRadiationManager;
     private SmelterListener smelterListener;
 
+    // ── Phase 6 ──
+    private EquipmentManager equipmentManager;
+    private EquipmentListener equipmentListener;
+
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
@@ -106,7 +113,10 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
 
-        // Phase 5 — shut down first
+        // Phase 6 — shut down first
+        if (equipmentManager != null) equipmentManager.shutdown();
+
+        // Phase 5
         if (machineRadiationManager != null) machineRadiationManager.shutdown();
         if (nuclearSmelterManager  != null)  nuclearSmelterManager.shutdown();  // saves smelter_data.yml
         if (smelterRecipeManager   != null)  smelterRecipeManager.shutdown();
@@ -244,6 +254,11 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 this, configManager, radiationManager, nuclearSmelterManager);
         machineRadiationManager.initialize();
 
+        // ── Phase 6 ──
+        equipmentManager = new EquipmentManager(
+                this, configManager, itemManager, radiationManager, playerDataManager);
+        equipmentManager.initialize(); // also wires resistanceManager into radiationManager
+
         NCLogger.debug("All managers initialized successfully.");
     }
 
@@ -277,6 +292,11 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 advancementManager, nuclearSmelterManager);
         pm.registerEvents(smelterListener, this);
 
+        // Phase 6
+        equipmentListener = new EquipmentListener(
+                this, itemManager, playerDataManager, advancementManager, equipmentManager);
+        pm.registerEvents(equipmentListener, this);
+
         NCLogger.debug("Event listeners registered.");
     }
 
@@ -287,13 +307,16 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 this, configManager, playerDataManager, itemManager,
                 radiationManager, irradiatedZombieManager, zombieSpawnManager,
                 radiationCloudManager, radiationNightManager, advancementManager,
-                plutoniumOreManager, oreMiningManager, nuclearSmelterManager);
+                plutoniumOreManager, oreMiningManager, nuclearSmelterManager, equipmentManager);
         cmd.setExecutor(handler);
         cmd.setTabCompleter(handler);
         NCLogger.debug("Commands registered.");
     }
 
     public void reload() throws Exception {
+        // Shutdown Phase 6 tasks
+        if (equipmentManager != null) equipmentManager.shutdown();
+
         // Shutdown Phase 5 tasks
         if (machineRadiationManager != null) machineRadiationManager.shutdown();
         if (nuclearSmelterManager   != null) nuclearSmelterManager.shutdown();
@@ -339,6 +362,9 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         nuclearSmelterManager.initialize();
         machineRadiationManager.initialize();
 
+        // Restart Phase 6
+        equipmentManager.initialize();
+
         NCLogger.info("NuclearCraft reloaded successfully.");
     }
 
@@ -375,4 +401,6 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public NuclearSmelterManager getNuclearSmelterManager()       { return nuclearSmelterManager; }
     public MachineRadiationManager getMachineRadiationManager()   { return machineRadiationManager; }
     public SmelterListener getSmelterListener()                   { return smelterListener; }
+    public EquipmentManager getEquipmentManager()                 { return equipmentManager; }
+    public EquipmentListener getEquipmentListener()               { return equipmentListener; }
 }

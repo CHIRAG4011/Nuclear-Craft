@@ -1,0 +1,113 @@
+# NuclearCraft — Equipment Configuration
+# Phase 6: Plutonium Tools, Weapons, Armor & Combat Systems
+
+tools:
+
+  plutonium-sword:
+    damage: 10.0          # Attribute modifier added to base 1
+    attack-speed: -2.3    # modifier (base 4.0); result 1.7/sec — slightly faster than netherite
+    durability: 2500
+    radiation-on-hit: 10
+    critical-radiation-bonus: 20
+    enabled: true
+
+  plutonium-axe:
+    damage: 11.0
+    attack-speed: -3.0    # result 1.0/sec
+    durability: 2600
+    shockwave-chance: 0.15
+    shockwave-radius: 3.0
+    shockwave-radiation: 15
+    enabled: true
+
+  plutonium-pickaxe:
+    durability: 2800
+    debris-chance: 0.10
+    enabled: true
+
+  plutonium-shovel:
+    durability: 2500
+    soil-conversion-chance: 0.15
+    enabled: true
+
+  plutonium-hoe:
+    durability: 2000
+    enabled: true
+
+armor:
+
+  hazmat:
+    helmet:
+      armor: 2.0
+      armor-toughness: 0.5
+      durability: 363
+      radiation-reduction: 0.20
+    chestplate:
+      armor: 5.0
+      armor-toughness: 0.5
+      durability: 529
+      radiation-reduction: 0.30
+    leggings:
+      armor: 4.0
+      armor-toughness: 0.5
+      durability: 496
+      radiation-reduction: 0.20
+    boots:
+      armor: 2.0
+      armor-toughness: 0.5
+      durability: 430
+      radiation-reduction: 0.10
+    full-set-bonus: 0.80
+
+  plutonium:
+    helmet:
+      armor: 4.0
+      armor-toughness: 3.0
+      durability: 500
+      knockback-resistance: 0.05
+    chestplate:
+      armor: 9.0
+      armor-toughness: 3.0
+      durability: 728
+    leggings:
+      armor: 7.0
+      armor-toughness: 3.0
+      durability: 683
+    boots:
+      armor: 4.0
+      armor-toughness: 3.0
+      durability: 592
+      knockback-resistance: 0.05
+    full-set-immunity: true       # full set blocks all environmental radiation
+    night-vision-amplifier: 0     # helmet passive
+    regen-amplifier: 0            # chestplate passive
+    speed-amplifier: 0            # leggings passive
+    passive-interval-ticks: 20
+
+debris:
+  radiation-radius: 2.0
+  radiation-amount: 3
+  radiation-interval-ticks: 100
+  particles-enabled: true
+  particle-interval-ticks: 20
+
+soil:
+  radiation-amount: 2
+  radiation-interval-ticks: 100
+
+farmland:
+  crop-growth-bonus: 0.50
+  radiation-amount: 1
+  radiation-interval-ticks: 100
+
+arrows:
+  radiation-amount: 25
+  poison-duration-ticks: 80
+  poison-amplifier: 0
+  glowing-duration-ticks: 100
+
+repair:
+  plutonium-material: refined-plutonium-ingot
+  repair-per-ingot: 300
+  hazmat-material: industrial-fabric
+  hazmat-repair-per-piece: 200

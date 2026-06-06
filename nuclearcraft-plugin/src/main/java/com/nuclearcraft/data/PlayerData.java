@@ -17,6 +17,12 @@ import java.util.UUID;
  * Phase 4 additions: plutoniumOreFound, plutoniumOreMined, fragmentsCollected,
  *                    radiationBurstsTriggered, drillUses, unsafeMiningAttempts.
  *
+ * Phase 5 additions: machinesBuilt, fragmentsProcessed, ingotsProduced,
+ *                    fuelConsumed, overheatsTriggered.
+ *
+ * Phase 6 additions: swordHits, radiationDamageInflicted, blocksConverted,
+ *                    farmlandCreated, debrisGenerated, arrowsFired.
+ *
  * Thread-safety: volatile for primitive fields read across threads;
  * writes must be done on the main thread or with external synchronization.
  */
@@ -61,6 +67,14 @@ public class PlayerData {
     private volatile int fuelConsumed;
     private volatile int overheatsTriggered;
 
+    // Equipment statistics (Phase 6)
+    private volatile int swordHits;
+    private volatile int radiationDamageInflicted;
+    private volatile int blocksConverted;
+    private volatile int farmlandCreated;
+    private volatile int debrisGenerated;
+    private volatile int arrowsFired;
+
     // Progression
     private volatile int bossKills;
     private final Set<String> unlockedUpgrades;
@@ -100,6 +114,12 @@ public class PlayerData {
         this.ingotsProduced = 0;
         this.fuelConsumed = 0;
         this.overheatsTriggered = 0;
+        this.swordHits = 0;
+        this.radiationDamageInflicted = 0;
+        this.blocksConverted = 0;
+        this.farmlandCreated = 0;
+        this.debrisGenerated = 0;
+        this.arrowsFired = 0;
         this.bossKills = 0;
         this.unlockedUpgrades = new HashSet<>();
         this.dirty = false;
@@ -123,7 +143,11 @@ public class PlayerData {
                       int machinesBuilt, int fragmentsProcessed,
                       int ingotsProduced, int fuelConsumed, int overheatsTriggered,
                       int bossKills,
-                      Set<String> unlockedUpgrades) {
+                      Set<String> unlockedUpgrades,
+                      // Phase 6
+                      int swordHits, int radiationDamageInflicted,
+                      int blocksConverted, int farmlandCreated,
+                      int debrisGenerated, int arrowsFired) {
         this.uuid = uuid;
         this.radiationLevel = radiationLevel;
         this.radiationStage = radiationStage;
@@ -154,6 +178,12 @@ public class PlayerData {
         this.overheatsTriggered = Math.max(0, overheatsTriggered);
         this.bossKills = bossKills;
         this.unlockedUpgrades = new HashSet<>(unlockedUpgrades);
+        this.swordHits = Math.max(0, swordHits);
+        this.radiationDamageInflicted = Math.max(0, radiationDamageInflicted);
+        this.blocksConverted = Math.max(0, blocksConverted);
+        this.farmlandCreated = Math.max(0, farmlandCreated);
+        this.debrisGenerated = Math.max(0, debrisGenerated);
+        this.arrowsFired = Math.max(0, arrowsFired);
         this.dirty = false;
     }
 
@@ -193,10 +223,7 @@ public class PlayerData {
     // ──────────────────────────────────────────────────────────────────────────
 
     public long getLastRadiationReceivedMs() { return lastRadiationReceivedMs; }
-    public void setLastRadiationReceivedMs(long ms) {
-        this.lastRadiationReceivedMs = ms;
-        this.dirty = true;
-    }
+    public void setLastRadiationReceivedMs(long ms) { this.lastRadiationReceivedMs = ms; this.dirty = true; }
 
     public String getLastRadiationSource() { return lastRadiationSource; }
     public void setLastRadiationSource(String source) {
@@ -205,156 +232,72 @@ public class PlayerData {
     }
 
     public int getTimesInfected() { return timesInfected; }
-    public void setTimesInfected(int count) {
-        this.timesInfected = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void setTimesInfected(int count) { this.timesInfected = Math.max(0, count); this.dirty = true; }
 
     public double getTotalRadiationExposure() { return totalRadiationExposure; }
-    public void addTotalRadiationExposure(double amount) {
-        this.totalRadiationExposure += Math.max(0, amount);
-        this.dirty = true;
-    }
+    public void addTotalRadiationExposure(double amount) { this.totalRadiationExposure += Math.max(0, amount); this.dirty = true; }
 
     public double getTotalRadiationCured() { return totalRadiationCured; }
-    public void addTotalRadiationCured(double amount) {
-        this.totalRadiationCured += Math.max(0, amount);
-        this.dirty = true;
-    }
+    public void addTotalRadiationCured(double amount) { this.totalRadiationCured += Math.max(0, amount); this.dirty = true; }
 
     public int getRadiationDeaths() { return radiationDeaths; }
-    public void setRadiationDeaths(int count) {
-        this.radiationDeaths = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void setRadiationDeaths(int count) { this.radiationDeaths = Math.max(0, count); this.dirty = true; }
 
     // ──────────────────────────────────────────────────────────────────────────
     // Phase 3 zombie statistics
     // ──────────────────────────────────────────────────────────────────────────
 
     public int getIrradiatedZombiesKilled() { return irradiatedZombiesKilled; }
-    public void incrementIrradiatedZombiesKilled() {
-        this.irradiatedZombiesKilled++;
-        this.dirty = true;
-    }
-    public void setIrradiatedZombiesKilled(int count) {
-        this.irradiatedZombiesKilled = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void incrementIrradiatedZombiesKilled() { this.irradiatedZombiesKilled++; this.dirty = true; }
+    public void setIrradiatedZombiesKilled(int count) { this.irradiatedZombiesKilled = Math.max(0, count); this.dirty = true; }
 
     public int getAlphaZombiesKilled() { return alphaZombiesKilled; }
-    public void incrementAlphaZombiesKilled() {
-        this.alphaZombiesKilled++;
-        this.dirty = true;
-    }
-    public void setAlphaZombiesKilled(int count) {
-        this.alphaZombiesKilled = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void incrementAlphaZombiesKilled() { this.alphaZombiesKilled++; this.dirty = true; }
+    public void setAlphaZombiesKilled(int count) { this.alphaZombiesKilled = Math.max(0, count); this.dirty = true; }
 
     public int getRadiationCloudsSurvived() { return radiationCloudsSurvived; }
-    public void incrementRadiationCloudsSurvived() {
-        this.radiationCloudsSurvived++;
-        this.dirty = true;
-    }
-    public void setRadiationCloudsSurvived(int count) {
-        this.radiationCloudsSurvived = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void incrementRadiationCloudsSurvived() { this.radiationCloudsSurvived++; this.dirty = true; }
+    public void setRadiationCloudsSurvived(int count) { this.radiationCloudsSurvived = Math.max(0, count); this.dirty = true; }
 
     public int getRadioactiveCoresCollected() { return radioactiveCoresCollected; }
-    public void incrementRadioactiveCoresCollected() {
-        this.radioactiveCoresCollected++;
-        this.dirty = true;
-    }
-    public void setRadioactiveCoresCollected(int count) {
-        this.radioactiveCoresCollected = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void incrementRadioactiveCoresCollected() { this.radioactiveCoresCollected++; this.dirty = true; }
+    public void setRadioactiveCoresCollected(int count) { this.radioactiveCoresCollected = Math.max(0, count); this.dirty = true; }
 
     public int getMutatedSeedsCollected() { return mutatedSeedsCollected; }
-    public void incrementMutatedSeedsCollected() {
-        this.mutatedSeedsCollected++;
-        this.dirty = true;
-    }
-    public void setMutatedSeedsCollected(int count) {
-        this.mutatedSeedsCollected = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void incrementMutatedSeedsCollected() { this.mutatedSeedsCollected++; this.dirty = true; }
+    public void setMutatedSeedsCollected(int count) { this.mutatedSeedsCollected = Math.max(0, count); this.dirty = true; }
 
     public int getIrradiatedHeartsCollected() { return irradiatedHeartsCollected; }
-    public void incrementIrradiatedHeartsCollected() {
-        this.irradiatedHeartsCollected++;
-        this.dirty = true;
-    }
-    public void setIrradiatedHeartsCollected(int count) {
-        this.irradiatedHeartsCollected = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void incrementIrradiatedHeartsCollected() { this.irradiatedHeartsCollected++; this.dirty = true; }
+    public void setIrradiatedHeartsCollected(int count) { this.irradiatedHeartsCollected = Math.max(0, count); this.dirty = true; }
 
     // ──────────────────────────────────────────────────────────────────────────
     // Phase 4 ore statistics
     // ──────────────────────────────────────────────────────────────────────────
 
     public int getPlutoniumOreFound() { return plutoniumOreFound; }
-    public void incrementPlutoniumOreFound() {
-        this.plutoniumOreFound++;
-        this.dirty = true;
-    }
-    public void setPlutoniumOreFound(int count) {
-        this.plutoniumOreFound = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void incrementPlutoniumOreFound() { this.plutoniumOreFound++; this.dirty = true; }
+    public void setPlutoniumOreFound(int count) { this.plutoniumOreFound = Math.max(0, count); this.dirty = true; }
 
     public int getPlutoniumOreMined() { return plutoniumOreMined; }
-    public void incrementPlutoniumOreMined() {
-        this.plutoniumOreMined++;
-        this.dirty = true;
-    }
-    public void setPlutoniumOreMined(int count) {
-        this.plutoniumOreMined = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void incrementPlutoniumOreMined() { this.plutoniumOreMined++; this.dirty = true; }
+    public void setPlutoniumOreMined(int count) { this.plutoniumOreMined = Math.max(0, count); this.dirty = true; }
 
     public int getFragmentsCollected() { return fragmentsCollected; }
-    public void addFragmentsCollected(int amount) {
-        this.fragmentsCollected += Math.max(0, amount);
-        this.dirty = true;
-    }
-    public void setFragmentsCollected(int count) {
-        this.fragmentsCollected = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void addFragmentsCollected(int amount) { this.fragmentsCollected += Math.max(0, amount); this.dirty = true; }
+    public void setFragmentsCollected(int count) { this.fragmentsCollected = Math.max(0, count); this.dirty = true; }
 
     public int getRadiationBurstsTriggered() { return radiationBurstsTriggered; }
-    public void incrementRadiationBurstsTriggered() {
-        this.radiationBurstsTriggered++;
-        this.dirty = true;
-    }
-    public void setRadiationBurstsTriggered(int count) {
-        this.radiationBurstsTriggered = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void incrementRadiationBurstsTriggered() { this.radiationBurstsTriggered++; this.dirty = true; }
+    public void setRadiationBurstsTriggered(int count) { this.radiationBurstsTriggered = Math.max(0, count); this.dirty = true; }
 
     public int getDrillUses() { return drillUses; }
-    public void incrementDrillUses() {
-        this.drillUses++;
-        this.dirty = true;
-    }
-    public void setDrillUses(int count) {
-        this.drillUses = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void incrementDrillUses() { this.drillUses++; this.dirty = true; }
+    public void setDrillUses(int count) { this.drillUses = Math.max(0, count); this.dirty = true; }
 
     public int getUnsafeMiningAttempts() { return unsafeMiningAttempts; }
-    public void incrementUnsafeMiningAttempts() {
-        this.unsafeMiningAttempts++;
-        this.dirty = true;
-    }
-    public void setUnsafeMiningAttempts(int count) {
-        this.unsafeMiningAttempts = Math.max(0, count);
-        this.dirty = true;
-    }
+    public void incrementUnsafeMiningAttempts() { this.unsafeMiningAttempts++; this.dirty = true; }
+    public void setUnsafeMiningAttempts(int count) { this.unsafeMiningAttempts = Math.max(0, count); this.dirty = true; }
 
     // ──────────────────────────────────────────────────────────────────────────
     // Phase 5 smelter statistics
@@ -381,14 +324,33 @@ public class PlayerData {
     public void setOverheatsTriggered(int count) { this.overheatsTriggered = Math.max(0, count); this.dirty = true; }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // Phase 6 equipment statistics
+    // ──────────────────────────────────────────────────────────────────────────
+
+    public int getSwordHits() { return swordHits; }
+    public void setSwordHits(int count) { this.swordHits = Math.max(0, count); this.dirty = true; }
+
+    public int getRadiationDamageInflicted() { return radiationDamageInflicted; }
+    public void setRadiationDamageInflicted(int count) { this.radiationDamageInflicted = Math.max(0, count); this.dirty = true; }
+
+    public int getBlocksConverted() { return blocksConverted; }
+    public void setBlocksConverted(int count) { this.blocksConverted = Math.max(0, count); this.dirty = true; }
+
+    public int getFarmlandCreated() { return farmlandCreated; }
+    public void setFarmlandCreated(int count) { this.farmlandCreated = Math.max(0, count); this.dirty = true; }
+
+    public int getDebrisGenerated() { return debrisGenerated; }
+    public void setDebrisGenerated(int count) { this.debrisGenerated = Math.max(0, count); this.dirty = true; }
+
+    public int getArrowsFired() { return arrowsFired; }
+    public void setArrowsFired(int count) { this.arrowsFired = Math.max(0, count); this.dirty = true; }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // Progression
     // ──────────────────────────────────────────────────────────────────────────
 
     public int getBossKills() { return bossKills; }
-    public void incrementBossKills() {
-        this.bossKills++;
-        this.dirty = true;
-    }
+    public void incrementBossKills() { this.bossKills++; this.dirty = true; }
 
     public Set<String> getUnlockedUpgrades() { return unlockedUpgrades; }
     public boolean hasUpgrade(String id) { return unlockedUpgrades.contains(id); }
@@ -411,6 +373,7 @@ public class PlayerData {
                 + ", izKills=" + irradiatedZombiesKilled
                 + ", oreFound=" + plutoniumOreFound
                 + ", oreMined=" + plutoniumOreMined
+                + ", swordHits=" + swordHits
                 + ", source=" + lastRadiationSource + "}";
     }
 }

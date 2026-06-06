@@ -26,7 +26,8 @@ public class ConfigManager {
         BOSS("boss.yml"),
         TOOLSTATS("toolstats.yml"),
         ARMORS("armors.yml"),
-        SMELTER("smelter.yml");
+        SMELTER("smelter.yml"),
+        EQUIPMENT("equipment.yml");
 
         private final String fileName;
 
@@ -118,6 +119,10 @@ public class ConfigManager {
 
     public FileConfiguration getSmelter() {
         return get(ConfigFile.SMELTER);
+    }
+
+    public FileConfiguration getEquipment() {
+        return get(ConfigFile.EQUIPMENT);
     }
 
     public void save(ConfigFile cf) {

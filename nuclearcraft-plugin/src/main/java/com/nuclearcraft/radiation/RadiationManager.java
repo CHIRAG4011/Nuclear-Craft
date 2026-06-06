@@ -45,11 +45,24 @@ public class RadiationManager {
     private final ConfigManager configManager;
     private final PlayerDataManager playerDataManager;
 
+    /** Injected by Phase 6 EquipmentManager after it initialises. May be null before Phase 6. */
+    private com.nuclearcraft.equipment.RadiationResistanceManager resistanceManager;
+
     public RadiationManager(NuclearCraftPlugin plugin, ConfigManager configManager,
                              PlayerDataManager playerDataManager) {
         this.plugin = plugin;
         this.configManager = configManager;
         this.playerDataManager = playerDataManager;
+    }
+
+    /**
+     * Wires the Phase 6 resistance manager into the radiation pipeline.
+     * Once set, all subsequent {@link #addRadiation} calls use the new
+     * hazmat/plutonium armor logic instead of the generic piece-count fallback.
+     */
+    public void setResistanceManager(com.nuclearcraft.equipment.RadiationResistanceManager resistanceManager) {
+        this.resistanceManager = resistanceManager;
+        NCLogger.info("RadiationResistanceManager wired into RadiationManager.");
     }
 
     public void initialize() {
@@ -83,8 +96,15 @@ public class RadiationManager {
 
         if (data.isImmune()) return;
 
-        // Armor reduction
-        int effectiveAmount = applyArmorReduction(player, amount);
+        // Armor reduction — use Phase 6 resistance manager when available,
+        // otherwise fall back to the legacy generic piece-count logic
+        int effectiveAmount;
+        if (resistanceManager != null) {
+            double multiplier = resistanceManager.getMultiplier(player, source);
+            effectiveAmount = (int) Math.max(0, amount * multiplier);
+        } else {
+            effectiveAmount = applyArmorReduction(player, amount);
+        }
 
         RadiationGainEvent event = new RadiationGainEvent(player, effectiveAmount, source, data.getRadiationLevel());
         plugin.getServer().getPluginManager().callEvent(event);

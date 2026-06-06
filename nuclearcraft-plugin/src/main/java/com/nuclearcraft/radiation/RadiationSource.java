@@ -15,6 +15,9 @@ public enum RadiationSource {
     /** Radiation from standing near Radioactive Debris. */
     RADIOACTIVE_DEBRIS("Radioactive Debris"),
 
+    /** Radiation from walking on Radioactive Soil. */
+    RADIOACTIVE_SOIL("Radioactive Soil"),
+
     /** Radiation from working on or near Radioactive Farmland. */
     RADIOACTIVE_FARMLAND("Radioactive Farmland"),
 

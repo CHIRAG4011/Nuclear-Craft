@@ -5,6 +5,7 @@ import com.nuclearcraft.config.ConfigManager;
 import com.nuclearcraft.core.NuclearCraftPlugin;
 import com.nuclearcraft.data.PlayerData;
 import com.nuclearcraft.data.PlayerDataManager;
+import com.nuclearcraft.equipment.EquipmentManager;
 import com.nuclearcraft.items.ItemManager;
 import com.nuclearcraft.ore.OreMiningManager;
 import com.nuclearcraft.ore.PlutoniumOreManager;
@@ -44,7 +45,14 @@ import java.util.stream.Collectors;
 public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> TOP_SUBCOMMANDS =
-            List.of("help", "reload", "info", "debug", "give", "version", "radiation", "zombie", "ore", "smelter");
+            List.of("help", "reload", "info", "debug", "give", "version", "radiation", "zombie", "ore", "smelter", "equipment");
+    private static final List<String> EQUIPMENT_SUBCOMMANDS =
+            List.of("give", "stats");
+    private static final List<String> EQUIPMENT_GIVE_TYPES = List.of(
+            "plutonium-sword", "plutonium-axe", "plutonium-pickaxe", "plutonium-shovel", "plutonium-hoe",
+            "plutonium-helmet", "plutonium-chestplate", "plutonium-leggings", "plutonium-boots",
+            "hazmat-helmet", "hazmat-chestplate", "hazmat-leggings", "hazmat-boots",
+            "plutonium-arrow", "refined-plutonium-ingot", "industrial-fabric");
     private static final List<String> RADIATION_SUBCOMMANDS =
             List.of("check", "add", "remove", "set", "clear");
     private static final List<String> ZOMBIE_SUBCOMMANDS =
@@ -75,6 +83,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     private final PlutoniumOreManager plutoniumOreManager;
     private final OreMiningManager oreMiningManager;
     private final NuclearSmelterManager nuclearSmelterManager;
+    private final EquipmentManager equipmentManager;
 
     public NuclearCraftCommand(NuclearCraftPlugin plugin, ConfigManager configManager,
                                 PlayerDataManager playerDataManager, ItemManager itemManager,
@@ -86,7 +95,8 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                                 AdvancementManager advancementManager,
                                 PlutoniumOreManager plutoniumOreManager,
                                 OreMiningManager oreMiningManager,
-                                NuclearSmelterManager nuclearSmelterManager) {
+                                NuclearSmelterManager nuclearSmelterManager,
+                                EquipmentManager equipmentManager) {
         this.plugin = plugin;
         this.configManager = configManager;
         this.playerDataManager = playerDataManager;
@@ -100,6 +110,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         this.plutoniumOreManager = plutoniumOreManager;
         this.oreMiningManager = oreMiningManager;
         this.nuclearSmelterManager = nuclearSmelterManager;
+        this.equipmentManager = equipmentManager;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -121,6 +132,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             case "zombie"    -> { handleZombie(sender, args);      yield true; }
             case "ore"       -> { handleOre(sender, args);         yield true; }
             case "smelter"   -> { handleSmelter(sender, args);     yield true; }
+            case "equipment" -> { handleEquipment(sender, args);  yield true; }
             default -> {
                 sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.unknown-command")));
                 yield true;
@@ -167,6 +179,10 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             entries.put("nuclearcraft smelter give [player]", "Give a Nuclear Smelter to self or target");
             entries.put("nuclearcraft smelter stats",         "Show smelter system statistics");
             entries.put("nuclearcraft smelter debug",         "List all active machines and their state");
+        }
+        if (sender.hasPermission("nuclearcraft.admin.equipment")) {
+            entries.put("nuclearcraft equipment give <type>", "Give a plutonium/hazmat equipment item");
+            entries.put("nuclearcraft equipment stats",       "Show Phase 6 equipment stats for online players");
         }
         entries.forEach((cmd, desc) ->
                 sender.sendMessage(ColorUtil.parse(
@@ -669,6 +685,98 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // Phase 6 equipment subcommand
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private void handleEquipment(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("nuclearcraft.admin.equipment")) {
+            sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.no-permission")));
+            return;
+        }
+        if (args.length < 2) {
+            sender.sendMessage(ColorUtil.parse(
+                    "<red>Usage: /nuclearcraft equipment <give|stats></red>"));
+            return;
+        }
+        switch (args[1].toLowerCase()) {
+            case "give"  -> handleEquipmentGive(sender, args);
+            case "stats" -> handleEquipmentStats(sender);
+            default -> sender.sendMessage(ColorUtil.parse(
+                    "<red>Unknown equipment subcommand. Use: give, stats</red>"));
+        }
+    }
+
+    private void handleEquipmentGive(CommandSender sender, String[] args) {
+        // Usage: /nuclearcraft equipment give <type> [player]
+        if (args.length < 3) {
+            sender.sendMessage(ColorUtil.parse("<red>Usage: /nuclearcraft equipment give <type> [player]</red>"));
+            return;
+        }
+        String itemId = args[2].toLowerCase();
+        Player target;
+        if (args.length >= 4) {
+            target = resolvePlayer(sender, args[3]);
+            if (target == null) return;
+        } else if (sender instanceof Player p) {
+            target = p;
+        } else {
+            sender.sendMessage(ColorUtil.parse("<red>Must specify a player when running from console.</red>"));
+            return;
+        }
+
+        int amount = 1;
+        if (args.length >= 5) {
+            amount = parseAmount(sender, args[4]);
+            if (amount < 0) return;
+        }
+
+        final Player finalTarget = target;
+        final int finalAmount = Math.max(1, amount);
+
+        itemManager.getRegistry().get(itemId).ifPresentOrElse(ci -> {
+            finalTarget.getInventory().addItem(ci.build(finalAmount));
+            sender.sendMessage(ColorUtil.parse(
+                    "<green>Given <aqua>" + finalAmount + "x " + itemId
+                    + "</aqua> to <yellow>" + finalTarget.getName() + "</yellow>.</green>"));
+        }, () -> sender.sendMessage(ColorUtil.parse(
+                "<red>Unknown equipment item: <white>" + itemId + "</white>. "
+                + "Check /nuclearcraft equipment give for valid types.</red>")));
+    }
+
+    private void handleEquipmentStats(CommandSender sender) {
+        sender.sendMessage(ColorUtil.parse(
+                "<dark_gray>── <gradient:#39ff14:#00bfff>Phase 6 Equipment Stats</gradient> ──</dark_gray>"));
+
+        int totalSwordHits = 0, totalRadDmg = 0, totalBlocks = 0,
+            totalFarmland = 0, totalDebris = 0, totalArrows = 0;
+
+        for (var player : plugin.getServer().getOnlinePlayers()) {
+            var dataOpt = playerDataManager.get(player.getUniqueId());
+            if (dataOpt.isEmpty()) continue;
+            var data = dataOpt.get();
+            totalSwordHits += data.getSwordHits();
+            totalRadDmg    += data.getRadiationDamageInflicted();
+            totalBlocks    += data.getBlocksConverted();
+            totalFarmland  += data.getFarmlandCreated();
+            totalDebris    += data.getDebrisGenerated();
+            totalArrows    += data.getArrowsFired();
+        }
+
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Sword Hits (online):</gray> <white>" + totalSwordHits + "</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Radiation Inflicted (online):</gray> <red>" + totalRadDmg + " rad</red>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Blocks Converted (online):</gray> <white>" + totalBlocks + "</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Radioactive Farmland Created (online):</gray> <green>" + totalFarmland + "</green>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Radioactive Debris Created (online):</gray> <white>" + totalDebris + "</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Plutonium Arrows Fired (online):</gray> <aqua>" + totalArrows + "</aqua>"));
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // Tab completion
     // ──────────────────────────────────────────────────────────────────────────
 
@@ -693,6 +801,9 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             if ("smelter".equalsIgnoreCase(args[0]) && sender.hasPermission("nuclearcraft.admin.smelter")) {
                 return filter(SMELTER_SUBCOMMANDS, args[1]);
             }
+            if ("equipment".equalsIgnoreCase(args[0]) && sender.hasPermission("nuclearcraft.admin.equipment")) {
+                return filter(EQUIPMENT_SUBCOMMANDS, args[1]);
+            }
         }
 
         if (args.length == 3) {
@@ -713,6 +824,19 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                     && sender.hasPermission("nuclearcraft.admin.smelter")) {
                 return plugin.getServer().getOnlinePlayers().stream()
                         .map(Player::getName).filter(n -> n.startsWith(args[2]))
+                        .collect(Collectors.toList());
+            }
+            if ("equipment".equalsIgnoreCase(args[0]) && "give".equalsIgnoreCase(args[1])
+                    && sender.hasPermission("nuclearcraft.admin.equipment")) {
+                return filter(EQUIPMENT_GIVE_TYPES, args[2]);
+            }
+        }
+
+        if (args.length == 4) {
+            if ("equipment".equalsIgnoreCase(args[0]) && "give".equalsIgnoreCase(args[1])
+                    && sender.hasPermission("nuclearcraft.admin.equipment")) {
+                return plugin.getServer().getOnlinePlayers().stream()
+                        .map(Player::getName).filter(n -> n.startsWith(args[3]))
                         .collect(Collectors.toList());
             }
         }

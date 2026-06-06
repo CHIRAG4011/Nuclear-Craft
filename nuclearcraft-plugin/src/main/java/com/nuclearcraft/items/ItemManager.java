@@ -117,6 +117,18 @@ public class ItemManager {
                 1107,
                 true));
 
+        // ── Phase 6: Equipment crafting materials ─────────────────────────────
+
+        register(new CustomItem(plugin,
+                "industrial-fabric",
+                "<gradient:#ffcc00:#ffffff>Industrial Fabric</gradient>",
+                List.of("Woven from radiation-hardened fibres.",
+                        "<green>Used to craft and repair Hazmat Suits</green>",
+                        "<yellow>☢ Radiation-resistant material</yellow>"),
+                Material.YELLOW_WOOL,
+                1315,
+                false));
+
         // ── Phase 5: Nuclear Smelter ──────────────────────────────────────────
 
         register(new CustomItem(plugin,

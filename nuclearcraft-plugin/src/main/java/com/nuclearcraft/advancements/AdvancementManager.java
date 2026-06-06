@@ -108,6 +108,32 @@ public class AdvancementManager {
                 "☢ Master Refiner",
                 "You have produced 100 Refined Plutonium Ingots — true industrial power!",
                 1000,
+                Sound.UI_TOAST_CHALLENGE_COMPLETE),
+
+        // ── Phase 6: Plutonium Equipment ─────────────────────────────────────
+
+        NUCLEAR_WARRIOR("nuclear_warrior",
+                "☢ Nuclear Warrior",
+                "You crafted your first Plutonium Sword — a weapon of mass irradiation.",
+                500,
+                Sound.ENTITY_PLAYER_LEVELUP),
+
+        PROTECTED_WORKER("protected_worker",
+                "☢ Protected Worker",
+                "You assembled a complete Hazmat Suit — stay safe out there.",
+                400,
+                Sound.BLOCK_AMETHYST_CLUSTER_PLACE),
+
+        NUCLEAR_KNIGHT("nuclear_knight",
+                "☢ Nuclear Knight",
+                "Full Plutonium Armor equipped — environmentally untouchable.",
+                750,
+                Sound.UI_TOAST_CHALLENGE_COMPLETE),
+
+        RADIOACTIVE_ARSENAL("radioactive_arsenal",
+                "☢ Radioactive Arsenal",
+                "You crafted all five Plutonium Tools — the complete nuclear toolkit.",
+                1000,
                 Sound.UI_TOAST_CHALLENGE_COMPLETE);
 
         private final String key;

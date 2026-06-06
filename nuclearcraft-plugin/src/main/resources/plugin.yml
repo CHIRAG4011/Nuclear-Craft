@@ -34,6 +34,7 @@ permissions:
       nuclearcraft.admin.zombies: true
       nuclearcraft.admin.ore: true
       nuclearcraft.admin.smelter: true
+      nuclearcraft.admin.equipment: true
 
   nuclearcraft.reload:
     description: Allows reloading NuclearCraft configuration
@@ -61,4 +62,8 @@ permissions:
 
   nuclearcraft.admin.smelter:
     description: Allows admin-level smelter commands (give smelter, view stats, debug machines)
+    default: op
+
+  nuclearcraft.admin.equipment:
+    description: Allows admin-level equipment commands (give plutonium/hazmat items, view stats)
     default: op

@@ -11,11 +11,13 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * Manages database connectivity and schema (Phase 1–4 extended schema).
+ * Manages database connectivity and schema (Phase 1–6 extended schema).
  * Supports SQLite (default) and MySQL via HikariCP.
  * Migration-safe: uses ALTER TABLE approach for new columns so existing data is preserved.
  *
  * Phase 4 additions: 6 ore-statistics columns.
+ * Phase 5 additions: 5 smelter-statistics columns.
+ * Phase 6 additions: 6 equipment-statistics columns.
  */
 public class DatabaseManager {
 
@@ -80,7 +82,7 @@ public class DatabaseManager {
 
     private void createTables() throws SQLException {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
-            // Full Phase 1–4 schema
+            // Full Phase 1–6 schema
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS player_data (
                     uuid                        TEXT    PRIMARY KEY,
@@ -111,7 +113,13 @@ public class DatabaseManager {
                     fragments_processed         INTEGER NOT NULL DEFAULT 0,
                     ingots_produced             INTEGER NOT NULL DEFAULT 0,
                     fuel_consumed               INTEGER NOT NULL DEFAULT 0,
-                    overheats_triggered         INTEGER NOT NULL DEFAULT 0
+                    overheats_triggered         INTEGER NOT NULL DEFAULT 0,
+                    sword_hits                  INTEGER NOT NULL DEFAULT 0,
+                    radiation_damage_inflicted  INTEGER NOT NULL DEFAULT 0,
+                    blocks_converted            INTEGER NOT NULL DEFAULT 0,
+                    farmland_created            INTEGER NOT NULL DEFAULT 0,
+                    debris_generated            INTEGER NOT NULL DEFAULT 0,
+                    arrows_fired                INTEGER NOT NULL DEFAULT 0
                 )
             """);
             stmt.execute("""
@@ -160,6 +168,14 @@ public class DatabaseManager {
             addColumnIfMissing(conn, "player_data", "ingots_produced",       "INTEGER NOT NULL DEFAULT 0");
             addColumnIfMissing(conn, "player_data", "fuel_consumed",         "INTEGER NOT NULL DEFAULT 0");
             addColumnIfMissing(conn, "player_data", "overheats_triggered",   "INTEGER NOT NULL DEFAULT 0");
+
+            // Phase 6 columns
+            addColumnIfMissing(conn, "player_data", "sword_hits",                 "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "radiation_damage_inflicted", "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "blocks_converted",           "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "farmland_created",           "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "debris_generated",           "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "arrows_fired",               "INTEGER NOT NULL DEFAULT 0");
         }
         NCLogger.debug("Database migrations complete.");
     }
@@ -221,7 +237,14 @@ public class DatabaseManager {
                             rs.getInt("fuel_consumed"),
                             rs.getInt("overheats_triggered"),
                             rs.getInt("boss_kills"),
-                            upgrades
+                            upgrades,
+                            // Phase 6
+                            rs.getInt("sword_hits"),
+                            rs.getInt("radiation_damage_inflicted"),
+                            rs.getInt("blocks_converted"),
+                            rs.getInt("farmland_created"),
+                            rs.getInt("debris_generated"),
+                            rs.getInt("arrows_fired")
                     ));
                 }
             }
@@ -242,8 +265,10 @@ public class DatabaseManager {
                 plutonium_ore_found, plutonium_ore_mined, fragments_collected,
                 radiation_bursts_triggered, drill_uses, unsafe_mining_attempts,
                 machines_built, fragments_processed, ingots_produced,
-                fuel_consumed, overheats_triggered
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                fuel_consumed, overheats_triggered,
+                sword_hits, radiation_damage_inflicted,
+                blocks_converted, farmland_created, debris_generated, arrows_fired
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(uuid) DO UPDATE SET
                 radiation_level             = excluded.radiation_level,
                 radiation_stage             = excluded.radiation_stage,
@@ -272,7 +297,13 @@ public class DatabaseManager {
                 fragments_processed         = excluded.fragments_processed,
                 ingots_produced             = excluded.ingots_produced,
                 fuel_consumed               = excluded.fuel_consumed,
-                overheats_triggered         = excluded.overheats_triggered
+                overheats_triggered         = excluded.overheats_triggered,
+                sword_hits                  = excluded.sword_hits,
+                radiation_damage_inflicted  = excluded.radiation_damage_inflicted,
+                blocks_converted            = excluded.blocks_converted,
+                farmland_created            = excluded.farmland_created,
+                debris_generated            = excluded.debris_generated,
+                arrows_fired                = excluded.arrows_fired
         """;
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1,  data.getUuid().toString());
@@ -304,6 +335,12 @@ public class DatabaseManager {
             ps.setInt(27,    data.getIngotsProduced());
             ps.setInt(28,    data.getFuelConsumed());
             ps.setInt(29,    data.getOverheatsTriggered());
+            ps.setInt(30,    data.getSwordHits());
+            ps.setInt(31,    data.getRadiationDamageInflicted());
+            ps.setInt(32,    data.getBlocksConverted());
+            ps.setInt(33,    data.getFarmlandCreated());
+            ps.setInt(34,    data.getDebrisGenerated());
+            ps.setInt(35,    data.getArrowsFired());
             ps.executeUpdate();
             saveUpgrades(conn, data);
             data.markClean();

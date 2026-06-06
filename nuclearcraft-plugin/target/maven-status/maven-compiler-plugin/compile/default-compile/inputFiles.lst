@@ -8,6 +8,18 @@
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/data/DatabaseManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/data/PlayerData.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/data/PlayerDataManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/ArmorEffectManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/EquipmentItem.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/EquipmentManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/EquipmentRepairManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/PlutoniumArmorManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/PlutoniumArrowManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/PlutoniumToolManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/RadiationResistanceManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/RadioactiveDebrisManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/RadioactiveFarmlandManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/RadioactiveSoilManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/WeaponEffectManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/events/NuclearSmelterCompleteEvent.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/events/NuclearSmelterOverheatEvent.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/events/NuclearSmelterStartEvent.java
@@ -23,6 +35,7 @@
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/items/ItemManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/items/ItemRegistry.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/CoreListener.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/EquipmentListener.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/OreListener.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/RadiationExposureListener.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/RadiationListener.java
