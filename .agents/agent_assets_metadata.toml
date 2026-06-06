@@ -30,3 +30,9 @@ id = "eFoflPKyK1-KO26mta2tX"
 uri = "file://NuclearCraft Plutonium Age — Plugin Guide 1.0.1.pdf"
 type = "pdf"
 title = "NuclearCraft: Plutonium Age — Plugin Guide 1.0.1"
+
+[[outputs]]
+id = "1KpJAnZWoS_HmjLhMBiOk"
+uri = "file://NuclearCraft-Guide.pdf"
+type = "pdf"
+title = "NuclearCraft: Plutonium Age — Complete Guide"
