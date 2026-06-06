@@ -2,6 +2,7 @@ package com.nuclearcraft.core;
 
 import com.nuclearcraft.advancements.AdvancementManager;
 import com.nuclearcraft.blocks.BlockManager;
+import com.nuclearcraft.combat.CombatManager;
 import com.nuclearcraft.commands.NuclearCraftCommand;
 import com.nuclearcraft.config.ConfigManager;
 import com.nuclearcraft.data.DatabaseManager;
@@ -95,6 +96,10 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     private RadiationAuraManager radiationAuraManager;
     private ForgeListener forgeListener;
 
+    // ── Phase 9 ──
+    private CombatManager combatManager;
+    private NuclearCraftCommand nuclearCraftCommandHandler;
+
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
@@ -119,7 +124,11 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
 
+        // Phase 9 — shut down combat systems first
+        if (combatManager != null) combatManager.shutdown();
+
         // Phase 8 — shut down forge systems before Phase 7
+        // Note: radiationAuraManager may already be shut down by CombatManager
         if (radiationAuraManager != null) radiationAuraManager.shutdown();
         if (nuclearForgeManager  != null) nuclearForgeManager.shutdown();
         if (forgeRecipeManager   != null) forgeRecipeManager.shutdown();
@@ -297,6 +306,13 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 this, configManager, radiationManager, upgradeManager);
         radiationAuraManager.initialize();
 
+        // ── Phase 9 ──
+        combatManager = new CombatManager(
+                this, configManager, radiationManager, equipmentManager,
+                upgradeManager, playerDataManager, advancementManager,
+                radiationAuraManager);
+        combatManager.initialize();
+
         NCLogger.debug("All managers initialized successfully.");
     }
 
@@ -345,20 +361,26 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         forgeListener = new ForgeListener(nuclearForgeManager, itemManager, this);
         pm.registerEvents(forgeListener, this);
 
+        // Phase 9
+        pm.registerEvents(
+                new com.nuclearcraft.listeners.CombatListener(this, combatManager, configManager),
+                this);
+
         NCLogger.debug("Event listeners registered.");
     }
 
     private void registerCommands() {
         var cmd = Objects.requireNonNull(getCommand("nuclearcraft"),
                 "Command 'nuclearcraft' not found in plugin.yml");
-        var handler = new NuclearCraftCommand(
+        nuclearCraftCommandHandler = new NuclearCraftCommand(
                 this, configManager, playerDataManager, itemManager,
                 radiationManager, irradiatedZombieManager, zombieSpawnManager,
                 radiationCloudManager, radiationNightManager, advancementManager,
                 plutoniumOreManager, oreMiningManager, nuclearSmelterManager,
                 equipmentManager, farmingManager, nuclearForgeManager, upgradeManager);
-        cmd.setExecutor(handler);
-        cmd.setTabCompleter(handler);
+        nuclearCraftCommandHandler.setCombatManager(combatManager);
+        cmd.setExecutor(nuclearCraftCommandHandler);
+        cmd.setTabCompleter(nuclearCraftCommandHandler);
         NCLogger.debug("Commands registered.");
     }
 
@@ -473,4 +495,7 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public NuclearForgeManager getNuclearForgeManager()           { return nuclearForgeManager; }
     public RadiationAuraManager getRadiationAuraManager()         { return radiationAuraManager; }
     public ForgeListener getForgeListener()                       { return forgeListener; }
+
+    // Phase 9
+    public CombatManager getCombatManager()                       { return combatManager; }
 }

@@ -1,0 +1,138 @@
+# ═══════════════════════════════════════════════════════════════
+#  NuclearCraft — combat.yml
+#  Phase 9: Advanced Combat & PvP Radiation System
+# ═══════════════════════════════════════════════════════════════
+
+combat:
+  enabled: true
+
+# ─────────────────────────────────────────────────────────────────
+#  Radiation Damage Values
+# ─────────────────────────────────────────────────────────────────
+
+radiation:
+  sword:
+    # Base radiation applied per sword hit (additive on top of equipment.yml value)
+    base-hit: 0
+    # Bonus radiation on a critical hit (falling + not sprinting)
+    critical-bonus: 5
+    # Bonus when victim is at stage 3+ (increased vulnerability)
+    high-stage-bonus: 5
+
+  axe:
+    base-hit: 0
+    shockwave-extra-radiation: 5
+
+  arrow:
+    # Radiation applied on arrow hit
+    base-hit: 15
+    # Extra for headshot detection (not implemented in vanilla; approximated)
+    headshot-bonus: 10
+    # Critical shot bonus (near-max bow charge)
+    critical-bonus: 20
+    # Poison duration in ticks
+    poison-duration: 80
+    poison-amplifier: 0
+    # Glowing duration in ticks
+    glowing-duration: 100
+
+  aura:
+    # Radiation applied to hostile mobs each aura tick
+    mob-per-tick: 25
+    # Radiation applied to enemy players each aura tick (PvP)
+    pvp-per-tick: 15
+    # Aura radius in blocks
+    radius: 3.0
+    # Tick period for aura (20 = 1 second)
+    tick-period: 40
+    # Whether the aura affects team-mates (false = only enemies)
+    affect-allies: false
+    enabled: true
+
+# ─────────────────────────────────────────────────────────────────
+#  Combo System (CombatInfectionManager)
+# ─────────────────────────────────────────────────────────────────
+
+combo:
+  enabled: true
+  # Maximum combo hits tracked before bonus caps
+  max-hits: 8
+  # Time in ms after last hit before combo resets
+  reset-ms: 6000
+  # Extra radiation PER combo stack (hit 2 = +5, hit 3 = +10, etc.)
+  radiation-per-stack: 5
+  # Maximum bonus radiation from combo (regardless of hit count)
+  max-bonus: 35
+
+# ─────────────────────────────────────────────────────────────────
+#  Radiation Surge (when two irradiated players duel)
+# ─────────────────────────────────────────────────────────────────
+
+surge:
+  enabled: true
+  # Minimum radiation stage both players must have to trigger
+  min-stage-both: 2
+  # Chance (0.0–1.0) per hit to trigger a surge
+  trigger-chance: 0.05
+  # Radiation added to BOTH combatants
+  both-player-amount: 30
+  # Radiation added to nearby third-party players
+  nearby-amount: 15
+  nearby-radius: 8.0
+  # Cooldown between surges per player pair (ms)
+  cooldown-ms: 15000
+
+# ─────────────────────────────────────────────────────────────────
+#  Weapon Mastery
+# ─────────────────────────────────────────────────────────────────
+
+mastery:
+  enabled: true
+
+  # XP thresholds per mastery level
+  levels:
+    novice:     0
+    experienced: 100
+    veteran:    500
+    elite:      1500
+    master:     4000
+
+  # XP gained per action
+  xp:
+    sword-hit: 1
+    sword-kill: 10
+    axe-hit: 1
+    axe-kill: 10
+    bow-hit: 2
+    bow-kill: 15
+
+  # Bonuses at MASTER tier (applied as multipliers on extra radiation)
+  bonuses:
+    sword-radiation-bonus-pct: 10    # +10% radiation on hits
+    arrow-radiation-bonus-pct: 10    # +10% arrow radiation
+    axe-shockwave-radius-bonus: 1.5  # extra blocks added to shockwave radius
+
+# ─────────────────────────────────────────────────────────────────
+#  Kill Tracking & Death Messages
+# ─────────────────────────────────────────────────────────────────
+
+kills:
+  # Window in ms to attribute a radiation kill to the last PvP attacker
+  attribution-window-ms: 30000
+  custom-death-messages: true
+
+# ─────────────────────────────────────────────────────────────────
+#  Visual Effects
+# ─────────────────────────────────────────────────────────────────
+
+visuals:
+  weapon-hit-particles: true
+  combo-particles: true
+  surge-particles: true
+  aura-particles: true
+  arrow-impact-particles: true
+  # Particle counts
+  hit-particle-count: 12
+  combo-particle-count: 20
+  surge-particle-count: 60
+  aura-particle-count: 5

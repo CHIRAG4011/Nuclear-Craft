@@ -1,0 +1,670 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 9 - Advanced Combat, Plutonium Arrows, PvP Radiation Mechanics & Combat Expansion
+
+You are continuing development of NuclearCraft for PaperMC 1.21+ using Java 21.
+
+Completed Systems:
+
+### Phase 1
+
+* Core Framework
+* Data System
+* Commands
+* GUI Framework
+
+### Phase 2
+
+* Radiation System
+* Infection System
+* Contagion System
+
+### Phase 3
+
+* Irradiated Zombies
+* Radiation Clouds
+* Alpha Irradiated Zombies
+
+### Phase 4
+
+* Plutonium Ore
+* Radiation Drill
+* Ore Radiation
+
+### Phase 5
+
+* Nuclear Smelter
+* Industrial Processing
+* Refined Plutonium
+
+### Phase 6
+
+* Plutonium Equipment
+* Hazmat Armor
+* Combat Systems
+
+### Phase 7
+
+* Radioactive Farming
+* Mutated Crops
+* Cure System
+
+### Phase 8
+
+* Nuclear Forge
+* MK-I to MK-IV Upgrades
+* Radiation Aura System
+
+Now implement the complete **Advanced Combat & PvP Radiation System**.
+
+This phase transforms radiation from an environmental hazard into a combat mechanic.
+
+Players should fear being infected by enemy players.
+
+Combat should feel unique and different from vanilla Minecraft.
+
+Radiation should become a weapon.
+
+---
+
+# SYSTEM OVERVIEW
+
+Progression:
+
+Plutonium Weapons
+
+↓
+
+Radiation Combat
+
+↓
+
+Advanced PvP
+
+↓
+
+Boss Preparation
+
+↓
+
+Titan Progression
+
+Radiation should create strategic decisions during combat.
+
+---
+
+# COMBAT FRAMEWORK
+
+Create:
+
+CombatManager
+
+RadiationCombatManager
+
+PvPRadiationManager
+
+ProjectileManager
+
+CombatStatisticsManager
+
+DamageCalculationManager
+
+All combat calculations should pass through centralized systems.
+
+---
+
+# RADIATION DAMAGE TYPES
+
+Create:
+
+RadiationDamageType enum
+
+Types:
+
+WEAPON
+
+ARROW
+
+AURA
+
+CLOUD
+
+CONTAGION
+
+BOSS
+
+ENVIRONMENTAL
+
+ADMIN
+
+Store source information.
+
+---
+
+# PLUTONIUM ARROW
+
+Create:
+
+PlutoniumArrowManager
+
+Custom Arrow Item
+
+Custom Projectile Tracking
+
+---
+
+# APPEARANCE
+
+Arrow Shaft:
+
+Dark Reinforced Metal
+
+Arrowhead:
+
+Glowing Green Crystal
+
+Energy Trails
+
+Green Particles
+
+---
+
+# CRAFTING
+
+Uses:
+
+Arrow
+
+Refined Plutonium Ingot
+
+Radioactive Core Fragments
+
+Balanced recipe required.
+
+---
+
+# PROJECTILE BEHAVIOR
+
+On Hit:
+
+Apply Radiation
+
+Apply Poison
+
+Apply Glowing
+
+Create Impact Explosion
+
+Play Custom Sound
+
+---
+
+# RADIATION VALUES
+
+Base Hit:
+
+15 Radiation
+
+Direct Headshot:
+
+25 Radiation
+
+Critical Shot:
+
+35 Radiation
+
+Configurable.
+
+---
+
+# ARMOR INTERACTION
+
+Hazmat Armor
+
+Reduces Radiation
+
+---
+
+Plutonium Armor
+
+Provides Resistance
+
+Not Complete Immunity
+
+Combat radiation should remain dangerous.
+
+---
+
+# RADIATION PVP SYSTEM
+
+Create:
+
+PvPRadiationManager
+
+---
+
+# PLAYER VS PLAYER
+
+When using:
+
+Plutonium Sword
+
+Plutonium Axe
+
+Plutonium Arrow
+
+Radiation Aura
+
+Apply Radiation To Target.
+
+Radiation persists after combat.
+
+Players must cure themselves later.
+
+---
+
+# COMBAT INFECTION SYSTEM
+
+Create:
+
+CombatInfectionManager
+
+---
+
+# MECHANIC
+
+Repeated attacks increase infection severity.
+
+Example:
+
+First Hit
+
++10 Radiation
+
+Second Hit
+
++15 Radiation
+
+Third Hit
+
++20 Radiation
+
+Fourth Hit
+
++25 Radiation
+
+Creates combo system.
+
+---
+
+# RADIATION COMBO TRACKER
+
+Track:
+
+Attacker
+
+Victim
+
+Recent Hits
+
+Combo Duration
+
+Reset Timer
+
+Configurable.
+
+---
+
+# DUEL EFFECTS
+
+When two highly irradiated players fight:
+
+Chance To Trigger:
+
+Radiation Surge
+
+---
+
+# RADIATION SURGE
+
+Visual:
+
+Large Green Explosion
+
+Sound Effects
+
+Particle Burst
+
+---
+
+Effect:
+
+Both Players Gain Radiation
+
+Nearby Players Gain Radiation
+
+Configurable.
+
+---
+
+# RADIATION AURA EXPANSION
+
+Integrate MK-IV Equipment.
+
+Create:
+
+AdvancedAuraManager
+
+---
+
+# AURA EFFECTS
+
+MK-IV Equipment
+
+Generates Radiation Aura
+
+Radius:
+
+3 Blocks
+
+---
+
+Effects:
+
+Hostile Mobs
+
+Receive Radiation
+
+---
+
+Players
+
+Receive Radiation In PvP
+
+---
+
+Aura does NOT affect allies.
+
+Support future team systems.
+
+---
+
+# WEAPON MASTERY SYSTEM
+
+Create:
+
+WeaponMasteryManager
+
+---
+
+# TRACK
+
+Sword Usage
+
+Axe Usage
+
+Arrow Usage
+
+Kills
+
+Radiation Inflicted
+
+---
+
+# MASTERY LEVELS
+
+Novice
+
+Experienced
+
+Veteran
+
+Elite
+
+Master
+
+---
+
+# BONUSES
+
+Master Sword User:
+
++10% Radiation Application
+
+---
+
+Master Archer:
+
++10% Arrow Radiation
+
+---
+
+Master Axe User:
+
+Larger Shockwaves
+
+---
+
+# COMBAT EFFECTS
+
+Create:
+
+CombatVisualManager
+
+---
+
+# EFFECTS
+
+Weapon Trails
+
+Energy Bursts
+
+Impact Effects
+
+Critical Radiation Explosions
+
+Aura Effects
+
+All configurable.
+
+---
+
+# KILL REWARDS
+
+Create:
+
+RadiationKillManager
+
+---
+
+# TRACK
+
+PvP Kills
+
+Radiation Kills
+
+Arrow Kills
+
+Aura Kills
+
+---
+
+# SPECIAL DEATHS
+
+Custom Messages:
+
+"Player succumbed to radiation inflicted by Player."
+
+"Player was contaminated by Player's plutonium weapon."
+
+"Player was eliminated by radioactive exposure."
+
+---
+
+# BOUNTY SYSTEM
+
+Optional.
+
+Create framework only.
+
+Future support:
+
+Radiation Hunter Bounties
+
+PvP Contracts
+
+Faction Objectives
+
+No implementation yet.
+
+---
+
+# ADVANCEMENTS
+
+Create:
+
+Radioactive Warrior
+
+Inflict Radiation In PvP
+
+---
+
+Contaminator
+
+Infect Another Player
+
+---
+
+Nuclear Archer
+
+Kill With Plutonium Arrow
+
+---
+
+Radiation Master
+
+Inflict 10,000 Radiation
+
+---
+
+# STATISTICS
+
+Track:
+
+PvP Kills
+
+Radiation Kills
+
+Arrow Hits
+
+Arrow Kills
+
+Aura Damage
+
+Radiation Applied
+
+Weapon Mastery
+
+Store permanently.
+
+---
+
+# COMMANDS
+
+Admin:
+
+/nuclearcraft combat stats
+
+Display Combat Statistics
+
+---
+
+/nuclearcraft combat radiation
+
+View Radiation Combat Data
+
+---
+
+/nuclearcraft combat mastery
+
+View Mastery Levels
+
+Permissions:
+
+nuclearcraft.admin.combat
+
+---
+
+# CONFIGURATION
+
+Create:
+
+combat.yml
+
+Include:
+
+Damage Values
+
+Radiation Values
+
+Combo Values
+
+Aura Settings
+
+Mastery Settings
+
+Projectile Settings
+
+Particle Settings
+
+Everything configurable.
+
+---
+
+# PERFORMANCE REQUIREMENTS
+
+Support:
+
+Large PvP Servers
+
+100+ Players
+
+Massive Battles
+
+Avoid:
+
+Repeated entity scans
+
+Projectile memory leaks
+
+Heavy combat calculations
+
+Optimize all tracking systems.
+
+---
+
+# DELIVERABLES
+
+Generate complete production-ready code for:
+
+* CombatManager
+* RadiationCombatManager
+* PvPRadiationManager
+* CombatInfectionManager
+* WeaponMasteryManager
+* PlutoniumArrowManager
+* AdvancedAuraManager
+* CombatVisualManager
+* RadiationKillManager
+* Commands
+* Statistics Tracking
+* Config Integration
+
+All code must compile successfully and integrate perfectly with:
+
+* Radiation System
+* Equipment System
+* Nuclear Forge Upgrades
+* Player Data System
+
+After completion, the project should be fully ready for **Phase 10: Plutonium Titan Boss, Endgame Encounters & Nuclear Raid Progression**.

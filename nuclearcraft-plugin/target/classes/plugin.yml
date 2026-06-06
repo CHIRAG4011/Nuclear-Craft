@@ -37,6 +37,7 @@ permissions:
       nuclearcraft.admin.equipment: true
       nuclearcraft.admin.farming: true
       nuclearcraft.admin.forge: true
+      nuclearcraft.admin.combat: true
 
   nuclearcraft.reload:
     description: Allows reloading NuclearCraft configuration
@@ -76,4 +77,8 @@ permissions:
 
   nuclearcraft.admin.forge:
     description: Allows admin-level forge commands (give forge, set energy, upgrade items, view stats)
+    default: op
+
+  nuclearcraft.admin.combat:
+    description: Allows admin-level combat commands (view stats, mastery, radiation kills)
     default: op

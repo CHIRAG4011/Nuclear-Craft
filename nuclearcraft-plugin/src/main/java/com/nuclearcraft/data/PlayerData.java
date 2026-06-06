@@ -85,6 +85,18 @@ public class PlayerData {
     private volatile int failedUpgrades;
     private volatile int mk4Creations;
 
+    // Combat statistics (Phase 9)
+    private volatile int pvpKills;
+    private volatile int pvpRadiationKills;
+    private volatile int pvpArrowKills;
+    private volatile int pvpAuraKills;
+    private volatile int pvpArrowHits;
+    private volatile long totalPvPRadiationInflicted;
+    private volatile long auraDamageDealt;
+    private volatile int swordMasteryXp;
+    private volatile int axeMasteryXp;
+    private volatile int bowMasteryXp;
+
     // Farming statistics (Phase 7)
     private volatile int seedsPlanted;
     private volatile int plantsHarvested;
@@ -143,6 +155,16 @@ public class PlayerData {
         this.successfulUpgrades = 0;
         this.failedUpgrades = 0;
         this.mk4Creations = 0;
+        this.pvpKills = 0;
+        this.pvpRadiationKills = 0;
+        this.pvpArrowKills = 0;
+        this.pvpAuraKills = 0;
+        this.pvpArrowHits = 0;
+        this.totalPvPRadiationInflicted = 0L;
+        this.auraDamageDealt = 0L;
+        this.swordMasteryXp = 0;
+        this.axeMasteryXp = 0;
+        this.bowMasteryXp = 0;
         this.seedsPlanted = 0;
         this.plantsHarvested = 0;
         this.healingPetalsCollected = 0;
@@ -445,6 +467,46 @@ public class PlayerData {
     public int getMk4Creations()             { return mk4Creations; }
     public void incrementMk4Creations()      { this.mk4Creations++; this.dirty = true; }
     public void setMk4Creations(int v)       { this.mk4Creations = Math.max(0, v); this.dirty = true; }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Phase 9 combat statistics
+    // ──────────────────────────────────────────────────────────────────────────
+
+    public int getPvPKills()                { return pvpKills; }
+    public void incrementPvPKills()         { this.pvpKills++; this.dirty = true; }
+
+    public int getPvPRadiationKills()       { return pvpRadiationKills; }
+    public void incrementPvPRadiationKills(){ this.pvpRadiationKills++; this.dirty = true; }
+
+    public int getPvPArrowKills()           { return pvpArrowKills; }
+    public void incrementPvPArrowKills()    { this.pvpArrowKills++; this.dirty = true; }
+
+    public int getPvPAuraKills()            { return pvpAuraKills; }
+    public void incrementPvPAuraKills()     { this.pvpAuraKills++; this.dirty = true; }
+
+    public int getPvPArrowHits()            { return pvpArrowHits; }
+    public void incrementPvPArrowHits()     { this.pvpArrowHits++; this.dirty = true; }
+
+    public long getTotalPvPRadiationInflicted() { return totalPvPRadiationInflicted; }
+    public void addPvPRadiationInflicted(int amount) {
+        this.totalPvPRadiationInflicted += Math.max(0, amount);
+        this.dirty = true;
+    }
+
+    public long getAuraDamageDealt()        { return auraDamageDealt; }
+    public void addAuraDamageDealt(int amount) {
+        this.auraDamageDealt += Math.max(0, amount);
+        this.dirty = true;
+    }
+
+    public int getSwordMasteryXp()          { return swordMasteryXp; }
+    public void addSwordMasteryXp(int xp)   { this.swordMasteryXp += Math.max(0, xp); this.dirty = true; }
+
+    public int getAxeMasteryXp()            { return axeMasteryXp; }
+    public void addAxeMasteryXp(int xp)     { this.axeMasteryXp += Math.max(0, xp); this.dirty = true; }
+
+    public int getBowMasteryXp()            { return bowMasteryXp; }
+    public void addBowMasteryXp(int xp)     { this.bowMasteryXp += Math.max(0, xp); this.dirty = true; }
 
     /** Expose dirty flag so managers can mark without going through a stat increment. */
     public void setDirty(boolean dirty)      { this.dirty = dirty; }

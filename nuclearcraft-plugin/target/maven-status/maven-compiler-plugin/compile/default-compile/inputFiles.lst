@@ -2,6 +2,17 @@
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/blocks/BlockManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/blocks/BlockRegistry.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/blocks/CustomBlock.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/combat/AdvancedAuraManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/combat/CombatInfectionManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/combat/CombatManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/combat/CombatStatisticsManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/combat/CombatVisualManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/combat/DamageCalculationManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/combat/PvPRadiationManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/combat/RadiationCombatManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/combat/RadiationDamageType.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/combat/RadiationKillManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/combat/WeaponMasteryManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/commands/NuclearCraftCommand.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/config/ConfigManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/core/NuclearCraftPlugin.java
@@ -60,6 +71,7 @@
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/items/CustomItem.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/items/ItemManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/items/ItemRegistry.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/CombatListener.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/CoreListener.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/EquipmentListener.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/FarmingListener.java

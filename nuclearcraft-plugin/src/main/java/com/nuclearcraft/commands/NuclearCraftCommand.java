@@ -1,6 +1,8 @@
 package com.nuclearcraft.commands;
 
 import com.nuclearcraft.advancements.AdvancementManager;
+import com.nuclearcraft.combat.CombatManager;
+import com.nuclearcraft.combat.WeaponMasteryManager;
 import com.nuclearcraft.config.ConfigManager;
 import com.nuclearcraft.core.NuclearCraftPlugin;
 import com.nuclearcraft.data.PlayerData;
@@ -60,7 +62,9 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> TOP_SUBCOMMANDS =
             List.of("help", "reload", "info", "debug", "give", "version",
-                    "radiation", "zombie", "ore", "smelter", "equipment", "farming", "forge");
+                    "radiation", "zombie", "ore", "smelter", "equipment", "farming", "forge", "combat");
+    private static final List<String> COMBAT_SUBCOMMANDS =
+            List.of("stats", "mastery", "radiation");
     private static final List<String> FORGE_SUBCOMMANDS =
             List.of("give", "energy", "upgrade", "stats");
     private static final List<String> FORGE_ENERGY_ACTIONS =
@@ -112,6 +116,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     private final FarmingManager farmingManager;
     private final NuclearForgeManager nuclearForgeManager;
     private final UpgradeManager upgradeManager;
+    private CombatManager combatManager;
 
     public NuclearCraftCommand(NuclearCraftPlugin plugin, ConfigManager configManager,
                                 PlayerDataManager playerDataManager, ItemManager itemManager,
@@ -147,6 +152,11 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         this.upgradeManager = upgradeManager;
     }
 
+    /** Called after Phase 9 init so command can display combat stats. */
+    public void setCombatManager(CombatManager combatManager) {
+        this.combatManager = combatManager;
+    }
+
     // ──────────────────────────────────────────────────────────────────────────
     // Routing
     // ──────────────────────────────────────────────────────────────────────────
@@ -169,6 +179,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             case "equipment" -> { handleEquipment(sender, args);   yield true; }
             case "farming"   -> { handleFarming(sender, args);     yield true; }
             case "forge"     -> { handleForge(sender, args);       yield true; }
+            case "combat"    -> { handleCombat(sender, args);     yield true; }
             default -> {
                 sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.unknown-command")));
                 yield true;
@@ -910,6 +921,62 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // Phase 9 combat
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private void handleCombat(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("nuclearcraft.admin.combat")) {
+            sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.no-permission")));
+            return;
+        }
+        if (combatManager == null) {
+            sender.sendMessage(ColorUtil.parse("<red>Combat system (Phase 9) is not initialized.</red>"));
+            return;
+        }
+        String sub = args.length >= 2 ? args[1].toLowerCase() : "stats";
+        switch (sub) {
+            case "stats" -> {
+                Player target = (sender instanceof Player p && args.length < 3) ? p
+                        : args.length >= 3 ? resolvePlayer(sender, args[2]) : null;
+                if (target == null) { sender.sendMessage(ColorUtil.parse("<red>Usage: /nc combat stats [player]</red>")); return; }
+                playerDataManager.get(target.getUniqueId()).ifPresentOrElse(data -> {
+                    sender.sendMessage(ColorUtil.parse(
+                            "<gold>☢ Combat Stats — <white>" + target.getName() + "</white></gold>"));
+                    sender.sendMessage(ColorUtil.parse(
+                            "  <gray>PvP Kills:</gray> <white>" + data.getPvPKills() + "</white>"
+                            + "  <gray>Radiation Kills:</gray> <white>" + data.getPvPRadiationKills() + "</white>"));
+                    sender.sendMessage(ColorUtil.parse(
+                            "  <gray>Arrow Kills:</gray> <white>" + data.getPvPArrowKills() + "</white>"
+                            + "  <gray>Aura Kills:</gray> <white>" + data.getPvPAuraKills() + "</white>"));
+                    sender.sendMessage(ColorUtil.parse(
+                            "  <gray>Total PvP Radiation Inflicted:</gray> <green>" + data.getTotalPvPRadiationInflicted() + "</green>"));
+                }, () -> sender.sendMessage(ColorUtil.parse("<red>No data found for " + target.getName() + ".</red>")));
+            }
+            case "mastery" -> {
+                Player target = (sender instanceof Player p && args.length < 3) ? p
+                        : args.length >= 3 ? resolvePlayer(sender, args[2]) : null;
+                if (target == null) { sender.sendMessage(ColorUtil.parse("<red>Usage: /nc combat mastery [player]</red>")); return; }
+                sender.sendMessage(combatManager.getMasteryManager().getSummary(target));
+            }
+            case "radiation" -> {
+                Player target = (sender instanceof Player p && args.length < 3) ? p
+                        : args.length >= 3 ? resolvePlayer(sender, args[2]) : null;
+                if (target == null) { sender.sendMessage(ColorUtil.parse("<red>Usage: /nc combat radiation [player]</red>")); return; }
+                playerDataManager.get(target.getUniqueId()).ifPresent(data -> {
+                    sender.sendMessage(ColorUtil.parse(
+                            "<gold>☢ Radiation Combat — <white>" + target.getName() + "</white></gold>"));
+                    sender.sendMessage(ColorUtil.parse(
+                            "  <gray>Arrow Hits:</gray> <white>" + data.getPvPArrowHits() + "</white>"));
+                    sender.sendMessage(ColorUtil.parse(
+                            "  <gray>Aura Damage Dealt:</gray> <green>" + data.getAuraDamageDealt() + "</green>"));
+                });
+            }
+            default -> sender.sendMessage(ColorUtil.parse(
+                    "<red>Unknown combat subcommand. Use: stats | mastery | radiation</red>"));
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // Tab completion
     // ──────────────────────────────────────────────────────────────────────────
 
@@ -939,6 +1006,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                               : args.length == 3 && "energy".equals(args[1])  ? filter(FORGE_ENERGY_ACTIONS, args[2])
                               : args.length == 3 && "upgrade".equals(args[1]) ? filter(FORGE_UPGRADE_TIERS, args[2])
                               : List.of();
+            case "combat"    -> args.length == 2 ? filter(COMBAT_SUBCOMMANDS, args[1]) : List.of();
             case "give"      -> args.length == 2
                     ? plugin.getServer().getOnlinePlayers().stream()
                             .map(Player::getName)

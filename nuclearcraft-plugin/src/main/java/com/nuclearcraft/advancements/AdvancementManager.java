@@ -210,6 +210,32 @@ public class AdvancementManager {
                 "☢ Perfected Technology",
                 "All equipment slots now carry MK-IV upgrades. The radiation aura surrounds you.",
                 5000,
+                Sound.UI_TOAST_CHALLENGE_COMPLETE),
+
+        // ── Phase 9: Advanced Combat ──────────────────────────────────────────
+
+        RADIOACTIVE_WARRIOR("radioactive_warrior",
+                "☢ Radioactive Warrior",
+                "You applied radiation to another player in PvP for the first time.",
+                300,
+                Sound.ENTITY_PLAYER_LEVELUP),
+
+        CONTAMINATOR("contaminator",
+                "☢ Contaminator",
+                "You raised another player's radiation stage through PvP combat.",
+                500,
+                Sound.BLOCK_BEACON_ACTIVATE),
+
+        NUCLEAR_ARCHER("nuclear_archer",
+                "☢ Nuclear Archer",
+                "You eliminated a player with a Plutonium Arrow.",
+                750,
+                Sound.UI_TOAST_CHALLENGE_COMPLETE),
+
+        RADIATION_MASTER("radiation_master",
+                "☢ Radiation Master",
+                "You have inflicted 10,000 radiation through PvP combat — a true nuclear menace!",
+                2500,
                 Sound.UI_TOAST_CHALLENGE_COMPLETE);
 
         private final String key;
