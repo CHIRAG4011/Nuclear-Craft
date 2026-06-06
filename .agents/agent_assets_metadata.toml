@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "RY30P058f9zN9cYbxBp66"
+uri = "file://NuclearCraft-ResourcePack.zip"
+type = "unspecified"
+title = "NuclearCraft Resource Pack"
