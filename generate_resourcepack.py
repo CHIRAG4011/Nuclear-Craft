@@ -539,6 +539,46 @@ TEXTURES["radiation_antidote"] = px([
     [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
 ])
 
+# ── NUCLEAR SMELTER (item icon) ───────────────────
+TEXTURES["nuclear_smelter"] = px([
+    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
+    [_,M,L,L,L,L,L,L,L,L,L,L,M,_,_,_],
+    [_,L,K,K,K,K,K,K,K,K,K,K,L,_,_,_],
+    [_,L,K,J,J,J,J,J,J,J,J,K,L,_,_,_],
+    [_,L,K,J,A,B,B,B,B,B,A,J,L,_,_,_],
+    [_,L,K,J,B,A,E,E,A,B,J,J,L,_,_,_],
+    [_,L,K,J,B,E,A,A,E,A,J,K,L,_,_,_],
+    [_,L,K,J,A,B,B,B,B,B,A,J,L,_,_,_],
+    [_,L,K,J,J,J,J,J,J,J,J,K,L,_,_,_],
+    [_,L,K,V,W,K,K,K,K,V,W,K,L,_,_,_],
+    [_,L,L,K,K,M,M,M,M,K,K,L,L,_,_,_],
+    [_,M,L,L,L,L,L,L,L,L,L,L,M,_,_,_],
+    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
+])
+
+# ── NUCLEAR FORGE (item icon) ────────────────────
+TEXTURES["nuclear_forge"] = px([
+    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
+    [_,M,M,M,M,M,M,M,M,M,M,M,M,_,_,_],
+    [_,M,L,K,K,K,K,K,K,K,K,L,M,_,_,_],
+    [_,M,K,J,J,J,J,J,J,J,J,K,M,_,_,_],
+    [_,M,K,J,V,W,V,V,W,V,J,K,M,_,_,_],
+    [_,M,K,J,V,A,B,B,A,W,J,K,M,_,_,_],
+    [_,M,K,J,W,B,E,E,B,V,J,K,M,_,_,_],
+    [_,M,K,J,V,A,B,B,A,W,J,K,M,_,_,_],
+    [_,M,K,J,J,J,J,J,J,J,J,K,M,_,_,_],
+    [_,M,L,K,K,K,K,K,K,K,K,L,M,_,_,_],
+    [_,M,M,L,L,L,L,L,L,L,L,M,M,_,_,_],
+    [_,_,M,M,M,M,M,M,M,M,M,M,_,_,_,_],
+    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
+    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
+])
+
 # ── RADIATION SERUM ───────────────────────────────
 TEXTURES["radiation_serum"] = px([
     [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
@@ -662,6 +702,9 @@ CUSTOM_MODELS = {
     "plutonium_arrow":           flat_model("minecraft:item/nuclearcraft/plutonium_arrow"),
     "radiation_antidote":        flat_model("minecraft:item/nuclearcraft/radiation_antidote"),
     "radiation_serum":           flat_model("minecraft:item/nuclearcraft/radiation_serum"),
+    # Machines
+    "nuclear_smelter":           flat_model("minecraft:item/nuclearcraft/nuclear_smelter"),
+    "nuclear_forge":             flat_model("minecraft:item/nuclearcraft/nuclear_forge"),
 }
 
 # Base vanilla item overrides — maps base item → list of (CMD, model_id)
@@ -689,8 +732,10 @@ OVERRIDES = {
     "netherite_boots":     [(1313, "plutonium_boots")],
     "arrow":               [(1314, "plutonium_arrow")],
     "yellow_wool":         [(1315, "industrial_fabric")],
-    "honey_bottle":        [(1316, "radiation_antidote")],
-    "glass_bottle":        [(1317, "radiation_serum")],
+    "honey_bottle":        [(1301, "radiation_antidote")],
+    "glass_bottle":        [(1302, "radiation_serum")],
+    "blast_furnace":       [(1201, "nuclear_smelter")],
+    "smithing_table":      [(1401, "nuclear_forge")],
 }
 
 def build_override_model(base_item, overrides_list):
@@ -714,7 +759,7 @@ def build_override_model(base_item, overrides_list):
 PACK_MCMETA = {
     "pack": {
         "pack_format": 34,
-        "description": "§aNuclearCraft §7Resource Pack §8| §eCustom items, armor & tools"
+        "description": "§aNuclearCraft §7Resource Pack §81.0.1 §8| §eAll custom items, armor, tools & machines"
     }
 }
 
@@ -746,8 +791,10 @@ LANG = {
     "item.minecraft.netherite_boots.custom_1313":      "Plutonium Boots",
     "item.minecraft.arrow.custom_1314":                "Plutonium Arrow",
     "item.minecraft.yellow_wool.custom_1315":          "Industrial Fabric",
-    "item.minecraft.honey_bottle.custom_1316":         "Radiation Antidote",
-    "item.minecraft.glass_bottle.custom_1317":         "Radiation Serum",
+    "item.minecraft.honey_bottle.custom_1301":         "Radiation Antidote",
+    "item.minecraft.glass_bottle.custom_1302":         "Radiation Serum",
+    "item.minecraft.blast_furnace.custom_1201":        "Nuclear Smelter",
+    "item.minecraft.smithing_table.custom_1401":       "Nuclear Forge",
 }
 
 # ─────────────────────────────────────────────
@@ -757,6 +804,8 @@ LANG = {
 OUT_DIR = "NuclearCraft_ResourcePack"
 if os.path.exists(OUT_DIR):
     shutil.rmtree(OUT_DIR)
+if os.path.exists("nuclearcraft-resource-pack"):
+    shutil.rmtree("nuclearcraft-resource-pack")
 
 # Directory layout
 ITEM_TEX_DIR   = f"{OUT_DIR}/assets/minecraft/textures/item/nuclearcraft"
@@ -839,9 +888,10 @@ make_pack_icon().save(f"{OUT_DIR}/pack.png")
 print("✅  pack.png icon written")
 
 # 8) Zip it all up
-ZIP_NAME = "NuclearCraft_ResourcePack.zip"
-if os.path.exists(ZIP_NAME):
-    os.remove(ZIP_NAME)
+ZIP_NAME = "NuclearCraft Resource Pack 1.0.1.zip"
+for old in ["NuclearCraft_ResourcePack.zip", "NuclearCraft-ResourcePack.zip", ZIP_NAME]:
+    if os.path.exists(old):
+        os.remove(old)
 with zipfile.ZipFile(ZIP_NAME, "w", zipfile.ZIP_DEFLATED) as zf:
     for root, dirs, files in os.walk(OUT_DIR):
         for file in files:
