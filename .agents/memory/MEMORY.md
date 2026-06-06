@@ -1,4 +1,6 @@
-- [Java 21 build setup](java21-build.md) — JDK 16 is in Nix; download Adoptium JDK 21 to /tmp to compile. Use curl, not wget. Temurin 21.0.7+6 works.
+- [Java 21 build setup](java21-build.md) — JDK 16 is in Nix; download Adoptium JDK 21 to /tmp to compile. Use curl, not wget. Temurin 21.0.7+6 works; 21.0.11+10 also confirmed working.
 - [Paper API compile quirk](paper-api-compile.md) — Paper API jar targets Java 21; compiling with JDK < 21 gives "cannot access" errors on all Bukkit classes.
 - [Smelter data persistence](smelter-persistence.md) — Save with numbered keys (m0, m1…) and location-key as a sub-value; never use location string as a YAML path key.
 - [Phase 6 equipment architecture](phase6-equipment.md) — EquipmentManager orchestrates 10 sub-managers; RadiationResistanceManager is injected into RadiationManager via setResistanceManager() after init; WeaponEffectManager requires plugin instance for PDC key lookup.
+- [Paper 1.21 Attribute names](paper-attribute-names.md) — No GENERIC_ prefix in Paper 1.21: use Attribute.ATTACK_DAMAGE, ATTACK_SPEED, ARMOR, MAX_HEALTH, MOVEMENT_SPEED. GENERIC_* names cause "cannot find symbol" errors.
+- [Phase 8 forge architecture](phase8-forge.md) — Nuclear Forge wiring, PDC key patterns, forge.yml location, upgrade tier config keys, and overload cooldown Long cast requirement.

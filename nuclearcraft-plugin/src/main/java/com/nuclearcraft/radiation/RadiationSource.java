@@ -48,6 +48,12 @@ public enum RadiationSource {
     /** Radiation applied directly via admin command. */
     COMMAND("Command"),
 
+    /** Radiation from a Nuclear Forge overload event. */
+    NUCLEAR_FORGE("Nuclear Forge"),
+
+    /** Radiation emitted by MK-IV equipment radiation aura. */
+    EQUIPMENT_AURA("Equipment Aura"),
+
     /** Source could not be determined. */
     UNKNOWN("Unknown");
 

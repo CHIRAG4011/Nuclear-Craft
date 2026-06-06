@@ -1,0 +1,802 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 8 - Nuclear Forge, Equipment Upgrades & Advanced Crafting Systems
+
+You are continuing development of NuclearCraft for PaperMC 1.21+ using Java 21.
+
+Completed Systems:
+
+### Phase 1
+
+* Core Framework
+* Data System
+* Config System
+* GUI Framework
+* Item Framework
+* Block Framework
+
+### Phase 2
+
+* Radiation System
+* Infection System
+* Contagion System
+
+### Phase 3
+
+* Irradiated Zombies
+* Alpha Irradiated Zombies
+* Radiation Surge Events
+
+### Phase 4
+
+* Plutonium Ore
+* Radiation Drill
+* Raw Plutonium Fragments
+
+### Phase 5
+
+* Nuclear Smelter
+* Plutonium Refining
+* Industrial Processing
+
+### Phase 6
+
+* Plutonium Equipment
+* Hazmat Armor
+* Combat Systems
+
+### Phase 7
+
+* Radioactive Farming
+* Mutated Crops
+* Cure System
+
+Now implement the complete **Nuclear Forge & Upgrade Progression System**.
+
+This phase creates the main progression loop between Plutonium Gear and Titan Equipment.
+
+Players should continuously improve their gear rather than instantly obtaining end-game equipment.
+
+The Nuclear Forge should feel like the NuclearCraft equivalent of an Enchanting Table mixed with a Blacksmith Workshop.
+
+---
+
+# SYSTEM OVERVIEW
+
+Current Progression:
+
+Irradiated Zombies
+
+↓
+
+Plutonium Ore
+
+↓
+
+Nuclear Smelter
+
+↓
+
+Plutonium Equipment
+
+↓
+
+Nuclear Forge
+
+↓
+
+MK Upgrades
+
+↓
+
+Titan Boss
+
+↓
+
+Titan Equipment
+
+The Nuclear Forge becomes the central progression machine for all future upgrades.
+
+---
+
+# NUCLEAR FORGE
+
+Create:
+
+NuclearForgeManager
+
+NuclearForgeBlock
+
+NuclearForgeGUI
+
+UpgradeManager
+
+ForgeRecipeManager
+
+ForgeListener
+
+---
+
+# MACHINE PURPOSE
+
+The Nuclear Forge upgrades:
+
+Plutonium Tools
+
+Plutonium Weapons
+
+Plutonium Armor
+
+Future Titan Equipment
+
+Future Reactor Components
+
+Future Nuclear Machines
+
+Must be highly expandable.
+
+---
+
+# CRAFTING RECIPE
+
+Balanced Mid-Late Game Recipe.
+
+Must require:
+
+Refined Plutonium Ingots
+
+Radioactive Cores
+
+Obsidian
+
+Advanced Materials
+
+Design a balanced recipe.
+
+---
+
+# MACHINE APPEARANCE
+
+Visual Theme:
+
+Advanced Engineering Facility
+
+Black Reactor Steel
+
+Green Energy Core
+
+Mechanical Arms
+
+Reinforced Plating
+
+Animated Energy Chamber
+
+Glowing Radiation Tubes
+
+Warning Labels
+
+---
+
+# MACHINE STATES
+
+Create:
+
+OFFLINE
+
+READY
+
+UPGRADING
+
+COMPLETED
+
+ERROR
+
+OVERLOADED
+
+All states visible in GUI.
+
+---
+
+# MACHINE GUI
+
+Size:
+
+54 Slots
+
+Sections:
+
+Input Equipment
+
+Upgrade Material Slot
+
+Catalyst Slot
+
+Upgrade Preview
+
+Upgrade Progress
+
+Upgrade Information
+
+Output Slot
+
+Status Display
+
+Radiation Meter
+
+Forge Core Status
+
+---
+
+# GUI FEATURES
+
+Display:
+
+Current Upgrade Level
+
+Success Chance
+
+Failure Chance
+
+Upgrade Cost
+
+Expected Result
+
+Required Materials
+
+Upgrade History
+
+Dynamic Updates
+
+No inventory flickering.
+
+---
+
+# UPGRADE MATERIALS
+
+Existing:
+
+Radioactive Core
+
+Refined Plutonium Ingot
+
+Irradiated Heart
+
+Future:
+
+Titan Fragments
+
+Reactor Components
+
+Must support easy expansion.
+
+---
+
+# EQUIPMENT UPGRADE SYSTEM
+
+All Plutonium Equipment starts at:
+
+MK-0
+
+Upgradeable to:
+
+MK-I
+
+MK-II
+
+MK-III
+
+MK-IV
+
+Store upgrade level in PersistentDataContainer.
+
+Must survive restarts.
+
+---
+
+# MK-I
+
+Requirements:
+
+2 Plutonium Ingots
+
+1 Radioactive Core
+
+---
+
+Effects:
+
++5% Damage
+
++5% Durability
+
++5% Mining Speed
+
+---
+
+Success Chance:
+
+100%
+
+---
+
+# MK-II
+
+Requirements:
+
+4 Plutonium Ingots
+
+2 Radioactive Cores
+
+---
+
+Effects:
+
++10% Damage
+
++10% Durability
+
++10% Mining Speed
+
+---
+
+Success Chance:
+
+90%
+
+Failure:
+
+Materials Lost
+
+Equipment Safe
+
+---
+
+# MK-III
+
+Requirements:
+
+8 Plutonium Ingots
+
+4 Radioactive Cores
+
+1 Irradiated Heart
+
+---
+
+Effects:
+
++20% Damage
+
++20% Durability
+
++20% Mining Speed
+
+---
+
+Success Chance:
+
+75%
+
+Failure:
+
+Materials Lost
+
+Equipment Safe
+
+---
+
+# MK-IV
+
+Requirements:
+
+16 Plutonium Ingots
+
+8 Radioactive Cores
+
+2 Irradiated Hearts
+
+---
+
+Effects:
+
++35% Damage
+
++35% Durability
+
++35% Mining Speed
+
+Radiation Aura
+
+Special Effects
+
+---
+
+Success Chance:
+
+50%
+
+Failure:
+
+Materials Lost
+
+5% Chance Equipment Downgrades
+
+Configurable.
+
+---
+
+# WEAPON BONUSES
+
+Sword:
+
+Additional Radiation Damage
+
+Larger Critical Radiation Bursts
+
+Enhanced Particle Effects
+
+---
+
+Axe:
+
+Larger Shockwaves
+
+Bigger Radiation Radius
+
+More Knockback
+
+---
+
+Arrow:
+
+Longer Radiation Duration
+
+Higher Poison Levels
+
+---
+
+# TOOL BONUSES
+
+Pickaxe:
+
+Faster Mining
+
+Higher Resource Yield
+
+Lower Debris Chance
+
+---
+
+Shovel:
+
+Larger Soil Conversion Radius
+
+---
+
+Hoe:
+
+Faster Crop Growth
+
+Larger Radioactive Farmland Conversion Area
+
+---
+
+# ARMOR BONUSES
+
+Hazmat Armor
+
+Upgradeable
+
+Improves Radiation Resistance
+
+---
+
+MK-I
+
+85%
+
+MK-II
+
+90%
+
+MK-III
+
+95%
+
+MK-IV
+
+98%
+
+---
+
+# PLUTONIUM ARMOR BONUSES
+
+MK-I
+
+Additional Defense
+
+---
+
+MK-II
+
+Minor Regeneration
+
+---
+
+MK-III
+
+Movement Speed Bonus
+
+---
+
+MK-IV
+
+Radiation Aura
+
+Bonus Health
+
+Damage Resistance
+
+---
+
+# RADIATION AURA SYSTEM
+
+Create:
+
+RadiationAuraManager
+
+Available:
+
+MK-IV Equipment
+
+Radius:
+
+3 Blocks
+
+Effects:
+
+Hostile mobs gain radiation.
+
+Players gain radiation in PvP.
+
+Configurable.
+
+---
+
+# FORGE ENERGY SYSTEM
+
+Create:
+
+ForgeEnergyManager
+
+---
+
+The Nuclear Forge requires:
+
+Radioactive Energy
+
+Generated from:
+
+Radioactive Cores
+
+---
+
+Energy Capacity:
+
+Configurable
+
+Energy Consumption:
+
+Per Upgrade
+
+Store energy persistently.
+
+---
+
+# FORGE OVERLOAD
+
+If energy exceeds safe limits:
+
+Forge enters OVERLOADED state.
+
+Effects:
+
+Green Explosion
+
+Radiation Burst
+
+Temporary Shutdown
+
+Nearby Players Gain Radiation
+
+No permanent block loss.
+
+---
+
+# UPGRADE EVENTS
+
+Create:
+
+ForgeUpgradeStartEvent
+
+ForgeUpgradeSuccessEvent
+
+ForgeUpgradeFailEvent
+
+ForgeOverloadEvent
+
+Future systems will hook into these.
+
+---
+
+# UPGRADE HISTORY
+
+Track:
+
+All upgrades performed.
+
+Successes.
+
+Failures.
+
+Highest Upgrade Achieved.
+
+Store globally and per-player.
+
+---
+
+# ADVANCEMENTS
+
+Create:
+
+Master Blacksmith
+
+Craft Nuclear Forge
+
+---
+
+Enhanced Arsenal
+
+Create First MK-I Item
+
+---
+
+Nuclear Engineer
+
+Create MK-IV Item
+
+---
+
+Perfected Technology
+
+Own Full MK-IV Set
+
+---
+
+# STATISTICS
+
+Track:
+
+Forge Uses
+
+Successful Upgrades
+
+Failed Upgrades
+
+MK-IV Creations
+
+Energy Consumed
+
+Forge Overloads
+
+Materials Consumed
+
+Store permanently.
+
+---
+
+# COMMANDS
+
+Admin:
+
+/nuclearcraft forge give
+
+Give Nuclear Forge
+
+---
+
+/nuclearcraft forge energy set
+
+Set Forge Energy
+
+---
+
+/nuclearcraft forge upgrade
+
+Force Upgrade Item
+
+---
+
+/nuclearcraft forge stats
+
+Display Statistics
+
+Permissions:
+
+nuclearcraft.admin.forge
+
+---
+
+# CONFIGURATION
+
+Create:
+
+forge.yml
+
+Include:
+
+Upgrade Chances
+
+Upgrade Costs
+
+Upgrade Bonuses
+
+Energy Values
+
+Aura Values
+
+Overload Settings
+
+Particle Settings
+
+Everything configurable.
+
+---
+
+# PERFORMANCE REQUIREMENTS
+
+Must support:
+
+100+ Players
+
+Hundreds of Active Upgraded Items
+
+Large SMP Servers
+
+Avoid:
+
+Repeated NBT scanning
+
+Heavy GUI updates
+
+Memory leaks
+
+Store upgrade metadata efficiently.
+
+---
+
+# DELIVERABLES
+
+Generate complete production-ready code for:
+
+* NuclearForgeManager
+* NuclearForgeBlock
+* NuclearForgeGUI
+* UpgradeManager
+* ForgeRecipeManager
+* ForgeEnergyManager
+* RadiationAuraManager
+* Upgrade Events
+* Statistics Tracking
+* Commands
+* Config Integration
+
+All code must compile successfully and integrate perfectly with:
+
+* Radiation System
+* Equipment System
+* Farming System
+* Smelter System
+* Player Data System
+
+After completion, the project should be fully ready for **Phase 9: Advanced Combat, Plutonium Arrows, PvP Radiation Mechanics & Combat Expansion**.

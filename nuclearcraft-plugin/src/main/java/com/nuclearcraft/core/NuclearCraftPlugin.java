@@ -7,7 +7,10 @@ import com.nuclearcraft.config.ConfigManager;
 import com.nuclearcraft.data.DatabaseManager;
 import com.nuclearcraft.data.PlayerDataManager;
 import com.nuclearcraft.equipment.EquipmentManager;
+import com.nuclearcraft.equipment.RadiationAuraManager;
 import com.nuclearcraft.farming.FarmingManager;
+import com.nuclearcraft.forge.ForgeRecipeManager;
+import com.nuclearcraft.forge.NuclearForgeManager;
 import com.nuclearcraft.gui.GUIManager;
 import com.nuclearcraft.items.ItemManager;
 import com.nuclearcraft.listeners.*;
@@ -20,6 +23,7 @@ import com.nuclearcraft.smelter.MachineRadiationManager;
 import com.nuclearcraft.smelter.NuclearSmelterManager;
 import com.nuclearcraft.smelter.NuclearSmelterRecipeManager;
 import com.nuclearcraft.tasks.TaskManager;
+import com.nuclearcraft.upgrade.UpgradeManager;
 import com.nuclearcraft.utils.NCLogger;
 import com.nuclearcraft.zombies.*;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -84,6 +88,13 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     private FarmingManager farmingManager;
     private FarmingListener farmingListener;
 
+    // ── Phase 8 ──
+    private UpgradeManager upgradeManager;
+    private ForgeRecipeManager forgeRecipeManager;
+    private NuclearForgeManager nuclearForgeManager;
+    private RadiationAuraManager radiationAuraManager;
+    private ForgeListener forgeListener;
+
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
@@ -107,6 +118,12 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
+
+        // Phase 8 — shut down forge systems before Phase 7
+        if (radiationAuraManager != null) radiationAuraManager.shutdown();
+        if (nuclearForgeManager  != null) nuclearForgeManager.shutdown();
+        if (forgeRecipeManager   != null) forgeRecipeManager.shutdown();
+        if (upgradeManager       != null) upgradeManager.shutdown();
 
         // Phase 7 — shut down first so crops are saved before DB closes
         if (farmingManager != null) farmingManager.shutdown();
@@ -264,6 +281,22 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 equipmentManager.getFarmlandManager());
         farmingManager.initialize();
 
+        // ── Phase 8 ──
+        upgradeManager = new UpgradeManager(this);
+        upgradeManager.initialize();
+
+        forgeRecipeManager = new ForgeRecipeManager(this, itemManager);
+        forgeRecipeManager.initialize();
+
+        nuclearForgeManager = new NuclearForgeManager(
+                this, configManager, itemManager, upgradeManager,
+                playerDataManager, advancementManager, radiationManager);
+        nuclearForgeManager.initialize();
+
+        radiationAuraManager = new RadiationAuraManager(
+                this, configManager, radiationManager, upgradeManager);
+        radiationAuraManager.initialize();
+
         NCLogger.debug("All managers initialized successfully.");
     }
 
@@ -308,6 +341,10 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 advancementManager, farmingManager);
         pm.registerEvents(farmingListener, this);
 
+        // Phase 8
+        forgeListener = new ForgeListener(nuclearForgeManager, itemManager, this);
+        pm.registerEvents(forgeListener, this);
+
         NCLogger.debug("Event listeners registered.");
     }
 
@@ -319,7 +356,7 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 radiationManager, irradiatedZombieManager, zombieSpawnManager,
                 radiationCloudManager, radiationNightManager, advancementManager,
                 plutoniumOreManager, oreMiningManager, nuclearSmelterManager,
-                equipmentManager, farmingManager);
+                equipmentManager, farmingManager, nuclearForgeManager, upgradeManager);
         cmd.setExecutor(handler);
         cmd.setTabCompleter(handler);
         NCLogger.debug("Commands registered.");
@@ -383,6 +420,12 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         // Restart Phase 7
         farmingManager.initialize();
 
+        // Restart Phase 8
+        upgradeManager.initialize();
+        forgeRecipeManager.reload();
+        nuclearForgeManager.initialize();
+        radiationAuraManager.initialize();
+
         NCLogger.info("NuclearCraft reloaded successfully.");
     }
 
@@ -423,4 +466,11 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public EquipmentListener getEquipmentListener()               { return equipmentListener; }
     public FarmingManager getFarmingManager()                     { return farmingManager; }
     public FarmingListener getFarmingListener()                   { return farmingListener; }
+
+    // Phase 8
+    public UpgradeManager getUpgradeManager()                     { return upgradeManager; }
+    public ForgeRecipeManager getForgeRecipeManager()             { return forgeRecipeManager; }
+    public NuclearForgeManager getNuclearForgeManager()           { return nuclearForgeManager; }
+    public RadiationAuraManager getRadiationAuraManager()         { return radiationAuraManager; }
+    public ForgeListener getForgeListener()                       { return forgeListener; }
 }

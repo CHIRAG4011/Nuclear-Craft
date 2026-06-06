@@ -184,6 +184,32 @@ public class AdvancementManager {
                 "☢ Cured At Last",
                 "You cured Stage 4 Critical Radiation Poisoning. Against all odds!",
                 1000,
+                Sound.UI_TOAST_CHALLENGE_COMPLETE),
+
+        // ── Phase 8: Nuclear Forge & Equipment Upgrades ───────────────────────
+
+        MASTER_BLACKSMITH("master_blacksmith",
+                "☢ Master Blacksmith",
+                "You built your first Nuclear Forge — the age of MK upgrades begins!",
+                750,
+                Sound.BLOCK_BEACON_ACTIVATE),
+
+        ENHANCED_ARSENAL("enhanced_arsenal",
+                "☢ Enhanced Arsenal",
+                "You successfully upgraded a piece of equipment using the Nuclear Forge.",
+                500,
+                Sound.BLOCK_AMETHYST_CLUSTER_PLACE),
+
+        NUCLEAR_ENGINEER("nuclear_engineer",
+                "☢ Nuclear Engineer",
+                "You achieved the pinnacle: an MK-IV Nuclear Forge upgrade!",
+                2000,
+                Sound.UI_TOAST_CHALLENGE_COMPLETE),
+
+        PERFECTED_TECHNOLOGY("perfected_technology",
+                "☢ Perfected Technology",
+                "All equipment slots now carry MK-IV upgrades. The radiation aura surrounds you.",
+                5000,
                 Sound.UI_TOAST_CHALLENGE_COMPLETE);
 
         private final String key;

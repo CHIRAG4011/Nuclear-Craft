@@ -79,6 +79,12 @@ public class PlayerData {
     private volatile int debrisGenerated;
     private volatile int arrowsFired;
 
+    // Forge statistics (Phase 8)
+    private volatile int forgeUses;
+    private volatile int successfulUpgrades;
+    private volatile int failedUpgrades;
+    private volatile int mk4Creations;
+
     // Farming statistics (Phase 7)
     private volatile int seedsPlanted;
     private volatile int plantsHarvested;
@@ -133,6 +139,10 @@ public class PlayerData {
         this.farmlandCreated = 0;
         this.debrisGenerated = 0;
         this.arrowsFired = 0;
+        this.forgeUses = 0;
+        this.successfulUpgrades = 0;
+        this.failedUpgrades = 0;
+        this.mk4Creations = 0;
         this.seedsPlanted = 0;
         this.plantsHarvested = 0;
         this.healingPetalsCollected = 0;
@@ -415,6 +425,29 @@ public class PlayerData {
 
     public int getBossKills() { return bossKills; }
     public void incrementBossKills() { this.bossKills++; this.dirty = true; }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Phase 8 forge statistics
+    // ──────────────────────────────────────────────────────────────────────────
+
+    public int getForgeUses()                { return forgeUses; }
+    public void incrementForgeUses()         { this.forgeUses++; this.dirty = true; }
+    public void setForgeUses(int count)      { this.forgeUses = Math.max(0, count); this.dirty = true; }
+
+    public int getSuccessfulUpgrades()       { return successfulUpgrades; }
+    public void incrementSuccessfulUpgrades(){ this.successfulUpgrades++; this.dirty = true; }
+    public void setSuccessfulUpgrades(int v) { this.successfulUpgrades = Math.max(0, v); this.dirty = true; }
+
+    public int getFailedUpgrades()           { return failedUpgrades; }
+    public void incrementFailedUpgrades()    { this.failedUpgrades++; this.dirty = true; }
+    public void setFailedUpgrades(int v)     { this.failedUpgrades = Math.max(0, v); this.dirty = true; }
+
+    public int getMk4Creations()             { return mk4Creations; }
+    public void incrementMk4Creations()      { this.mk4Creations++; this.dirty = true; }
+    public void setMk4Creations(int v)       { this.mk4Creations = Math.max(0, v); this.dirty = true; }
+
+    /** Expose dirty flag so managers can mark without going through a stat increment. */
+    public void setDirty(boolean dirty)      { this.dirty = dirty; }
 
     public Set<String> getUnlockedUpgrades() { return unlockedUpgrades; }
     public boolean hasUpgrade(String id) { return unlockedUpgrades.contains(id); }

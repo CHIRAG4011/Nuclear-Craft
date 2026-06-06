@@ -7,6 +7,10 @@ import com.nuclearcraft.data.PlayerData;
 import com.nuclearcraft.data.PlayerDataManager;
 import com.nuclearcraft.equipment.EquipmentManager;
 import com.nuclearcraft.farming.FarmingManager;
+import com.nuclearcraft.forge.ForgeData;
+import com.nuclearcraft.forge.NuclearForgeManager;
+import com.nuclearcraft.upgrade.UpgradeManager;
+import com.nuclearcraft.upgrade.UpgradeTier;
 import com.nuclearcraft.items.ItemManager;
 import com.nuclearcraft.ore.OreGenerationManager;
 import com.nuclearcraft.ore.OreMiningManager;
@@ -56,7 +60,13 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> TOP_SUBCOMMANDS =
             List.of("help", "reload", "info", "debug", "give", "version",
-                    "radiation", "zombie", "ore", "smelter", "equipment", "farming");
+                    "radiation", "zombie", "ore", "smelter", "equipment", "farming", "forge");
+    private static final List<String> FORGE_SUBCOMMANDS =
+            List.of("give", "energy", "upgrade", "stats");
+    private static final List<String> FORGE_ENERGY_ACTIONS =
+            List.of("set", "add", "clear");
+    private static final List<String> FORGE_UPGRADE_TIERS =
+            List.of("mk1", "mk2", "mk3", "mk4");
     private static final List<String> EQUIPMENT_SUBCOMMANDS =
             List.of("give", "stats");
     private static final List<String> EQUIPMENT_GIVE_TYPES = List.of(
@@ -100,6 +110,8 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     private final NuclearSmelterManager nuclearSmelterManager;
     private final EquipmentManager equipmentManager;
     private final FarmingManager farmingManager;
+    private final NuclearForgeManager nuclearForgeManager;
+    private final UpgradeManager upgradeManager;
 
     public NuclearCraftCommand(NuclearCraftPlugin plugin, ConfigManager configManager,
                                 PlayerDataManager playerDataManager, ItemManager itemManager,
@@ -113,7 +125,9 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                                 OreMiningManager oreMiningManager,
                                 NuclearSmelterManager nuclearSmelterManager,
                                 EquipmentManager equipmentManager,
-                                FarmingManager farmingManager) {
+                                FarmingManager farmingManager,
+                                NuclearForgeManager nuclearForgeManager,
+                                UpgradeManager upgradeManager) {
         this.plugin = plugin;
         this.configManager = configManager;
         this.playerDataManager = playerDataManager;
@@ -129,6 +143,8 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         this.nuclearSmelterManager = nuclearSmelterManager;
         this.equipmentManager = equipmentManager;
         this.farmingManager = farmingManager;
+        this.nuclearForgeManager = nuclearForgeManager;
+        this.upgradeManager = upgradeManager;
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -152,6 +168,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             case "smelter"   -> { handleSmelter(sender, args);     yield true; }
             case "equipment" -> { handleEquipment(sender, args);   yield true; }
             case "farming"   -> { handleFarming(sender, args);     yield true; }
+            case "forge"     -> { handleForge(sender, args);       yield true; }
             default -> {
                 sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.unknown-command")));
                 yield true;
@@ -697,6 +714,164 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                 "<green>Gave <yellow>" + amount + "x " + type + "</yellow> to you.</green>"));
     }
 
+    // ──────────────────────────────────────────────────────────────────────────
+    // Phase 8: Forge subcommands
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * /nc forge give [player]             — give a Nuclear Forge to a player
+     * /nc forge energy set <amount>       — set energy of looked-at forge
+     * /nc forge energy add <amount>       — add energy to looked-at forge
+     * /nc forge energy clear              — zero out energy of looked-at forge
+     * /nc forge upgrade <mk1|2|3|4>       — instantly apply tier to held item
+     * /nc forge stats                     — show aggregate forge statistics
+     */
+    private void handleForge(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("nuclearcraft.admin.forge")) {
+            sender.sendMessage(ColorUtil.parse("<red>You don't have permission to use forge commands.</red>"));
+            return;
+        }
+        if (args.length < 2) {
+            sender.sendMessage(ColorUtil.parse("<yellow>Usage: /nc forge <give|energy|upgrade|stats></yellow>"));
+            return;
+        }
+        switch (args[1].toLowerCase()) {
+            case "give"   -> handleForgeGive(sender, args);
+            case "energy" -> handleForgeEnergy(sender, args);
+            case "upgrade"-> handleForgeUpgrade(sender, args);
+            case "stats"  -> handleForgeStats(sender);
+            default -> sender.sendMessage(ColorUtil.parse("<red>Unknown forge subcommand. Use: give|energy|upgrade|stats</red>"));
+        }
+    }
+
+    private void handleForgeGive(CommandSender sender, String[] args) {
+        Player target;
+        if (args.length >= 3) {
+            target = resolvePlayer(sender, args[2]);
+            if (target == null) return;
+        } else if (sender instanceof Player player) {
+            target = player;
+        } else {
+            sender.sendMessage(ColorUtil.parse("<red>Specify a player: /nc forge give <player></red>"));
+            return;
+        }
+        itemManager.getItem("nuclear-forge").ifPresentOrElse(
+                item -> {
+                    target.getInventory().addItem(item.build(1));
+                    sender.sendMessage(ColorUtil.parse("<green>Gave a Nuclear Forge to <yellow>"
+                            + target.getName() + "</yellow>.</green>"));
+                },
+                () -> sender.sendMessage(ColorUtil.parse("<red>Nuclear Forge item not found in registry.</red>"))
+        );
+    }
+
+    private void handleForgeEnergy(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ColorUtil.parse("<red>You must be in-game and look at a forge block.</red>"));
+            return;
+        }
+        if (args.length < 3) {
+            sender.sendMessage(ColorUtil.parse("<yellow>Usage: /nc forge energy <set|add|clear> [amount]</yellow>"));
+            return;
+        }
+
+        // Find the forge the player is looking at
+        Block targetBlock = player.getTargetBlockExact(8);
+        if (targetBlock == null || !nuclearForgeManager.isForge(targetBlock)) {
+            sender.sendMessage(ColorUtil.parse("<red>Look at a Nuclear Forge block (within 8 blocks).</red>"));
+            return;
+        }
+
+        ForgeData forge = nuclearForgeManager.getForgeAt(targetBlock).orElse(null);
+        if (forge == null) {
+            sender.sendMessage(ColorUtil.parse("<red>Could not locate forge data.</red>"));
+            return;
+        }
+
+        switch (args[2].toLowerCase()) {
+            case "set" -> {
+                if (args.length < 4) { sender.sendMessage(ColorUtil.parse("<yellow>Usage: /nc forge energy set <amount></yellow>")); return; }
+                int amount = parseAmount(sender, args[3]);
+                if (amount < 0) return;
+                nuclearForgeManager.setEnergy(forge, amount);
+                sender.sendMessage(ColorUtil.parse("<green>Forge energy set to <yellow>" + amount + "</yellow>.</green>"));
+            }
+            case "add" -> {
+                if (args.length < 4) { sender.sendMessage(ColorUtil.parse("<yellow>Usage: /nc forge energy add <amount></yellow>")); return; }
+                int amount = parseAmount(sender, args[3]);
+                if (amount < 0) return;
+                forge.addEnergy(amount);
+                sender.sendMessage(ColorUtil.parse("<green>Added <yellow>" + amount + "</yellow> energy to forge. Total: "
+                        + (int) forge.getEnergy() + "</green>"));
+            }
+            case "clear" -> {
+                forge.setEnergy(0);
+                sender.sendMessage(ColorUtil.parse("<green>Forge energy cleared.</green>"));
+            }
+            default -> sender.sendMessage(ColorUtil.parse("<red>Unknown action. Use: set|add|clear</red>"));
+        }
+    }
+
+    private void handleForgeUpgrade(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ColorUtil.parse("<red>Only players can use /nc forge upgrade.</red>"));
+            return;
+        }
+        if (args.length < 3) {
+            sender.sendMessage(ColorUtil.parse("<yellow>Usage: /nc forge upgrade <mk1|mk2|mk3|mk4></yellow>"));
+            return;
+        }
+
+        UpgradeTier target;
+        try {
+            String tierStr = args[2].replace("mk", "mk_").toUpperCase();
+            target = UpgradeTier.valueOf(tierStr);
+        } catch (IllegalArgumentException e) {
+            sender.sendMessage(ColorUtil.parse("<red>Invalid tier. Use: mk1, mk2, mk3, mk4</red>"));
+            return;
+        }
+
+        var item = player.getInventory().getItemInMainHand();
+        if (!upgradeManager.isUpgradeable(item)) {
+            sender.sendMessage(ColorUtil.parse("<red>Hold a Plutonium or Hazmat item in your main hand.</red>"));
+            return;
+        }
+
+        upgradeManager.applyTier(item, target);
+        player.getInventory().setItemInMainHand(item);
+        sender.sendMessage(ColorUtil.parse("<green>Applied <yellow>" + target.getDisplayName()
+                + "</yellow> upgrade to your held item.</green>"));
+    }
+
+    private void handleForgeStats(CommandSender sender) {
+        sender.sendMessage(ColorUtil.parse(
+                "<dark_gray>── <gradient:#39ff14:#ffaa00>Nuclear Forge Stats</gradient> ──</dark_gray>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Active Forges:</gray> <white>" + nuclearForgeManager.getMachineCount() + "</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Total Upgrade Attempts:</gray> <white>" + nuclearForgeManager.getGlobalForgeUses() + "</white>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Successes:</gray> <green>" + nuclearForgeManager.getGlobalSuccesses() + "</green>"
+                + "  <gray>Failures:</gray> <red>" + nuclearForgeManager.getGlobalFailures() + "</red>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>MK-IV Creations:</gray> <gold>" + nuclearForgeManager.getGlobalMk4Creations() + "</gold>"));
+        sender.sendMessage(ColorUtil.parse(
+                " <gray>Overloads:</gray> <dark_red>" + nuclearForgeManager.getGlobalOverloads() + "</dark_red>"));
+
+        for (Player p : plugin.getServer().getOnlinePlayers()) {
+            playerDataManager.get(p).ifPresent(pd -> {
+                if (pd.getForgeUses() > 0) {
+                    sender.sendMessage(ColorUtil.parse(
+                            " <aqua>" + p.getName() + "</aqua>"
+                            + " — <gray>Uses:</gray> <white>" + pd.getForgeUses() + "</white>"
+                            + " <gray>✔</gray> <green>" + pd.getSuccessfulUpgrades() + "</green>"
+                            + " <gray>✘</gray> <red>" + pd.getFailedUpgrades() + "</red>"
+                            + " <gray>MK-IV:</gray> <gold>" + pd.getMk4Creations() + "</gold>"));
+                }
+            });
+        }
+    }
+
     private void handleFarmingGrowall(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(ColorUtil.parse("<red>Only players can use growall.</red>")); return;
@@ -759,6 +934,10 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                               : List.of();
             case "farming"   -> args.length == 2 ? filter(FARMING_SUBCOMMANDS, args[1])
                               : args.length == 3 && "give".equals(args[1]) ? filter(FARMING_GIVE_TYPES, args[2])
+                              : List.of();
+            case "forge"     -> args.length == 2 ? filter(FORGE_SUBCOMMANDS, args[1])
+                              : args.length == 3 && "energy".equals(args[1])  ? filter(FORGE_ENERGY_ACTIONS, args[2])
+                              : args.length == 3 && "upgrade".equals(args[1]) ? filter(FORGE_UPGRADE_TIERS, args[2])
                               : List.of();
             case "give"      -> args.length == 2
                     ? plugin.getServer().getOnlinePlayers().stream()

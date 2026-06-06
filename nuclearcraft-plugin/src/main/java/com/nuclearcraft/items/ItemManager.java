@@ -145,6 +145,19 @@ public class ItemManager {
                 1201,
                 true));
 
+        // ── Phase 8: Nuclear Forge ────────────────────────────────────────────
+
+        register(new CustomItem(plugin,
+                "nuclear-forge",
+                "<gradient:#39ff14:#ffaa00>Nuclear Forge</gradient>",
+                List.of("<gray>Advanced equipment upgrade machine.</gray>",
+                        "<yellow>☢ Upgrade Plutonium & Hazmat gear to MK-IV</yellow>",
+                        "<gray>Requires Radioactive Cores for energy</gray>",
+                        "<green>Right-click to open upgrade interface</green>"),
+                Material.SMITHING_TABLE,
+                1401,
+                true));
+
         // ── Phase 7: Cure items ───────────────────────────────────────────────
 
         register(new CustomItem(plugin,

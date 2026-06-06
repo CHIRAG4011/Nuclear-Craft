@@ -1,0 +1,130 @@
+# ═══════════════════════════════════════════════════════════════
+#  NuclearCraft — forge.yml
+#  Nuclear Forge configuration for Phase 8
+# ═══════════════════════════════════════════════════════════════
+
+machine:
+  # How often the forge tick loop runs (in server ticks, 20 = 1 second)
+  tick-period: 4
+  # Maximum energy the forge can store safely before overloading
+  max-energy: 10000.0
+  # Energy provided by each Radioactive Core inserted as fuel
+  energy-per-core: 2000.0
+  # Energy decay per tick (prevents permanent overload risk from idle cores)
+  energy-decay-per-tick: 0.5
+  # Ticks before overloaded forge automatically comes back READY
+  overload-shutdown-ticks: 200
+
+# ─────────────────────────────────────────────────────────────────
+#  Upgrade tier definitions
+#  All values are configurable; plugin defaults match these.
+# ─────────────────────────────────────────────────────────────────
+
+upgrades:
+  mk1:
+    ingots-required: 2
+    cores-required: 1
+    hearts-required: 0
+    energy-cost: 500
+    success-chance: 100.0
+    duration-ticks: 60
+    damage-bonus-pct: 5
+    durability-bonus-pct: 5
+    speed-bonus-pct: 5
+    armor-bonus-pct: 5
+    downgrade-chance-on-fail: 0.0
+
+  mk2:
+    ingots-required: 4
+    cores-required: 2
+    hearts-required: 0
+    energy-cost: 1200
+    success-chance: 90.0
+    duration-ticks: 100
+    damage-bonus-pct: 10
+    durability-bonus-pct: 10
+    speed-bonus-pct: 10
+    armor-bonus-pct: 10
+    downgrade-chance-on-fail: 0.0
+
+  mk3:
+    ingots-required: 8
+    cores-required: 4
+    hearts-required: 1
+    energy-cost: 2500
+    success-chance: 75.0
+    duration-ticks: 160
+    damage-bonus-pct: 20
+    durability-bonus-pct: 20
+    speed-bonus-pct: 20
+    armor-bonus-pct: 20
+    downgrade-chance-on-fail: 0.0
+
+  mk4:
+    ingots-required: 16
+    cores-required: 8
+    hearts-required: 2
+    energy-cost: 5000
+    success-chance: 50.0
+    duration-ticks: 240
+    damage-bonus-pct: 35
+    durability-bonus-pct: 35
+    speed-bonus-pct: 35
+    armor-bonus-pct: 35
+    # Chance (0–100) that a failed MK-IV attempt downgrades item to MK-III
+    downgrade-chance-on-fail: 5.0
+
+# ─────────────────────────────────────────────────────────────────
+#  Radiation Aura (MK-IV equipment)
+# ─────────────────────────────────────────────────────────────────
+
+aura:
+  enabled: true
+  # Radius in blocks around player wearing MK-IV gear
+  radius: 3
+  # Radiation added to hostile mobs per aura tick
+  mob-radiation-per-tick: 25
+  # Radiation added to nearby players (PvP) per aura tick
+  pvp-radiation-per-tick: 15
+  # How often aura ticks (in server ticks)
+  tick-period: 40
+  # Whether aura affects player allies (false = only hostile mobs + enemies)
+  affect-allies: false
+
+# ─────────────────────────────────────────────────────────────────
+#  Overload explosion
+# ─────────────────────────────────────────────────────────────────
+
+overload:
+  # Radiation burst radius when overload occurs
+  radiation-burst-radius: 8
+  # Radiation added to nearby players on overload
+  radiation-burst-amount: 150
+  # Whether to play the green explosion particle effect
+  play-explosion-effect: true
+  # Whether overload can destroy the forge block (false = safe, no block loss)
+  destroy-on-overload: false
+
+# ─────────────────────────────────────────────────────────────────
+#  GUI visual settings
+# ─────────────────────────────────────────────────────────────────
+
+gui:
+  title: "<dark_gray>☢ </dark_gray><gradient:#39ff14:#00bfff>Nuclear Forge</gradient><dark_gray> ☢</dark_gray>"
+  # Refresh the GUI display every N ticks for online viewers
+  refresh-ticks: 10
+
+# ─────────────────────────────────────────────────────────────────
+#  Particles
+# ─────────────────────────────────────────────────────────────────
+
+particles:
+  # Particles spawned continuously while a forge is UPGRADING
+  upgrade-particle: "SOUL_FIRE_FLAME"
+  upgrade-particle-count: 6
+  # Particles on upgrade success
+  success-particle: "TOTEM_OF_UNDYING"
+  success-particle-count: 30
+  # Particles on upgrade failure
+  fail-particle: "LARGE_SMOKE"
+  fail-particle-count: 15

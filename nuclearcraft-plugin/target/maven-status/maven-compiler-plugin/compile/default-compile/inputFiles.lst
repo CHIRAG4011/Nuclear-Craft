@@ -15,12 +15,17 @@
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/PlutoniumArmorManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/PlutoniumArrowManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/PlutoniumToolManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/RadiationAuraManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/RadiationResistanceManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/RadioactiveDebrisManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/RadioactiveFarmlandManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/RadioactiveSoilManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/equipment/WeaponEffectManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/events/CropMutationEvent.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/events/ForgeOverloadEvent.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/events/ForgeUpgradeFailEvent.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/events/ForgeUpgradeStartEvent.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/events/ForgeUpgradeSuccessEvent.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/events/NuclearSmelterCompleteEvent.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/events/NuclearSmelterOverheatEvent.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/events/NuclearSmelterStartEvent.java
@@ -44,6 +49,11 @@
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/farming/RadiationImmunityManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/farming/SerumManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/farming/ToxicBloomManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/forge/ForgeData.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/forge/ForgeRecipeManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/forge/ForgeState.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/forge/NuclearForgeGUI.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/forge/NuclearForgeManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/gui/GUIManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/gui/GuiButton.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/gui/GuiMenu.java
@@ -53,6 +63,7 @@
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/CoreListener.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/EquipmentListener.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/FarmingListener.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/ForgeListener.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/OreListener.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/RadiationExposureListener.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/listeners/RadiationListener.java
@@ -75,6 +86,8 @@
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/smelter/SmelterRecipe.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/smelter/SmelterState.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/tasks/TaskManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/upgrade/UpgradeManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/upgrade/UpgradeTier.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/utils/ColorUtil.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/utils/CooldownManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/utils/ItemUtil.java

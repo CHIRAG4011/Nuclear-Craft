@@ -27,7 +27,8 @@ public class ConfigManager {
         TOOLSTATS("toolstats.yml"),
         ARMORS("armors.yml"),
         SMELTER("smelter.yml"),
-        EQUIPMENT("equipment.yml");
+        EQUIPMENT("equipment.yml"),
+        FORGE("forge.yml");
 
         private final String fileName;
 
@@ -123,6 +124,10 @@ public class ConfigManager {
 
     public FileConfiguration getEquipment() {
         return get(ConfigFile.EQUIPMENT);
+    }
+
+    public FileConfiguration getForge() {
+        return get(ConfigFile.FORGE);
     }
 
     public void save(ConfigFile cf) {
