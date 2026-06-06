@@ -11,13 +11,14 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * Manages database connectivity and schema (Phase 1–6 extended schema).
+ * Manages database connectivity and schema (Phase 1–7 extended schema).
  * Supports SQLite (default) and MySQL via HikariCP.
  * Migration-safe: uses ALTER TABLE approach for new columns so existing data is preserved.
  *
  * Phase 4 additions: 6 ore-statistics columns.
  * Phase 5 additions: 5 smelter-statistics columns.
  * Phase 6 additions: 6 equipment-statistics columns.
+ * Phase 7 additions: 7 farming-statistics columns.
  */
 public class DatabaseManager {
 
@@ -82,7 +83,7 @@ public class DatabaseManager {
 
     private void createTables() throws SQLException {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
-            // Full Phase 1–6 schema
+            // Full Phase 1–7 schema
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS player_data (
                     uuid                        TEXT    PRIMARY KEY,
@@ -119,7 +120,14 @@ public class DatabaseManager {
                     blocks_converted            INTEGER NOT NULL DEFAULT 0,
                     farmland_created            INTEGER NOT NULL DEFAULT 0,
                     debris_generated            INTEGER NOT NULL DEFAULT 0,
-                    arrows_fired                INTEGER NOT NULL DEFAULT 0
+                    arrows_fired                INTEGER NOT NULL DEFAULT 0,
+                    seeds_planted               INTEGER NOT NULL DEFAULT 0,
+                    plants_harvested            INTEGER NOT NULL DEFAULT 0,
+                    healing_petals_collected    INTEGER NOT NULL DEFAULT 0,
+                    antidotes_crafted           INTEGER NOT NULL DEFAULT 0,
+                    serums_crafted              INTEGER NOT NULL DEFAULT 0,
+                    radiation_cures_used        INTEGER NOT NULL DEFAULT 0,
+                    toxic_blooms_generated      INTEGER NOT NULL DEFAULT 0
                 )
             """);
             stmt.execute("""
@@ -176,6 +184,15 @@ public class DatabaseManager {
             addColumnIfMissing(conn, "player_data", "farmland_created",           "INTEGER NOT NULL DEFAULT 0");
             addColumnIfMissing(conn, "player_data", "debris_generated",           "INTEGER NOT NULL DEFAULT 0");
             addColumnIfMissing(conn, "player_data", "arrows_fired",               "INTEGER NOT NULL DEFAULT 0");
+
+            // Phase 7 columns
+            addColumnIfMissing(conn, "player_data", "seeds_planted",            "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "plants_harvested",         "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "healing_petals_collected", "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "antidotes_crafted",        "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "serums_crafted",           "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "radiation_cures_used",     "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(conn, "player_data", "toxic_blooms_generated",   "INTEGER NOT NULL DEFAULT 0");
         }
         NCLogger.debug("Database migrations complete.");
     }
@@ -244,7 +261,15 @@ public class DatabaseManager {
                             rs.getInt("blocks_converted"),
                             rs.getInt("farmland_created"),
                             rs.getInt("debris_generated"),
-                            rs.getInt("arrows_fired")
+                            rs.getInt("arrows_fired"),
+                            // Phase 7
+                            rs.getInt("seeds_planted"),
+                            rs.getInt("plants_harvested"),
+                            rs.getInt("healing_petals_collected"),
+                            rs.getInt("antidotes_crafted"),
+                            rs.getInt("serums_crafted"),
+                            rs.getInt("radiation_cures_used"),
+                            rs.getInt("toxic_blooms_generated")
                     ));
                 }
             }
@@ -267,8 +292,10 @@ public class DatabaseManager {
                 machines_built, fragments_processed, ingots_produced,
                 fuel_consumed, overheats_triggered,
                 sword_hits, radiation_damage_inflicted,
-                blocks_converted, farmland_created, debris_generated, arrows_fired
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                blocks_converted, farmland_created, debris_generated, arrows_fired,
+                seeds_planted, plants_harvested, healing_petals_collected,
+                antidotes_crafted, serums_crafted, radiation_cures_used, toxic_blooms_generated
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(uuid) DO UPDATE SET
                 radiation_level             = excluded.radiation_level,
                 radiation_stage             = excluded.radiation_stage,
@@ -303,7 +330,14 @@ public class DatabaseManager {
                 blocks_converted            = excluded.blocks_converted,
                 farmland_created            = excluded.farmland_created,
                 debris_generated            = excluded.debris_generated,
-                arrows_fired                = excluded.arrows_fired
+                arrows_fired                = excluded.arrows_fired,
+                seeds_planted               = excluded.seeds_planted,
+                plants_harvested            = excluded.plants_harvested,
+                healing_petals_collected    = excluded.healing_petals_collected,
+                antidotes_crafted           = excluded.antidotes_crafted,
+                serums_crafted              = excluded.serums_crafted,
+                radiation_cures_used        = excluded.radiation_cures_used,
+                toxic_blooms_generated      = excluded.toxic_blooms_generated
         """;
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1,  data.getUuid().toString());
@@ -341,6 +375,14 @@ public class DatabaseManager {
             ps.setInt(33,    data.getFarmlandCreated());
             ps.setInt(34,    data.getDebrisGenerated());
             ps.setInt(35,    data.getArrowsFired());
+            // Phase 7
+            ps.setInt(36,    data.getSeedsPlanted());
+            ps.setInt(37,    data.getPlantsHarvested());
+            ps.setInt(38,    data.getHealingPetalsCollected());
+            ps.setInt(39,    data.getAntidotesCrafted());
+            ps.setInt(40,    data.getSerumsCrafted());
+            ps.setInt(41,    data.getRadiationCuresUsed());
+            ps.setInt(42,    data.getToxicBloomsGenerated());
             ps.executeUpdate();
             saveUpgrades(conn, data);
             data.markClean();

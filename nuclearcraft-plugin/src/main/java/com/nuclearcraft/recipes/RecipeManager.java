@@ -14,6 +14,8 @@ import java.util.*;
  * Manages all NuclearCraft crafting recipes.
  * Supports shaped, shapeless, and future machine recipes.
  * Tracks registered keys for clean removal on reload.
+ *
+ * Phase 7 additions: Radiation Antidote and Radiation Serum.
  */
 public class RecipeManager {
 
@@ -43,10 +45,11 @@ public class RecipeManager {
 
     private void registerAllRecipes() {
         registerNuclearSmelterRecipe();
-        // NOTE: vanilla furnace smelting for raw-plutonium-fragment is intentionally NOT
-        // registered here. Phase 5 requires using the Nuclear Smelter machine.
-        // FurnaceSmeltEvent cancellation in SmelterListener acts as a safety net.
+        registerRadiationAntidoteRecipe();
+        registerRadiationSerumRecipe();
     }
+
+    // ── Phase 5: Nuclear Smelter ──────────────────────────────────────────────
 
     private void registerNuclearSmelterRecipe() {
         itemManager.getItem("nuclear-smelter").ifPresent(smelterItem -> {
@@ -63,13 +66,73 @@ public class RecipeManager {
         });
     }
 
+    // ── Phase 7: Radiation Cures ──────────────────────────────────────────────
+
+    /**
+     * Radiation Antidote recipe (shapeless):
+     *   2× Healing Petal + 1× Honey Bottle → 1 Radiation Antidote
+     *
+     * Does NOT grant immunity — use the Serum for that.
+     */
+    private void registerRadiationAntidoteRecipe() {
+        itemManager.getItem("radiation-antidote").ifPresent(antidoteItem -> {
+            itemManager.getItem("healing-petal").ifPresent(petalItem -> {
+                registerShapeless(
+                        "craft_radiation_antidote",
+                        antidoteItem.build(1),
+                        List.of(
+                                new RecipeChoice.ExactChoice(petalItem.build(1)),
+                                new RecipeChoice.ExactChoice(petalItem.build(1)),
+                                new RecipeChoice.MaterialChoice(Material.HONEY_BOTTLE)
+                        )
+                );
+            });
+        });
+    }
+
+    /**
+     * Radiation Serum recipe (shaped):
+     *
+     *   P R P
+     *   H G H
+     *   P B P
+     *
+     * Where:
+     *   P = Healing Petal
+     *   R = Radioactive Core
+     *   H = Gold Nugget
+     *   G = Golden Apple
+     *   B = Glass Bottle
+     *
+     * Results in 1 Radiation Serum.
+     */
+    private void registerRadiationSerumRecipe() {
+        itemManager.getItem("radiation-serum").ifPresent(serumItem -> {
+            itemManager.getItem("healing-petal").ifPresent(petalItem -> {
+                itemManager.getItem("radioactive-core").ifPresent(coreItem -> {
+                    registerShaped(
+                            "craft_radiation_serum",
+                            serumItem.build(1),
+                            new String[]{"PRP", "HGH", "PBP"},
+                            Map.of(
+                                    'P', new RecipeChoice.ExactChoice(petalItem.build(1)),
+                                    'R', new RecipeChoice.ExactChoice(coreItem.build(1)),
+                                    'H', new RecipeChoice.MaterialChoice(Material.GOLD_NUGGET),
+                                    'G', new RecipeChoice.MaterialChoice(Material.GOLDEN_APPLE),
+                                    'B', new RecipeChoice.MaterialChoice(Material.GLASS_BOTTLE)
+                            )
+                    );
+                });
+            });
+        });
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Registration helpers
+    // ──────────────────────────────────────────────────────────────────────────
+
     /**
      * Registers a shaped crafting recipe.
-     *
-     * @param keyName  Unique recipe key name
-     * @param result   Output item stack
-     * @param shape    Recipe shape (e.g. ["AAA", "ABA", "AAA"])
-     * @param ingredients Map of character to RecipeChoice
      */
     public void registerShaped(String keyName, ItemStack result, String[] shape,
                                 Map<Character, RecipeChoice> ingredients) {

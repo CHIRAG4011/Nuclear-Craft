@@ -7,6 +7,7 @@ import com.nuclearcraft.config.ConfigManager;
 import com.nuclearcraft.data.DatabaseManager;
 import com.nuclearcraft.data.PlayerDataManager;
 import com.nuclearcraft.equipment.EquipmentManager;
+import com.nuclearcraft.farming.FarmingManager;
 import com.nuclearcraft.gui.GUIManager;
 import com.nuclearcraft.items.ItemManager;
 import com.nuclearcraft.listeners.*;
@@ -29,18 +30,8 @@ import java.util.Objects;
  * Main entry point for the NuclearCraft plugin.
  * Manages the lifecycle of all subsystems via dependency injection.
  *
- * Phase 2 additions: RadiationManager, ContagionManager, RadiationVisualManager,
- *                    RadiationListener registration.
- * Phase 3 additions: IrradiatedZombieManager, ZombieSpawnManager, ZombieCombatManager,
- *                    ZombieLootManager, RadiationCloudManager, RadiationNightManager,
- *                    AdvancementManager, ZombieSpawnListener registration.
- * Phase 4 additions: PlutoniumOreManager, OreGenerationManager, OreMiningManager,
- *                    OreRadiationManager, RadiationDrillManager,
- *                    OreListener, RadiationExposureListener.
- * Phase 5 additions: NuclearSmelterManager, NuclearSmelterRecipeManager,
- *                    MachineRadiationManager, SmelterListener.
- * Phase 6 additions: EquipmentManager (orchestrates all Phase 6 sub-managers),
- *                    EquipmentListener registration.
+ * Phase 7 additions: FarmingManager (orchestrates all Phase 7 sub-managers),
+ *                    FarmingListener registration.
  */
 public final class NuclearCraftPlugin extends JavaPlugin {
 
@@ -89,6 +80,10 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     private EquipmentManager equipmentManager;
     private EquipmentListener equipmentListener;
 
+    // ── Phase 7 ──
+    private FarmingManager farmingManager;
+    private FarmingListener farmingListener;
+
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
@@ -113,12 +108,15 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
 
-        // Phase 6 — shut down first
+        // Phase 7 — shut down first so crops are saved before DB closes
+        if (farmingManager != null) farmingManager.shutdown();
+
+        // Phase 6
         if (equipmentManager != null) equipmentManager.shutdown();
 
         // Phase 5
         if (machineRadiationManager != null) machineRadiationManager.shutdown();
-        if (nuclearSmelterManager  != null)  nuclearSmelterManager.shutdown();  // saves smelter_data.yml
+        if (nuclearSmelterManager  != null)  nuclearSmelterManager.shutdown();
         if (smelterRecipeManager   != null)  smelterRecipeManager.shutdown();
 
         // Phase 4
@@ -259,6 +257,13 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 this, configManager, itemManager, radiationManager, playerDataManager);
         equipmentManager.initialize(); // also wires resistanceManager into radiationManager
 
+        // ── Phase 7 ──
+        farmingManager = new FarmingManager(
+                this, configManager, itemManager, radiationManager,
+                playerDataManager, advancementManager,
+                equipmentManager.getFarmlandManager());
+        farmingManager.initialize();
+
         NCLogger.debug("All managers initialized successfully.");
     }
 
@@ -297,6 +302,12 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 this, itemManager, playerDataManager, advancementManager, equipmentManager);
         pm.registerEvents(equipmentListener, this);
 
+        // Phase 7
+        farmingListener = new FarmingListener(
+                this, itemManager, playerDataManager, radiationManager,
+                advancementManager, farmingManager);
+        pm.registerEvents(farmingListener, this);
+
         NCLogger.debug("Event listeners registered.");
     }
 
@@ -307,13 +318,17 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 this, configManager, playerDataManager, itemManager,
                 radiationManager, irradiatedZombieManager, zombieSpawnManager,
                 radiationCloudManager, radiationNightManager, advancementManager,
-                plutoniumOreManager, oreMiningManager, nuclearSmelterManager, equipmentManager);
+                plutoniumOreManager, oreMiningManager, nuclearSmelterManager,
+                equipmentManager, farmingManager);
         cmd.setExecutor(handler);
         cmd.setTabCompleter(handler);
         NCLogger.debug("Commands registered.");
     }
 
     public void reload() throws Exception {
+        // Phase 7
+        if (farmingManager != null) farmingManager.shutdown();
+
         // Shutdown Phase 6 tasks
         if (equipmentManager != null) equipmentManager.shutdown();
 
@@ -365,6 +380,9 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         // Restart Phase 6
         equipmentManager.initialize();
 
+        // Restart Phase 7
+        farmingManager.initialize();
+
         NCLogger.info("NuclearCraft reloaded successfully.");
     }
 
@@ -403,4 +421,6 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public SmelterListener getSmelterListener()                   { return smelterListener; }
     public EquipmentManager getEquipmentManager()                 { return equipmentManager; }
     public EquipmentListener getEquipmentListener()               { return equipmentListener; }
+    public FarmingManager getFarmingManager()                     { return farmingManager; }
+    public FarmingListener getFarmingListener()                   { return farmingListener; }
 }

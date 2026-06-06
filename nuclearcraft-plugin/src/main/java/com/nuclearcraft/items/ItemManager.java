@@ -11,6 +11,8 @@ import java.util.Optional;
 /**
  * Manages registration and lifecycle of all NuclearCraft custom items.
  * Acts as the single access point for custom item creation and lookup.
+ *
+ * Phase 7 additions: radiation-antidote, radiation-serum.
  */
 public class ItemManager {
 
@@ -81,8 +83,8 @@ public class ItemManager {
                 "healing-petal",
                 "<gradient:#ff88cc:#ff44aa>Healing Petal</gradient>",
                 List.of("Grown from mutated crops.",
-                        "<aqua>Consume to reduce radiation exposure</aqua>",
-                        "<green>Grants Regeneration II for 5 seconds</green>"),
+                        "<aqua>Primary ingredient for radiation cures</aqua>",
+                        "<green>Harvested from Mutated Healing Plants</green>"),
                 Material.PINK_PETALS,
                 1105,
                 false));
@@ -141,6 +143,33 @@ public class ItemManager {
                         "<green>Right-click to open machine interface</green>"),
                 Material.BLAST_FURNACE,
                 1201,
+                true));
+
+        // ── Phase 7: Cure items ───────────────────────────────────────────────
+
+        register(new CustomItem(plugin,
+                "radiation-antidote",
+                "<gradient:#00ffcc:#39ff14>Radiation Antidote</gradient>",
+                List.of("<gray>Brewed from Healing Petals and Honey.</gray>",
+                        "<aqua>Right-click to consume</aqua>",
+                        "<green>✔ Clears all radiation</green>",
+                        "<green>✔ Removes infection and debuffs</green>",
+                        "<yellow>✘ Does not grant immunity</yellow>"),
+                Material.HONEY_BOTTLE,
+                1301,
+                true));
+
+        register(new CustomItem(plugin,
+                "radiation-serum",
+                "<gradient:#39ff14:#7700ff>Radiation Serum</gradient>",
+                List.of("<gray>Advanced nuclear cure — handle with care.</gray>",
+                        "<aqua>Right-click to consume</aqua>",
+                        "<green>✔ Instantly clears all radiation</green>",
+                        "<green>✔ Removes infection and debuffs</green>",
+                        "<gold>✔ Grants 10 min radiation immunity</gold>",
+                        "<yellow>☢ Rare and expensive to craft</yellow>"),
+                Material.GLASS_BOTTLE,
+                1302,
                 true));
     }
 

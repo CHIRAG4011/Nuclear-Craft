@@ -23,6 +23,10 @@ import java.util.UUID;
  * Phase 6 additions: swordHits, radiationDamageInflicted, blocksConverted,
  *                    farmlandCreated, debrisGenerated, arrowsFired.
  *
+ * Phase 7 additions: seedsPlanted, plantsHarvested, healingPetalsCollected,
+ *                    antidotesCrafted, serumsCrafted, radiationCuresUsed,
+ *                    toxicBloomsGenerated.
+ *
  * Thread-safety: volatile for primitive fields read across threads;
  * writes must be done on the main thread or with external synchronization.
  */
@@ -75,6 +79,15 @@ public class PlayerData {
     private volatile int debrisGenerated;
     private volatile int arrowsFired;
 
+    // Farming statistics (Phase 7)
+    private volatile int seedsPlanted;
+    private volatile int plantsHarvested;
+    private volatile int healingPetalsCollected;
+    private volatile int antidotesCrafted;
+    private volatile int serumsCrafted;
+    private volatile int radiationCuresUsed;
+    private volatile int toxicBloomsGenerated;
+
     // Progression
     private volatile int bossKills;
     private final Set<String> unlockedUpgrades;
@@ -120,6 +133,13 @@ public class PlayerData {
         this.farmlandCreated = 0;
         this.debrisGenerated = 0;
         this.arrowsFired = 0;
+        this.seedsPlanted = 0;
+        this.plantsHarvested = 0;
+        this.healingPetalsCollected = 0;
+        this.antidotesCrafted = 0;
+        this.serumsCrafted = 0;
+        this.radiationCuresUsed = 0;
+        this.toxicBloomsGenerated = 0;
         this.bossKills = 0;
         this.unlockedUpgrades = new HashSet<>();
         this.dirty = false;
@@ -147,7 +167,12 @@ public class PlayerData {
                       // Phase 6
                       int swordHits, int radiationDamageInflicted,
                       int blocksConverted, int farmlandCreated,
-                      int debrisGenerated, int arrowsFired) {
+                      int debrisGenerated, int arrowsFired,
+                      // Phase 7
+                      int seedsPlanted, int plantsHarvested,
+                      int healingPetalsCollected, int antidotesCrafted,
+                      int serumsCrafted, int radiationCuresUsed,
+                      int toxicBloomsGenerated) {
         this.uuid = uuid;
         this.radiationLevel = radiationLevel;
         this.radiationStage = radiationStage;
@@ -184,6 +209,13 @@ public class PlayerData {
         this.farmlandCreated = Math.max(0, farmlandCreated);
         this.debrisGenerated = Math.max(0, debrisGenerated);
         this.arrowsFired = Math.max(0, arrowsFired);
+        this.seedsPlanted = Math.max(0, seedsPlanted);
+        this.plantsHarvested = Math.max(0, plantsHarvested);
+        this.healingPetalsCollected = Math.max(0, healingPetalsCollected);
+        this.antidotesCrafted = Math.max(0, antidotesCrafted);
+        this.serumsCrafted = Math.max(0, serumsCrafted);
+        this.radiationCuresUsed = Math.max(0, radiationCuresUsed);
+        this.toxicBloomsGenerated = Math.max(0, toxicBloomsGenerated);
         this.dirty = false;
     }
 
@@ -346,6 +378,38 @@ public class PlayerData {
     public void setArrowsFired(int count) { this.arrowsFired = Math.max(0, count); this.dirty = true; }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // Phase 7 farming statistics
+    // ──────────────────────────────────────────────────────────────────────────
+
+    public int getSeedsPlanted() { return seedsPlanted; }
+    public void incrementSeedsPlanted() { this.seedsPlanted++; this.dirty = true; }
+    public void setSeedsPlanted(int count) { this.seedsPlanted = Math.max(0, count); this.dirty = true; }
+
+    public int getPlantsHarvested() { return plantsHarvested; }
+    public void incrementPlantsHarvested() { this.plantsHarvested++; this.dirty = true; }
+    public void setPlantsHarvested(int count) { this.plantsHarvested = Math.max(0, count); this.dirty = true; }
+
+    public int getHealingPetalsCollected() { return healingPetalsCollected; }
+    public void addHealingPetalsCollected(int amount) { this.healingPetalsCollected += Math.max(0, amount); this.dirty = true; }
+    public void setHealingPetalsCollected(int count) { this.healingPetalsCollected = Math.max(0, count); this.dirty = true; }
+
+    public int getAntidotesCrafted() { return antidotesCrafted; }
+    public void incrementAntidotesCrafted() { this.antidotesCrafted++; this.dirty = true; }
+    public void setAntidotesCrafted(int count) { this.antidotesCrafted = Math.max(0, count); this.dirty = true; }
+
+    public int getSerumsCrafted() { return serumsCrafted; }
+    public void incrementSerumsCrafted() { this.serumsCrafted++; this.dirty = true; }
+    public void setSerumsCrafted(int count) { this.serumsCrafted = Math.max(0, count); this.dirty = true; }
+
+    public int getRadiationCuresUsed() { return radiationCuresUsed; }
+    public void incrementRadiationCuresUsed() { this.radiationCuresUsed++; this.dirty = true; }
+    public void setRadiationCuresUsed(int count) { this.radiationCuresUsed = Math.max(0, count); this.dirty = true; }
+
+    public int getToxicBloomsGenerated() { return toxicBloomsGenerated; }
+    public void incrementToxicBloomsGenerated() { this.toxicBloomsGenerated++; this.dirty = true; }
+    public void setToxicBloomsGenerated(int count) { this.toxicBloomsGenerated = Math.max(0, count); this.dirty = true; }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // Progression
     // ──────────────────────────────────────────────────────────────────────────
 
@@ -374,6 +438,8 @@ public class PlayerData {
                 + ", oreFound=" + plutoniumOreFound
                 + ", oreMined=" + plutoniumOreMined
                 + ", swordHits=" + swordHits
+                + ", seedsPlanted=" + seedsPlanted
+                + ", plantsHarvested=" + plantsHarvested
                 + ", source=" + lastRadiationSource + "}";
     }
 }

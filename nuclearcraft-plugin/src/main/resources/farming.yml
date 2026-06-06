@@ -1,74 +1,95 @@
-# NuclearCraft Radioactive Farming Configuration
+# NuclearCraft Phase 7 — Radioactive Farming & Cure System Configuration
 
 radioactive-farming:
   enabled: true
 
-  farmland:
+# ── Mutated Seed & Planting ────────────────────────────────────────────────────
+seed:
+  # Only Radioactive Farmland is valid; attempting to plant elsewhere shows the
+  # wrong-farmland message and cancels the placement.
+  valid-surface: radioactive-farmland
+
+# ── Plant Growth ───────────────────────────────────────────────────────────────
+plant:
+  # Total growth stages: 0 (seed) → 4 (mature blossom)
+  # Growth stages are driven by vanilla random-tick BlockGrowEvents — no tick scanning.
+  max-stage: 4
+
+  # Radioactive Farmland gives a bonus chance to grow an extra stage per tick.
+  farmland-growth-bonus: 0.50
+
+  # Bone meal is allowed by vanilla mechanics (no override needed).
+
+  # Chance of a fully-grown crop mutating into a Toxic Bloom instead (0.0 – 1.0)
+  toxic-bloom-chance: 0.01
+
+  harvest:
+    petals-min: 1
+    petals-max: 3
+    seeds-min: 0
+    seeds-max: 2
+    xp-min: 2
+    xp-max: 5
+
+# ── Toxic Bloom ────────────────────────────────────────────────────────────────
+toxic-bloom:
+  # How often to irradiate nearby players (ticks)
+  radiation-interval-ticks: 40
+  # Radiation points applied each interval
+  radiation-amount: 8
+  # Radius (blocks) in which players are irradiated
+  radius: 4.0
+
+# ── Radiation Cure System ─────────────────────────────────────────────────────
+cure:
+  antidote:
+    # Antidote clears all radiation, infection, and debuffs.
+    # Does NOT grant immunity.
     enabled: true
-    creation:
-      item: refined-plutonium-ingot
-      click-action: RIGHT_CLICK
-    radiation:
-      passive-exposure: 1.0
-      exposure-interval-ticks: 40
-    particles:
-      enabled: true
-      type: VILLAGER_HAPPY
-      color: "57,255,20"
-      interval-ticks: 20
 
-  crop-boosts:
+  serum:
+    # Serum clears all radiation and grants temporary immunity.
     enabled: true
-    growth-multiplier: 3.0
-    yield-multiplier: 2.0
-    mutation-chance: 0.10
+    # Duration of immunity granted by the serum (minutes)
+    immunity-duration-minutes: 10
 
-  mutated-crops:
-    mutated-wheat:
-      base-crop: WHEAT
-      drops:
-        - item: mutated-seed
-          chance: 0.25
-          min: 1
-          max: 2
-        - item: WHEAT
-          chance: 1.0
-          min: 2
-          max: 4
-      radiation-on-harvest: 3.0
-    mutated-carrots:
-      base-crop: CARROTS
-      drops:
-        - item: healing-petal
-          chance: 0.15
-          min: 1
-          max: 1
-        - item: CARROT
-          chance: 1.0
-          min: 2
-          max: 5
-      radiation-on-harvest: 2.0
-    mutated-potatoes:
-      base-crop: POTATOES
-      drops:
-        - item: POTATO
-          chance: 1.0
-          min: 3
-          max: 6
-        - item: POISONOUS_POTATO
-          chance: 0.30
-          min: 1
-          max: 2
-      radiation-on-harvest: 2.5
+# ── Healing Petal (direct consume, legacy) ────────────────────────────────────
+healing-petal:
+  # Direct consumption effect when right-clicked (not used for crafting removal)
+  consume-effect: REGENERATION
+  consume-amplifier: 1
+  consume-duration: 100
+  radiation-reduction: 25.0
 
-  seeds:
-    mutated-seed:
-      plant-on: radioactive-farmland
-      grows-into: mutated-wheat
-      radiation-to-grow: 50.0
+# ── Statistics (all tracked per-player in database) ───────────────────────────
+statistics:
+  track:
+    - seeds_planted
+    - plants_harvested
+    - healing_petals_collected
+    - antidotes_crafted
+    - serums_crafted
+    - radiation_cures_used
+    - toxic_blooms_generated
 
-  healing-petal:
-    consume-effect: REGENERATION
-    consume-amplifier: 1
-    consume-duration: 100
-    radiation-reduction: 25.0
+# ── Farmland Radiation (retained from Phase 6 for compatibility) ──────────────
+farmland:
+  radiation:
+    passive-exposure: 1.0
+    exposure-interval-ticks: 40
+  particles:
+    enabled: true
+    interval-ticks: 20
+
+# ── Crop Boosts (retained for compatibility) ──────────────────────────────────
+crop-boosts:
+  enabled: true
+  growth-multiplier: 1.5
+  mutation-chance: 0.10
+
+# ── Particle Settings ─────────────────────────────────────────────────────────
+particles:
+  harvest:
+    enabled: true
+  toxic-bloom:
+    enabled: true

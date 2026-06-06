@@ -34,6 +34,24 @@ import org.bukkit.entity.Player;
  *     unsafe_miner      — attempted to mine without Radiation Drill
  *     safe_extraction   — successfully mined Plutonium Ore with Drill
  *     radioactive_hoarder — carried 64+ Plutonium Fragments
+ *
+ *   Phase 5:
+ *     industrial_age    — built first Nuclear Smelter
+ *     first_refinement  — refined first Plutonium Ingot
+ *     master_refiner    — produced 100 Refined Plutonium Ingots
+ *
+ *   Phase 6:
+ *     nuclear_warrior   — crafted first Plutonium Sword
+ *     protected_worker  — assembled complete Hazmat Suit
+ *     nuclear_knight    — equipped full Plutonium Armor
+ *     radioactive_arsenal — crafted all five Plutonium Tools
+ *
+ *   Phase 7:
+ *     first_harvest     — harvested first Mutated Healing Plant
+ *     nuclear_farmer    — created first Radioactive Farm
+ *     master_botanist   — harvested 100 Mutated Healing Plants
+ *     radiation_survivor — used first Radiation Antidote or Serum
+ *     cured_at_last     — cured Stage 4 Critical Radiation Poisoning
  */
 public class AdvancementManager {
 
@@ -133,6 +151,38 @@ public class AdvancementManager {
         RADIOACTIVE_ARSENAL("radioactive_arsenal",
                 "☢ Radioactive Arsenal",
                 "You crafted all five Plutonium Tools — the complete nuclear toolkit.",
+                1000,
+                Sound.UI_TOAST_CHALLENGE_COMPLETE),
+
+        // ── Phase 7: Radioactive Farming & Cure ──────────────────────────────
+
+        FIRST_HARVEST("first_harvest",
+                "☢ First Harvest",
+                "You harvested your first Mutated Healing Plant.",
+                300,
+                Sound.BLOCK_AMETHYST_CLUSTER_PLACE),
+
+        NUCLEAR_FARMER("nuclear_farmer",
+                "☢ Nuclear Farmer",
+                "You planted your first Mutated Seed — the cure begins here.",
+                200,
+                Sound.BLOCK_GRASS_PLACE),
+
+        MASTER_BOTANIST("master_botanist",
+                "☢ Master Botanist",
+                "Harvested 100 Mutated Healing Plants — a true nuclear botanist!",
+                1500,
+                Sound.UI_TOAST_CHALLENGE_COMPLETE),
+
+        RADIATION_SURVIVOR("radiation_survivor",
+                "☢ Radiation Survivor",
+                "You used your first Radiation Antidote or Serum.",
+                400,
+                Sound.ENTITY_GENERIC_DRINK),
+
+        CURED_AT_LAST("cured_at_last",
+                "☢ Cured At Last",
+                "You cured Stage 4 Critical Radiation Poisoning. Against all odds!",
                 1000,
                 Sound.UI_TOAST_CHALLENGE_COMPLETE);
 

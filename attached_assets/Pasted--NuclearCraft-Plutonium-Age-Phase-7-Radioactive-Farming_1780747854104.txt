@@ -1,0 +1,796 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 7 - Radioactive Farming, Mutated Crops, Cure System & Agricultural Progression
+
+You are continuing development of NuclearCraft for PaperMC 1.21+ using Java 21.
+
+Completed Systems:
+
+### Phase 1
+
+* Core Framework
+* Managers
+* Data System
+* Commands
+* GUI Framework
+
+### Phase 2
+
+* Radiation System
+* Infection Progression
+* Contagion System
+
+### Phase 3
+
+* Irradiated Zombies
+* Alpha Irradiated Zombies
+* Radiation Clouds
+* Radiation Surge Events
+
+### Phase 4
+
+* Plutonium Ore
+* Radiation Drill
+* Raw Plutonium Fragments
+
+### Phase 5
+
+* Nuclear Smelter
+* Refined Plutonium Ingots
+* Industrial Processing
+
+### Phase 6
+
+* Plutonium Tools
+* Plutonium Armor
+* Hazmat Armor
+* Radioactive Debris
+* Radioactive Farmland
+* Combat Systems
+
+Now implement the complete **Radioactive Agriculture & Cure Progression System**.
+
+This system is the primary method for curing radiation.
+
+Players should not be able to simply craft a cure.
+
+They must farm radioactive plants and invest time into agriculture.
+
+This phase should create a full farming gameplay loop.
+
+---
+
+# SYSTEM OVERVIEW
+
+Progression Flow:
+
+Kill Irradiated Zombies
+
+↓
+
+Obtain Mutated Seeds
+
+↓
+
+Craft Plutonium Hoe
+
+↓
+
+Create Radioactive Farmland
+
+↓
+
+Grow Mutated Healing Plants
+
+↓
+
+Harvest Healing Petals
+
+↓
+
+Craft Radiation Antidotes
+
+↓
+
+Survive Nuclear Progression
+
+This should become a major part of long-term survival.
+
+---
+
+# MUTATED SEED SYSTEM
+
+Create:
+
+MutatedSeedManager
+
+MutatedSeedListener
+
+MutatedCropManager
+
+---
+
+# MUTATED SEEDS
+
+Source:
+
+Irradiated Zombies
+
+Existing Drop Rates From Phase 3
+
+Must integrate with existing loot system.
+
+---
+
+# ITEM DESIGN
+
+Name:
+
+Mutated Seed
+
+Appearance:
+
+Dark Green Seed
+
+Small Glowing Core
+
+Radioactive Veins
+
+Subtle Particle Effects
+
+---
+
+# ITEM LORE
+
+Example:
+
+"A seed altered by intense radiation."
+
+Custom model support required.
+
+---
+
+# PLANTING RULES
+
+Mutated Seeds can ONLY be planted on:
+
+Radioactive Farmland
+
+Cannot be planted on:
+
+* Dirt
+* Grass
+* Coarse Dirt
+* Normal Farmland
+* Podzol
+* Moss
+
+Attempting to plant elsewhere:
+
+Fail
+
+Display warning message.
+
+---
+
+# RADIOACTIVE FARMLAND
+
+Integrate with Phase 6 system.
+
+Only created using:
+
+Plutonium Hoe
+
+Right Click:
+
+Grass Block
+
+↓
+
+Radioactive Farmland
+
+Dirt
+
+↓
+
+Radioactive Farmland
+
+Coarse Dirt
+
+↓
+
+Radioactive Farmland
+
+Normal Farmland must never be created.
+
+---
+
+# FARMLAND APPEARANCE
+
+Texture Requirements:
+
+Black Soil
+
+Bright Green Energy Cracks
+
+Radiation Warning Symbols
+
+Animated Glow
+
+Occasional Particle Emissions
+
+---
+
+# FARMLAND EFFECTS
+
+Standing On Farmland:
+
+Radiation Exposure
+
+Source:
+
+RADIOACTIVE_FARMLAND
+
+---
+
+# ARMOR INTERACTIONS
+
+Hazmat Armor
+
+80% Protection
+
+Plutonium Armor
+
+100% Protection
+
+Must integrate with RadiationResistanceManager.
+
+---
+
+# MUTATED HEALING PLANT
+
+Create:
+
+MutatedPlantManager
+
+PlantGrowthManager
+
+PlantHarvestManager
+
+---
+
+# GROWTH SYSTEM
+
+Growth stages similar to wheat.
+
+Total Stages:
+
+5
+
+Stage 0
+
+Seed
+
+---
+
+Stage 1
+
+Small Sprout
+
+---
+
+Stage 2
+
+Young Plant
+
+---
+
+Stage 3
+
+Growing Flower
+
+---
+
+Stage 4
+
+Mature Healing Plant
+
+---
+
+# VISUAL PROGRESSION
+
+Stage 0
+
+Small glowing seed
+
+---
+
+Stage 1
+
+Tiny green stem
+
+---
+
+Stage 2
+
+Blue-green leaves
+
+---
+
+Stage 3
+
+Bright glowing flower
+
+---
+
+Stage 4
+
+Large medicinal blossom
+
+Visible glow at night
+
+---
+
+# GROWTH SPEED
+
+Base Growth:
+
+Similar to Wheat
+
+Radioactive Farmland Bonus:
+
++50%
+
+Bone Meal Support:
+
+Allowed
+
+Configurable.
+
+---
+
+# PLANT HEALTH SYSTEM
+
+Create:
+
+PlantHealthManager
+
+---
+
+# NEGLECT MECHANICS
+
+If plant receives insufficient light:
+
+Growth slows.
+
+---
+
+If farmland is removed:
+
+Plant dies.
+
+---
+
+If exposed to explosions:
+
+Chance to mutate.
+
+---
+
+# TOXIC BLOOM MUTATION
+
+Create:
+
+ToxicBloomManager
+
+Rare Mutation Event.
+
+Chance:
+
+1%
+
+When fully grown plant updates.
+
+---
+
+# TOXIC BLOOM
+
+Appearance:
+
+Large Toxic Flower
+
+Dark Purple Petals
+
+Green Energy Core
+
+Heavy Radiation Particles
+
+---
+
+# EFFECTS
+
+Nearby Players:
+
+Receive Radiation
+
+Radius:
+
+4 Blocks
+
+---
+
+Attracts:
+
+Irradiated Zombies
+
+At Night
+
+---
+
+# HARVEST SYSTEM
+
+Mature Plant Drops:
+
+Healing Petals
+
+Mutated Seeds
+
+XP
+
+---
+
+# DROP RATES
+
+Healing Petals:
+
+1-3
+
+---
+
+Extra Seeds:
+
+0-2
+
+---
+
+XP:
+
+2-5
+
+Configurable.
+
+---
+
+# HEALING PETAL
+
+Create:
+
+HealingPetalItem
+
+---
+
+# APPEARANCE
+
+Bright Blue Petal
+
+Green Glow
+
+Medicinal Theme
+
+---
+
+# PURPOSE
+
+Primary ingredient for cures.
+
+---
+
+# CURE SYSTEM
+
+Create:
+
+RadiationCureManager
+
+AntidoteManager
+
+SerumManager
+
+---
+
+# RADIATION ANTIDOTE
+
+Recipe:
+
+Healing Petal
+
+Honey Bottle
+
+Healing Petal
+
+Balanced crafting recipe.
+
+---
+
+# EFFECTS
+
+Removes:
+
+Radiation
+
+Infection Progress
+
+Contagion
+
+Radiation Debuffs
+
+---
+
+Does NOT provide immunity.
+
+---
+
+# RADIATION SERUM
+
+Advanced Cure.
+
+More expensive.
+
+Requires:
+
+Healing Petals
+
+Golden Apple
+
+Radioactive Core
+
+Glass Bottle
+
+---
+
+# EFFECTS
+
+Instantly Removes Radiation
+
+Removes Infection
+
+Grants Radiation Immunity
+
+Duration:
+
+10 Minutes
+
+Configurable.
+
+---
+
+# IMMUNITY SYSTEM
+
+Create:
+
+RadiationImmunityManager
+
+---
+
+# IMMUNITY EFFECTS
+
+Immune To:
+
+Ore Radiation
+
+Farmland Radiation
+
+Debris Radiation
+
+Cloud Radiation
+
+Fragment Radiation
+
+Machine Radiation
+
+---
+
+NOT Immune To:
+
+Boss Abilities
+
+Special Weapons
+
+Admin Commands
+
+This keeps late-game combat balanced.
+
+---
+
+# AGRICULTURAL UPGRADES
+
+Create framework.
+
+Future support:
+
+Fertilizers
+
+Advanced Seeds
+
+Titan Crops
+
+Genetic Mutations
+
+Architecture must support expansion.
+
+---
+
+# FARM EVENTS
+
+Create:
+
+CropMutationEvent
+
+PlantHarvestEvent
+
+PlantGrowthEvent
+
+RadiationCureEvent
+
+Future systems should be able to hook into these.
+
+---
+
+# ADVANCEMENTS
+
+Create:
+
+First Harvest
+
+Harvest First Healing Plant
+
+---
+
+Nuclear Farmer
+
+Create First Radioactive Farm
+
+---
+
+Master Botanist
+
+Harvest 100 Healing Plants
+
+---
+
+Radiation Survivor
+
+Use First Radiation Antidote
+
+---
+
+Cured At Last
+
+Remove Stage 4 Radiation
+
+---
+
+# STATISTICS
+
+Track:
+
+Seeds Planted
+
+Plants Harvested
+
+Healing Petals Collected
+
+Antidotes Crafted
+
+Serums Crafted
+
+Radiation Cures Used
+
+Toxic Blooms Generated
+
+Store permanently.
+
+---
+
+# COMMANDS
+
+Admin:
+
+/nuclearcraft farming give seed
+
+/nuclearcraft farming give petal
+
+/nuclearcraft farming give antidote
+
+/nuclearcraft farming give serum
+
+---
+
+/nuclearcraft farming growall
+
+Instantly grow nearby crops.
+
+---
+
+/nuclearcraft farming stats
+
+Permissions:
+
+nuclearcraft.admin.farming
+
+---
+
+# CONFIGURATION
+
+Create:
+
+farming.yml
+
+Include:
+
+Growth Rates
+
+Mutation Rates
+
+Drop Rates
+
+Radiation Values
+
+Immunity Duration
+
+XP Rewards
+
+Particle Settings
+
+Everything configurable.
+
+---
+
+# PERFORMANCE REQUIREMENTS
+
+Must support:
+
+Large SMP Farms
+
+Hundreds of Crops
+
+100+ Players
+
+Avoid:
+
+Per-tick crop scanning
+
+Chunk memory leaks
+
+Excessive scheduled tasks
+
+Use efficient growth tracking.
+
+---
+
+# DELIVERABLES
+
+Generate complete production-ready code for:
+
+* MutatedSeedManager
+* MutatedPlantManager
+* PlantGrowthManager
+* PlantHarvestManager
+* ToxicBloomManager
+* RadiationCureManager
+* AntidoteManager
+* SerumManager
+* RadiationImmunityManager
+* Farming Commands
+* Advancements
+* Statistics Tracking
+* Config Integration
+
+All code must compile successfully and integrate perfectly with:
+
+* Radiation System
+* Plutonium Hoe System
+* Armor System
+* Farming Framework
+* Item Framework
+
+After completion, the project should be fully ready for Phase 8: Nuclear Forge, Equipment Upgrades & Advanced Crafting Systems.

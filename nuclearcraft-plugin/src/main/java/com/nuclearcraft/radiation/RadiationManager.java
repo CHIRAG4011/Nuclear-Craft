@@ -12,6 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Core manager for the NuclearCraft radiation system.
@@ -23,6 +24,11 @@ import java.util.Optional;
  *  - Radiation progression (worsening over time)
  *  - Radiation decay (slow recovery when clean)
  *  - Radiation death detection and custom death messages
+ *
+ * Phase 7 update: Immunity check is now source-aware.
+ * {@link RadiationSource}s in {@link #IMMUNITY_BLOCKED} are skipped while the player
+ * is immune (environmental/passive sources). Boss attacks, weapons, and admin
+ * commands still apply radiation regardless of immunity status.
  *
  * All Bukkit API calls are made on the main thread.
  * All data reads/writes go through PlayerDataManager.
@@ -40,6 +46,23 @@ public class RadiationManager {
 
     /** Radiation is considered "received recently" within this window. */
     public static final long DECAY_GRACE_PERIOD_MS = 10L * 60L * 1000L; // 10 minutes
+
+    /**
+     * Radiation sources that are blocked when the player has immunity (e.g. from the Radiation Serum).
+     * Boss attacks, admin commands, and weapon hits bypass immunity intentionally.
+     */
+    private static final Set<RadiationSource> IMMUNITY_BLOCKED = Set.of(
+            RadiationSource.PLUTONIUM_ORE,
+            RadiationSource.RADIOACTIVE_DEBRIS,
+            RadiationSource.RADIOACTIVE_SOIL,
+            RadiationSource.RADIOACTIVE_FARMLAND,
+            RadiationSource.TOXIC_BLOOM,
+            RadiationSource.PLUTONIUM_FRAGMENT,
+            RadiationSource.RADIATION_CLOUD,
+            RadiationSource.NUCLEAR_SMELTER,
+            RadiationSource.IRRADIATED_ZOMBIE,
+            RadiationSource.RADIATED_PLAYER
+    );
 
     private final NuclearCraftPlugin plugin;
     private final ConfigManager configManager;
@@ -82,8 +105,13 @@ public class RadiationManager {
 
     /**
      * Adds radiation to the player from a specified source.
-     * Fires {@link RadiationGainEvent}. Respects immunity timer and cancellation.
+     * Fires {@link RadiationGainEvent}. Respects selective immunity and cancellation.
      * Armor reduces exposure based on configuration.
+     *
+     * <p>Phase 7 immunity logic: immunity only blocks sources in {@link #IMMUNITY_BLOCKED}
+     * (environmental/passive). Boss attacks ({@link RadiationSource#BOSS_ATTACK}),
+     * weapon hits ({@link RadiationSource#PLUTONIUM_WEAPON}, {@link RadiationSource#PLUTONIUM_ARROW}),
+     * and admin commands ({@link RadiationSource#COMMAND}) are never blocked by immunity.
      *
      * @param player the affected player
      * @param amount positive radiation points to add
@@ -94,7 +122,8 @@ public class RadiationManager {
         if (opt.isEmpty()) return;
         PlayerData data = opt.get();
 
-        if (data.isImmune()) return;
+        // Selective immunity check — only block environmental/passive sources
+        if (data.isImmune() && IMMUNITY_BLOCKED.contains(source)) return;
 
         // Armor reduction — use Phase 6 resistance manager when available,
         // otherwise fall back to the legacy generic piece-count logic
@@ -255,7 +284,6 @@ public class RadiationManager {
 
     private void onStageChange(Player player, PlayerData data, int oldStage, int newStage) {
         var cfg = configManager.getRadiation();
-        String msgPath = "radiation.stage-" + newStage;
         String stageName = cfg.getString("stages." + newStage + ".name", "Unknown");
 
         if (newStage > oldStage) {

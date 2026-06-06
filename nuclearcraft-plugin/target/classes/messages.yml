@@ -37,6 +37,15 @@ radiation:
   critical: "<red>☢ CRITICAL RADIATION LEVEL — Seek medical attention immediately!</red>"
   immune: "<green>☢ Your immunity timer protected you from radiation.</green>"
 
+farming:
+  wrong-farmland: "<red>☢ Mutated Seeds can only be planted on <yellow>Radioactive Farmland</yellow>!</red>"
+  no-space: "<red>There is no space above this farmland to plant the seed.</red>"
+  seed-planted: "<green>☢ Mutated Seed planted! It will grow slowly on the radioactive soil...</green>"
+  not-ready: "<yellow>☢ This plant is not fully grown yet. Be patient!</yellow>"
+  harvested: "<green>☢ Harvested a Mutated Healing Plant! Healing Petals collected.</green>"
+  antidote-used: "<green>☢ Radiation Antidote consumed — your radiation levels are now clear!</green>"
+  serum-used: "<green>☢ Radiation Serum consumed — all radiation cleared and you are immune for <yellow>{minutes} minutes</yellow>!</green>"
+
 items:
   radioactive-core: "Radioactive Core"
   raw-plutonium-fragment: "Raw Plutonium Fragment"
@@ -45,3 +54,5 @@ items:
   healing-petal: "Healing Petal"
   irradiated-heart: "Irradiated Heart"
   titan-core: "Titan Core"
+  radiation-antidote: "Radiation Antidote"
+  radiation-serum: "Radiation Serum"

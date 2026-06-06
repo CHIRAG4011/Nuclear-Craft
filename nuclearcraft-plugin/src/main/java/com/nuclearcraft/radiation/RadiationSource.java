@@ -21,6 +21,9 @@ public enum RadiationSource {
     /** Radiation from working on or near Radioactive Farmland. */
     RADIOACTIVE_FARMLAND("Radioactive Farmland"),
 
+    /** Radiation emitted by a Toxic Bloom mutated plant. Phase 7. */
+    TOXIC_BLOOM("Toxic Bloom"),
+
     /** Radiation from being hit with a Plutonium weapon. */
     PLUTONIUM_WEAPON("Plutonium Weapon"),
 
