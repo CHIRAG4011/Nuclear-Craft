@@ -6,10 +6,10 @@
 
     <groupId>com.nuclearcraft</groupId>
     <artifactId>NuclearCraft</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
-    <name>NuclearCraft</name>
+    <name>NuclearCraft: Plutonium Age</name>
     <description>A nuclear-themed Minecraft plugin featuring radiation, plutonium, and boss encounters.</description>
 
     <properties>

@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/crying_obsidian"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1501
+      },
+      "model": "nuclearcraft:item/titan_reactor_forge"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/blast_furnace"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1201
+      },
+      "model": "nuclearcraft:item/nuclear_smelter"
+    }
+  ]
+}

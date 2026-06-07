@@ -48,3 +48,9 @@ id = "RlfbzIZJMbR-hK-KkhqwA"
 uri = "file://plutonium smp resource pack.zip"
 type = "unspecified"
 title = "Plutonium SMP Resource Pack"
+
+[[outputs]]
+id = "6vA0lGBUrTTKhkzlMalCm"
+uri = "file://NuclearCraft-PlutoniumAge-1.0.1.zip"
+type = "unspecified"
+title = "NuclearCraft: Plutonium Age 1.0.1 (Plugin JAR)"

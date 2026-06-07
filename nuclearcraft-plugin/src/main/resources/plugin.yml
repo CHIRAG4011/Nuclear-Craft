@@ -1,4 +1,4 @@
-name: NuclearCraft
+name: NuclearCraft-PlutoniumAge
 version: '${project.version}'
 main: com.nuclearcraft.core.NuclearCraftPlugin
 api-version: '1.21'

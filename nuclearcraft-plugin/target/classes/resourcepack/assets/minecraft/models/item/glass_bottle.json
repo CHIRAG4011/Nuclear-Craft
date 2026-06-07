@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/glass_bottle"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1302
+      },
+      "model": "nuclearcraft:item/radiation_serum"
+    }
+  ]
+}
