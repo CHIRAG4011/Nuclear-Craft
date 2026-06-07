@@ -6,6 +6,9 @@ import com.nuclearcraft.data.PlayerDataManager;
 import com.nuclearcraft.utils.NCLogger;
 import com.nuclearcraft.utils.ParticleUtil;
 import com.nuclearcraft.utils.RandomUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -66,10 +69,46 @@ public class RadiationVisualManager {
             if (!configManager.getRadiation().getBoolean("visuals.particles-enabled", true)) return;
             for (Player player : plugin.getServer().getOnlinePlayers()) {
                 int stage = radiationManager.getStage(player);
-                if (stage == 0) continue;
                 spawnStageParticles(player, stage);
+                sendRadiationActionBar(player, stage);
             }
         }, interval, interval);
+    }
+
+    /**
+     * Shows a radiation status bar above the hotbar so the player always knows
+     * their current infection level — this acts as the "skin infection" indicator.
+     *
+     * Stage 0 → no bar (clean)
+     * Stage 1 → ☢ IRRADIATED  [green]
+     * Stage 2 → ☢ CONTAMINATED [yellow]
+     * Stage 3 → ☢ IRRADIATED III [orange] + teleport warning
+     * Stage 4 → ☢ CRITICAL RADIATION [red] blinking
+     */
+    private void sendRadiationActionBar(Player player, int stage) {
+        if (stage == 0) return;
+        double rad = radiationManager.getRadiation(player);
+        String bar = buildRadBar((int) rad);
+
+        Component msg = switch (stage) {
+            case 1 -> Component.text("☢ IRRADIATED  " + bar + "  [" + (int)rad + "/1000]")
+                    .color(NamedTextColor.GREEN);
+            case 2 -> Component.text("☢ CONTAMINATED  " + bar + "  [" + (int)rad + "/1000]")
+                    .color(NamedTextColor.YELLOW);
+            case 3 -> Component.text("☢ SEVERELY IRRADIATED  " + bar + "  [" + (int)rad + "/1000]")
+                    .color(NamedTextColor.GOLD);
+            case 4 -> Component.text("☢ CRITICAL RADIATION  " + bar + "  [" + (int)rad + "/1000]")
+                    .color(NamedTextColor.RED)
+                    .decorate(TextDecoration.BOLD);
+            default -> Component.empty();
+        };
+        player.sendActionBar(msg);
+    }
+
+    /** Builds a 10-segment ██████░░░░ bar showing radiation fill. */
+    private String buildRadBar(int radiation) {
+        int filled = Math.min(10, radiation / 100);
+        return "█".repeat(filled) + "░".repeat(10 - filled);
     }
 
     private void spawnStageParticles(Player player, int stage) {

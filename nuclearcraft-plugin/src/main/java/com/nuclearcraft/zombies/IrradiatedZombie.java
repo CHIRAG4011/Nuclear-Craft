@@ -3,10 +3,15 @@ package com.nuclearcraft.zombies;
 import com.nuclearcraft.utils.ColorUtil;
 import com.nuclearcraft.utils.NCLogger;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Color;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Zombie;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -162,10 +167,60 @@ public class IrradiatedZombie {
         entity.customName(ColorUtil.parse(buildName(level)));
         entity.setCustomNameVisible(level.isAlpha()); // Alpha shows name above head
 
-        // Glowing on alpha
-        if (level.isAlpha()) {
-            entity.setGlowing(true);
+        // All irradiated zombies glow green
+        entity.setGlowing(true);
+
+        // Green dyed leather armour — makes the zombie visually distinct in-game
+        // without requiring OptiFine or shader mods
+        applyGreenArmour(level);
+    }
+
+    /**
+     * Equips green dyed leather armour scaled to zombie tier.
+     * Pieces have 0% drop chance so players can't farm leather from them.
+     *
+     * Level 1 → helmet only
+     * Level 2 → helmet + chestplate
+     * Level 3 → full set (dim green)
+     * Level 4 (Alpha) → full set (bright toxic green)
+     */
+    private void applyGreenArmour(ZombieLevel level) {
+        EntityEquipment eq = entity.getEquipment();
+        if (eq == null) return;
+
+        // Neon green for Alpha, darker for normals
+        Color colour = level.isAlpha()
+                ? Color.fromRGB(100, 255, 30)  // toxic bright green (Alpha)
+                : Color.fromRGB(40,  150, 20);  // dark radioactive green
+
+        ItemStack helmet     = dyedLeather(Material.LEATHER_HELMET,     colour);
+        ItemStack chestplate = dyedLeather(Material.LEATHER_CHESTPLATE, colour);
+        ItemStack leggings   = dyedLeather(Material.LEATHER_LEGGINGS,   colour);
+        ItemStack boots      = dyedLeather(Material.LEATHER_BOOTS,      colour);
+
+        eq.setHelmet(helmet);
+        eq.setHelmetDropChance(0f);
+
+        if (level.getLevel() >= 2) {
+            eq.setChestplate(chestplate);
+            eq.setChestplateDropChance(0f);
         }
+        if (level.getLevel() >= 3) {
+            eq.setLeggings(leggings);
+            eq.setLeggingsDropChance(0f);
+            eq.setBoots(boots);
+            eq.setBootsDropChance(0f);
+        }
+    }
+
+    private ItemStack dyedLeather(Material material, Color colour) {
+        ItemStack item = new ItemStack(material);
+        if (item.getItemMeta() instanceof LeatherArmorMeta meta) {
+            meta.setColor(colour);
+            meta.setDisplayName(""); // hide name in tooltip
+            item.setItemMeta(meta);
+        }
+        return item;
     }
 
     private String buildName(ZombieLevel level) {

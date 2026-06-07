@@ -7,9 +7,16 @@ import com.nuclearcraft.data.PlayerDataManager;
 import com.nuclearcraft.events.*;
 import com.nuclearcraft.utils.MathHelper;
 import com.nuclearcraft.utils.NCLogger;
+import com.nuclearcraft.utils.RandomUtil;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.Optional;
 import java.util.Set;
@@ -284,7 +291,6 @@ public class RadiationManager {
 
     private void onStageChange(Player player, PlayerData data, int oldStage, int newStage) {
         var cfg = configManager.getRadiation();
-        String stageName = cfg.getString("stages." + newStage + ".name", "Unknown");
 
         if (newStage > oldStage) {
             String warnKey = newStage >= 4 ? "radiation.critical" : "radiation.exposed";
@@ -299,6 +305,33 @@ public class RadiationManager {
 
         if (newStage >= 1 && oldStage < 1) {
             data.setTimesInfected(data.getTimesInfected() + 1);
+        }
+
+        // ── Skin infection glow via scoreboard team ─────────────────────────
+        updateInfectionGlow(player, newStage);
+    }
+
+    /**
+     * Applies or removes the green scoreboard glow that visually signals infection.
+     * Uses the main scoreboard's "nc_infected" team (created in initialize).
+     */
+    private void updateInfectionGlow(Player player, int stage) {
+        try {
+            Scoreboard sb = plugin.getServer().getScoreboardManager().getMainScoreboard();
+            Team team = sb.getTeam("nc_infected");
+            if (team == null) {
+                team = sb.registerNewTeam("nc_infected");
+                team.color(NamedTextColor.GREEN);
+            }
+            if (stage >= 1) {
+                team.addPlayer(player);
+                player.setGlowing(true);
+            } else {
+                team.removePlayer(player);
+                player.setGlowing(false);
+            }
+        } catch (Exception e) {
+            NCLogger.warn("Could not update infection glow for " + player.getName() + ": " + e.getMessage());
         }
     }
 
@@ -375,48 +408,88 @@ public class RadiationManager {
         }, interval, interval);
     }
 
-    /** Applies stage-appropriate PotionEffects and damage. */
+    /** Applies stage-appropriate PotionEffects, radiation damage, and special effects. */
     private void applyStageEffects(Player player, PlayerData data) {
         int stage = data.getRadiationStage();
         if (stage == 0) return;
 
-        int duration = 40; // 2 seconds, re-applied every second to prevent flicker
+        // Standard effects refreshed every second (duration 40 = 2s prevents flicker)
+        int dur = 40;
 
         switch (stage) {
             case 1 -> {
-                applyEffect(player, PotionEffectType.WEAKNESS, 0, duration);
-                applyEffect(player, PotionEffectType.NAUSEA, 0, duration);
+                applyEffect(player, PotionEffectType.WEAKNESS, 0, dur);
+                applyNausea(player, 0); // glitch screen — long duration so warmup completes
             }
             case 2 -> {
-                applyEffect(player, PotionEffectType.WEAKNESS, 0, duration);
-                applyEffect(player, PotionEffectType.SLOWNESS, 0, duration);
-                applyEffect(player, PotionEffectType.NAUSEA, 0, duration);
+                applyEffect(player, PotionEffectType.WEAKNESS, 0, dur);
+                applyEffect(player, PotionEffectType.SLOWNESS, 0, dur);
+                applyNausea(player, 0);
             }
             case 3 -> {
-                applyEffect(player, PotionEffectType.WEAKNESS, 1, duration);
-                applyEffect(player, PotionEffectType.SLOWNESS, 1, duration);
-                applyEffect(player, PotionEffectType.HUNGER, 0, duration);
-                // Periodic damage: ~every 4 seconds
+                applyEffect(player, PotionEffectType.WEAKNESS, 1, dur);
+                applyEffect(player, PotionEffectType.SLOWNESS, 1, dur);
+                applyEffect(player, PotionEffectType.HUNGER, 0, dur);
+                applyNausea(player, 0);
+                // Random teleportation — radiation destabilises matter
+                if (RandomUtil.chance(0.05)) randomTeleport(player, 2, 5);
+                // Periodic damage ~every 4 s
                 if ((System.currentTimeMillis() / 1000L) % 4 == 0) {
                     double dmg = configManager.getRadiation().getDouble("stages.3.damage-per-cycle", 0.5);
                     player.damage(dmg);
                 }
             }
             case 4 -> {
-                applyEffect(player, PotionEffectType.WEAKNESS, 2, duration);
-                applyEffect(player, PotionEffectType.SLOWNESS, 2, duration);
-                applyEffect(player, PotionEffectType.HUNGER, 1, duration);
-                // Damage every 2 seconds
+                applyEffect(player, PotionEffectType.WEAKNESS, 2, dur);
+                applyEffect(player, PotionEffectType.SLOWNESS, 2, dur);
+                applyEffect(player, PotionEffectType.HUNGER, 1, dur);
+                applyNausea(player, 1); // Level-II nausea = stronger screen warp
+                // Aggressive random teleportation
+                if (RandomUtil.chance(0.15)) randomTeleport(player, 3, 8);
+                // Damage every 2 s
                 if ((System.currentTimeMillis() / 1000L) % 2 == 0) {
                     double dmg = configManager.getRadiation().getDouble("stages.4.damage-per-cycle", 1.0);
                     player.damage(dmg);
                 }
-                // Random nausea burst
-                if (com.nuclearcraft.utils.RandomUtil.chance(0.1)) {
-                    applyEffect(player, PotionEffectType.NAUSEA, 1, 60);
-                }
             }
         }
+    }
+
+    /**
+     * Applies NAUSEA with a duration long enough for the screen-warp animation to trigger.
+     *
+     * <p>Minecraft's NAUSEA effect has an internal warmup of ~300 ticks before the
+     * screen actually begins to warble. If we keep reapplying with duration=40 every
+     * second the warmup never completes. So we apply once at 800 ticks (40 s) and
+     * only refresh when fewer than 100 ticks remain — ensuring the animation always fires.
+     */
+    private void applyNausea(Player player, int amplifier) {
+        PotionEffect current = player.getPotionEffect(PotionEffectType.NAUSEA);
+        if (current != null && current.getDuration() > 100 && current.getAmplifier() >= amplifier) return;
+        player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 800, amplifier, true, false, false));
+    }
+
+    /**
+     * Teleports the player a random horizontal distance.
+     * Skips the teleport if the destination blocks are not air (safety check).
+     */
+    private void randomTeleport(Player player, int minBlocks, int maxBlocks) {
+        double angle = Math.random() * 2 * Math.PI;
+        double dist  = minBlocks + Math.random() * (maxBlocks - minBlocks);
+        Location src = player.getLocation();
+        Location dst = src.clone().add(Math.cos(angle) * dist, 0, Math.sin(angle) * dist);
+
+        // Safety: only teleport if destination blocks are passable
+        if (!dst.getBlock().isPassable() || !dst.clone().add(0, 1, 0).getBlock().isPassable()) return;
+
+        // Play origin portal burst + teleport sound (enderman-style but lower pitch)
+        src.getWorld().spawnParticle(Particle.PORTAL, src.clone().add(0, 1, 0), 40, 0.4, 0.8, 0.4, 0.15);
+        player.playSound(src, Sound.ENTITY_ENDERMAN_TELEPORT, 0.6f, 0.4f);
+
+        player.teleport(dst);
+
+        // Play arrival burst
+        dst.getWorld().spawnParticle(Particle.PORTAL, dst.clone().add(0, 1, 0), 40, 0.4, 0.8, 0.4, 0.15);
     }
 
     private void applyEffect(Player player, PotionEffectType type, int amplifier, int duration) {
