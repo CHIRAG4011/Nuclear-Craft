@@ -236,6 +236,32 @@ public class AdvancementManager {
                 "☢ Radiation Master",
                 "You have inflicted 10,000 radiation through PvP combat — a true nuclear menace!",
                 2500,
+                Sound.UI_TOAST_CHALLENGE_COMPLETE),
+
+        // ── Phase 11: Titan Technology ────────────────────────────────────────
+
+        TITAN_ENGINEER("titan_engineer",
+                "☢ Titan Engineer",
+                "You crafted your first piece of equipment in the Titan Reactor Forge!",
+                2000,
+                Sound.BLOCK_BEACON_ACTIVATE),
+
+        TITAN_WARRIOR("titan_warrior",
+                "☢ Titan Warrior",
+                "You forged Titan Armor — radiation can no longer stop you.",
+                3000,
+                Sound.UI_TOAST_CHALLENGE_COMPLETE),
+
+        MASTER_OF_RADIATION("master_of_radiation",
+                "☢ Master of Radiation",
+                "Your Titan Set reflected radiation back at an attacker!",
+                1500,
+                Sound.ENTITY_PLAYER_LEVELUP),
+
+        ULTIMATE_TECHNOLOGY("ultimate_technology",
+                "☢ Ultimate Technology",
+                "You are wearing the full Titan Set — the pinnacle of nuclear engineering!",
+                5000,
                 Sound.UI_TOAST_CHALLENGE_COMPLETE);
 
         private final String key;

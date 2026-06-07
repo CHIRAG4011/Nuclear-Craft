@@ -3,6 +3,7 @@ package com.nuclearcraft.commands;
 import com.nuclearcraft.advancements.AdvancementManager;
 import com.nuclearcraft.boss.TitanManager;
 import com.nuclearcraft.combat.CombatManager;
+import com.nuclearcraft.titantech.TitanTechManager;
 import com.nuclearcraft.combat.WeaponMasteryManager;
 import com.nuclearcraft.config.ConfigManager;
 import com.nuclearcraft.core.NuclearCraftPlugin;
@@ -63,7 +64,14 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> TOP_SUBCOMMANDS =
             List.of("help", "reload", "info", "debug", "give", "version",
-                    "radiation", "zombie", "ore", "smelter", "equipment", "farming", "forge", "combat", "titan");
+                    "radiation", "zombie", "ore", "smelter", "equipment", "farming", "forge", "combat", "titan", "titantech");
+    private static final List<String> TITANTECH_SUBCOMMANDS =
+            List.of("give", "stats", "aura", "setbonusinfo");
+    private static final List<String> TITANTECH_GIVE_TYPES = List.of(
+            "titan-reactor-forge",
+            "titan-helmet", "titan-chestplate", "titan-leggings", "titan-boots",
+            "titan-sword", "titan-axe", "titan-pickaxe", "titan-shovel", "titan-hoe",
+            "titan-bow", "titan-arrow", "titan-fragment", "titan-core");
     private static final List<String> COMBAT_SUBCOMMANDS =
             List.of("stats", "mastery", "radiation");
     private static final List<String> TITAN_SUBCOMMANDS =
@@ -121,6 +129,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     private final UpgradeManager upgradeManager;
     private CombatManager combatManager;
     private TitanManager titanManager;
+    private TitanTechManager titanTechManager;
 
     public NuclearCraftCommand(NuclearCraftPlugin plugin, ConfigManager configManager,
                                 PlayerDataManager playerDataManager, ItemManager itemManager,
@@ -166,6 +175,11 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         this.titanManager = titanManager;
     }
 
+    /** Called after Phase 11 init so command can manage Titan Tech. */
+    public void setTitanTechManager(TitanTechManager titanTechManager) {
+        this.titanTechManager = titanTechManager;
+    }
+
     // ──────────────────────────────────────────────────────────────────────────
     // Routing
     // ──────────────────────────────────────────────────────────────────────────
@@ -190,6 +204,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             case "forge"     -> { handleForge(sender, args);       yield true; }
             case "combat"    -> { handleCombat(sender, args);      yield true; }
             case "titan"     -> { handleTitan(sender, args);       yield true; }
+            case "titantech" -> { handleTitanTech(sender, args);  yield true; }
             default -> {
                 sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.unknown-command")));
                 yield true;
@@ -1074,6 +1089,77 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+    private void handleTitanTech(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("nuclearcraft.admin.titan")) {
+            sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.no-permission")));
+            return;
+        }
+        if (titanTechManager == null) {
+            sender.sendMessage(ColorUtil.parse("<red>Titan Technology (Phase 11) is not initialized.</red>"));
+            return;
+        }
+        if (args.length < 2) {
+            sender.sendMessage(ColorUtil.parse("<gold>☢ /nc titantech</gold> <gray>give|stats|aura|setbonusinfo</gray>"));
+            return;
+        }
+        switch (args[1].toLowerCase()) {
+            case "give" -> {
+                if (!(sender instanceof Player p)) {
+                    sender.sendMessage(ColorUtil.parse("<red>Only players can use titantech give.</red>")); return;
+                }
+                if (args.length < 3) {
+                    sender.sendMessage(ColorUtil.parse("<red>Usage: /nc titantech give <item> [amount]</red>")); return;
+                }
+                String itemId = args[2].toLowerCase();
+                int amount = args.length >= 4 ? parseAmount(sender, args[3]) : 1;
+                if (amount < 1) { sender.sendMessage(ColorUtil.parse("<red>Amount must be at least 1.</red>")); return; }
+                itemManager.getItem(itemId).ifPresentOrElse(ci -> {
+                    org.bukkit.inventory.ItemStack item = ci.build(amount);
+                    p.getInventory().addItem(item).forEach((k, v) -> p.getWorld().dropItemNaturally(p.getLocation(), v));
+                    sender.sendMessage(ColorUtil.parse("<green>☢ Gave " + amount + "x <white>" + itemId + "</white> to " + p.getName() + ".</green>"));
+                }, () -> sender.sendMessage(ColorUtil.parse("<red>Unknown item: " + itemId + "</red>")));
+            }
+            case "stats" -> {
+                Player target = (sender instanceof Player p && args.length < 3) ? p
+                        : args.length >= 3 ? resolvePlayer(sender, args[2]) : null;
+                if (target == null) {
+                    sender.sendMessage(ColorUtil.parse("<red>Usage: /nc titantech stats [player]</red>")); return;
+                }
+                playerDataManager.get(target.getUniqueId()).ifPresentOrElse(data -> {
+                    sender.sendMessage(ColorUtil.parse(
+                            "<gold>☢ Titan Tech Stats — <white>" + target.getName() + "</white></gold>"));
+                    sender.sendMessage(ColorUtil.parse(
+                            "  <gray>Equipment Crafted:</gray> <aqua>" + data.getTitanEquipmentCrafted() + "</aqua>"));
+                    sender.sendMessage(ColorUtil.parse(
+                            "  <gray>Radiation Reflected:</gray> <light_purple>" + data.getRadiationReflected() + "</light_purple>"));
+                    sender.sendMessage(ColorUtil.parse(
+                            "  <gray>Sword Hits:</gray> <yellow>" + data.getSwordHits() + "</yellow>"
+                            + "  <gray>Arrows Fired:</gray> <yellow>" + data.getArrowsFired() + "</yellow>"));
+                    boolean fullSet = target.isOnline() && titanTechManager.getSetBonusManager().hasFullSet(target);
+                    sender.sendMessage(ColorUtil.parse(
+                            "  <gray>Full Set Active:</gray> " + (fullSet ? "<green>YES</green>" : "<red>NO</red>")));
+                }, () -> sender.sendMessage(ColorUtil.parse("<red>No data for " + target.getName() + ".</red>")));
+            }
+            case "aura" -> {
+                if (!(sender instanceof Player p)) {
+                    sender.sendMessage(ColorUtil.parse("<red>Only players can test aura.</red>")); return;
+                }
+                sender.sendMessage(ColorUtil.parse(
+                        "<light_purple>☢ Titan Aura fires if you hold a Titan weapon in main hand. " +
+                        "Radius: 5 blocks, interval: 40 ticks.</light_purple>"));
+            }
+            case "setbonusinfo" -> {
+                sender.sendMessage(ColorUtil.parse("<gold>☢ Titan Set Bonus Effects:</gold>"));
+                sender.sendMessage(ColorUtil.parse("  <gray>Full set:</gray> Radiation Immunity, Speed II, Jump II, Resistance, Fire Resistance"));
+                sender.sendMessage(ColorUtil.parse("  <gray>+16 max HP</gray> (chestplate +4, set +8 = +12 hearts)"));
+                sender.sendMessage(ColorUtil.parse("  <gray>30% radiation reflection back to attacker</gray>"));
+                sender.sendMessage(ColorUtil.parse("  <gray>Auto-cure 100 radiation every 20s</gray>"));
+            }
+            default -> sender.sendMessage(ColorUtil.parse(
+                    "<red>Unknown titantech subcommand. Use: give | stats | aura | setbonusinfo</red>"));
+        }
+    }
+
     // ──────────────────────────────────────────────────────────────────────────
     // Tab completion
     // ──────────────────────────────────────────────────────────────────────────
@@ -1107,6 +1193,9 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             case "combat"    -> args.length == 2 ? filter(COMBAT_SUBCOMMANDS, args[1]) : List.of();
             case "titan"     -> args.length == 2 ? filter(TITAN_SUBCOMMANDS, args[1])
                               : args.length == 3 && "phase".equals(args[1]) ? List.of("1", "2", "3", "4")
+                              : List.of();
+            case "titantech" -> args.length == 2 ? filter(TITANTECH_SUBCOMMANDS, args[1])
+                              : args.length == 3 && "give".equals(args[1]) ? filter(TITANTECH_GIVE_TYPES, args[2])
                               : List.of();
             case "give"      -> args.length == 2
                     ? plugin.getServer().getOnlinePlayers().stream()

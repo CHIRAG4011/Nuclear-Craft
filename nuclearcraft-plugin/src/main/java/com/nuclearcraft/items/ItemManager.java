@@ -161,6 +161,130 @@ public class ItemManager {
                 1107,
                 true));
 
+        // ── Phase 11: Titan Technology Equipment ─────────────────────────────
+
+        register(new CustomItem(plugin,
+                "titan-reactor-forge",
+                "<gradient:#7700ff:#ff00ff>Titan Reactor Forge</gradient>",
+                List.of("<gray>The pinnacle of nuclear engineering.</gray>",
+                        "<dark_purple>Crafts legendary Titan equipment</dark_purple>",
+                        "<red>☢ EXTREME radiation hazard during operation</red>",
+                        "<green>Place and right-click to open interface</green>"),
+                Material.CRYING_OBSIDIAN,
+                1501,
+                true));
+
+        register(new CustomItem(plugin,
+                "titan-helmet",
+                "<gradient:#7700ff:#39ff14>☢ Titan Helmet</gradient>",
+                List.of("<dark_purple>Forged in the Titan Reactor.</dark_purple>",
+                        "<purple>☢ Grants Night Vision</purple>",
+                        "<green>▸ Radiation Resistance: TOTAL (full set)</green>",
+                        "<yellow>Far beyond MK-IV capabilities</yellow>"),
+                Material.NETHERITE_HELMET,
+                1502,
+                true));
+
+        register(new CustomItem(plugin,
+                "titan-chestplate",
+                "<gradient:#7700ff:#39ff14>☢ Titan Chestplate</gradient>",
+                List.of("<dark_purple>Forged in the Titan Reactor.</dark_purple>",
+                        "<purple>☢ Grants Regeneration + +4 Max Hearts</purple>",
+                        "<green>▸ Radiation Resistance: TOTAL (full set)</green>"),
+                Material.NETHERITE_CHESTPLATE,
+                1503,
+                true));
+
+        register(new CustomItem(plugin,
+                "titan-leggings",
+                "<gradient:#7700ff:#39ff14>☢ Titan Leggings</gradient>",
+                List.of("<dark_purple>Forged in the Titan Reactor.</dark_purple>",
+                        "<purple>☢ Grants Speed I + Resistance I</purple>",
+                        "<green>▸ Radiation Resistance: TOTAL (full set)</green>"),
+                Material.NETHERITE_LEGGINGS,
+                1504,
+                true));
+
+        register(new CustomItem(plugin,
+                "titan-boots",
+                "<gradient:#7700ff:#39ff14>☢ Titan Boots</gradient>",
+                List.of("<dark_purple>Forged in the Titan Reactor.</dark_purple>",
+                        "<purple>☢ Grants Jump Boost II</purple>",
+                        "<green>▸ Radiation Resistance: TOTAL (full set)</green>"),
+                Material.NETHERITE_BOOTS,
+                1505,
+                true));
+
+        register(new CustomItem(plugin,
+                "titan-sword",
+                "<gradient:#7700ff:#ff0044>☢ Titan Sword</gradient>",
+                List.of("<dark_purple>Channels the Titan's reactor energy.</dark_purple>",
+                        "<red>☢ Radiation blast on hit</red>",
+                        "<purple>☢ AOE radiation wave within 4 blocks</purple>",
+                        "<gold>15% critical radiation explosion</gold>"),
+                Material.NETHERITE_SWORD,
+                1506,
+                true));
+
+        register(new CustomItem(plugin,
+                "titan-axe",
+                "<gradient:#7700ff:#ff6600>☢ Titan Axe</gradient>",
+                List.of("<dark_purple>A devastating nuclear shockwave weapon.</dark_purple>",
+                        "<red>☢ Radiation + Weakness on hit</red>",
+                        "<purple>☢ Shockwave knocks back 5-block radius</purple>"),
+                Material.NETHERITE_AXE,
+                1507,
+                true));
+
+        register(new CustomItem(plugin,
+                "titan-pickaxe",
+                "<gradient:#7700ff:#00ccff>☢ Titan Pickaxe</gradient>",
+                List.of("<dark_purple>Mines at unimaginable speed.</dark_purple>",
+                        "<aqua>▸ Max Mining Speed</aqua>",
+                        "<green>✔ Safe for all ore types</green>"),
+                Material.NETHERITE_PICKAXE,
+                1508,
+                true));
+
+        register(new CustomItem(plugin,
+                "titan-shovel",
+                "<gradient:#7700ff:#88ff44>☢ Titan Shovel</gradient>",
+                List.of("<dark_purple>Terraforms with nuclear force.</dark_purple>",
+                        "<aqua>▸ Instant excavation</aqua>"),
+                Material.NETHERITE_SHOVEL,
+                1509,
+                true));
+
+        register(new CustomItem(plugin,
+                "titan-hoe",
+                "<gradient:#7700ff:#ffdd00>☢ Titan Hoe</gradient>",
+                List.of("<dark_purple>Accelerates radioactive crop growth.</dark_purple>",
+                        "<green>▸ Instantly tills large areas</green>"),
+                Material.NETHERITE_HOE,
+                1510,
+                true));
+
+        register(new CustomItem(plugin,
+                "titan-bow",
+                "<gradient:#7700ff:#ff00aa>☢ Titan Bow</gradient>",
+                List.of("<dark_purple>Fires arrows supercharged with reactor energy.</dark_purple>",
+                        "<red>☢ Fires Titan Arrows automatically</red>",
+                        "<purple>☢ AOE radiation burst on impact</purple>",
+                        "<gold>Glows targets for 6 seconds</gold>"),
+                Material.BOW,
+                1511,
+                true));
+
+        register(new CustomItem(plugin,
+                "titan-arrow",
+                "<gradient:#7700ff:#ff00aa>☢ Titan Arrow</gradient>",
+                List.of("<dark_purple>Supercharged with reactor radiation.</dark_purple>",
+                        "<red>☢ Applies heavy radiation + Poison on impact</red>",
+                        "<purple>☢ 3-block AOE burst on detonation</purple>"),
+                Material.SPECTRAL_ARROW,
+                1512,
+                false));
+
         // ── Phase 6: Equipment crafting materials ─────────────────────────────
 
         register(new CustomItem(plugin,

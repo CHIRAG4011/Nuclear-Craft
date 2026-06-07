@@ -1,0 +1,196 @@
+# ═══════════════════════════════════════════════════════════════════
+# NuclearCraft: Plutonium Age — Phase 11: Titan Technology System
+# titan_items.yml — All Titan Technology Configuration
+# ═══════════════════════════════════════════════════════════════════
+
+# ── Titan Reactor Forge Machine ─────────────────────────────────────
+titan-forge:
+  tick-period: 4
+  max-energy: 15000.0
+  energy-per-core: 5000.0
+  energy-decay-per-tick: 0.5
+  overload-cooldown-ticks: 400
+  overload-burst-radius: 10.0
+  overload-burst-amount: 300
+  gui-title: "§5☢ Titan Reactor Forge ☢"
+  gui-refresh-ticks: 10
+
+# ── Titan Armor Per-Piece Effects ───────────────────────────────────
+armor:
+  effect-interval-ticks: 40
+  helmet:
+    night-vision: true
+  chestplate:
+    regeneration: true
+    max-health-bonus: 4.0   # extra hearts (+4 = +8 HP)
+  leggings:
+    speed: true
+    knockback-resistance: true
+  boots:
+    jump-boost: true
+    fall-damage-immunity: true
+
+# ── Full Set Bonus ───────────────────────────────────────────────────
+set-bonus:
+  effect-interval-ticks: 40
+  health-bonus: 8.0         # extra hearts (+8 = +16 HP total with chestplate)
+  radiation-immune: true    # full radiation immunity
+  radiation-reflect-enabled: true
+  radiation-reflect-percent: 30.0
+  auto-cure-interval-ticks: 400
+  speed-amplifier: 1        # Speed II
+  jump-amplifier: 1         # Jump Boost II
+
+# ── Titan Weapons ────────────────────────────────────────────────────
+weapons:
+  sword:
+    radiation-on-hit: 80
+    wave-radius: 4.0
+    wave-radiation: 40
+    crit-chance: 15.0
+  axe:
+    radiation-on-hit: 60
+    shockwave-radius: 5.0
+    knockback-multiplier: 2.0
+  bow:
+    arrow-radiation: 120
+    aoe-radiation: 60
+    aoe-radius: 3.0
+    poison-duration-ticks: 100
+    glow-duration-ticks: 120
+  pickaxe:
+    mining-speed-multiplier: 2.5
+    bonus-ore-yield-chance: 30.0   # % chance for double drop
+  shovel:
+    area-radius: 2
+  hoe:
+    area-radius: 3
+    growth-boost-chance: 40.0
+
+# ── Titan Aura ───────────────────────────────────────────────────────
+aura:
+  interval-ticks: 40
+  radius: 5.0
+  mob-weakness-duration: 60
+  mob-slowness-duration: 60
+  mob-damage: 2.0
+  pvp-radiation: 15
+  pvp-enabled: true
+
+# ── Titan Repair ─────────────────────────────────────────────────────
+repair:
+  fragment-repair-percent: 20.0  # % durability per Titan Fragment
+  core-repair-percent: 50.0      # % durability per Titan Core
+
+# ── Titan Forge Recipes ──────────────────────────────────────────────
+recipes:
+  titan-helmet:
+    material1-amount: 8
+    material2-amount: 2
+    cores-required: 3
+    duration-ticks: 600
+    success-chance: 90.0
+
+  titan-chestplate:
+    material1-amount: 12
+    material2-amount: 3
+    cores-required: 4
+    duration-ticks: 800
+    success-chance: 85.0
+
+  titan-leggings:
+    material1-amount: 10
+    material2-amount: 3
+    cores-required: 3
+    duration-ticks: 700
+    success-chance: 87.0
+
+  titan-boots:
+    material1-amount: 7
+    material2-amount: 2
+    cores-required: 2
+    duration-ticks: 500
+    success-chance: 92.0
+
+  titan-sword:
+    material1-amount: 6
+    material2-amount: 2
+    cores-required: 3
+    duration-ticks: 500
+    success-chance: 90.0
+
+  titan-axe:
+    material1-amount: 7
+    material2-amount: 2
+    cores-required: 3
+    duration-ticks: 500
+    success-chance: 88.0
+
+  titan-bow:
+    material1-amount: 5
+    material2-amount: 1
+    cores-required: 3
+    duration-ticks: 450
+    success-chance: 90.0
+
+  titan-pickaxe:
+    material1-amount: 6
+    material2-amount: 2
+    cores-required: 3
+    duration-ticks: 480
+    success-chance: 90.0
+
+  titan-shovel:
+    material1-amount: 5
+    material2-amount: 1
+    cores-required: 3
+    duration-ticks: 420
+    success-chance: 92.0
+
+  titan-hoe:
+    material1-amount: 4
+    material2-amount: 1
+    cores-required: 2
+    duration-ticks: 400
+    success-chance: 93.0
+
+  titan-arrow:
+    material1-amount: 3
+    material2-amount: 1
+    cores-required: 1
+    duration-ticks: 200
+    success-chance: 100.0
+
+# ── Titan Upgrade Tiers (via Titan Forge) ────────────────────────────
+upgrades:
+  titan-1:
+    fragments-required: 4
+    cores-required: 1
+    duration-ticks: 400
+    success-chance: 90.0
+    radiation-bonus: 5
+    damage-bonus: 5
+
+  titan-2:
+    fragments-required: 8
+    cores-required: 2
+    duration-ticks: 600
+    success-chance: 80.0
+    radiation-bonus: 10
+    damage-bonus: 10
+
+  titan-3:
+    fragments-required: 14
+    cores-required: 3
+    duration-ticks: 900
+    success-chance: 70.0
+    radiation-bonus: 20
+    damage-bonus: 15
+
+  titan-4:
+    fragments-required: 20
+    cores-required: 4
+    duration-ticks: 1200
+    success-chance: 60.0
+    radiation-bonus: 35
+    damage-bonus: 25

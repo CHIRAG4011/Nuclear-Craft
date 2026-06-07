@@ -121,6 +121,10 @@ public class PlayerData {
     private volatile int catastrophesSurvived;
     private volatile int titanCoresObtained;
 
+    // Titan Technology statistics (Phase 11)
+    private volatile int titanEquipmentCrafted;
+    private volatile int radiationReflected;
+
     private final Set<String> unlockedUpgrades;
 
     private volatile boolean dirty;
@@ -193,6 +197,8 @@ public class PlayerData {
         this.titanDamageTaken = 0;
         this.catastrophesSurvived = 0;
         this.titanCoresObtained = 0;
+        this.titanEquipmentCrafted = 0;
+        this.radiationReflected = 0;
         this.unlockedUpgrades = new HashSet<>();
         this.dirty = false;
     }
@@ -275,6 +281,8 @@ public class PlayerData {
         this.titanDamageTaken = 0;
         this.catastrophesSurvived = 0;
         this.titanCoresObtained = 0;
+        this.titanEquipmentCrafted = 0;
+        this.radiationReflected = 0;
         this.dirty = false;
     }
 
@@ -419,6 +427,7 @@ public class PlayerData {
     // ──────────────────────────────────────────────────────────────────────────
 
     public int getSwordHits() { return swordHits; }
+    public void incrementSwordHits() { this.swordHits++; this.dirty = true; }
     public void setSwordHits(int count) { this.swordHits = Math.max(0, count); this.dirty = true; }
 
     public int getRadiationDamageInflicted() { return radiationDamageInflicted; }
@@ -434,7 +443,20 @@ public class PlayerData {
     public void setDebrisGenerated(int count) { this.debrisGenerated = Math.max(0, count); this.dirty = true; }
 
     public int getArrowsFired() { return arrowsFired; }
+    public void incrementArrowsFired() { this.arrowsFired++; this.dirty = true; }
     public void setArrowsFired(int count) { this.arrowsFired = Math.max(0, count); this.dirty = true; }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Phase 11 titan technology statistics
+    // ──────────────────────────────────────────────────────────────────────────
+
+    public int getTitanEquipmentCrafted()               { return titanEquipmentCrafted; }
+    public void incrementTitanEquipmentCrafted()        { this.titanEquipmentCrafted++; this.dirty = true; }
+    public void setTitanEquipmentCrafted(int v)         { this.titanEquipmentCrafted = Math.max(0, v); this.dirty = true; }
+
+    public int getRadiationReflected()                  { return radiationReflected; }
+    public void incrementRadiationReflected(int amount) { this.radiationReflected += Math.max(0, amount); this.dirty = true; }
+    public void setRadiationReflected(int v)            { this.radiationReflected = Math.max(0, v); this.dirty = true; }
 
     // ──────────────────────────────────────────────────────────────────────────
     // Phase 7 farming statistics

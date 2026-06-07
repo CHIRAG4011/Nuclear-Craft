@@ -1,0 +1,770 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 11 - Titan Reactor Armor, Endgame Equipment & Ultimate Nuclear Technology
+
+You are continuing development of NuclearCraft for PaperMC 1.21+ using Java 21.
+
+Completed Systems:
+
+### Phase 1
+
+* Core Framework
+* Data System
+* GUI Framework
+* Config System
+
+### Phase 2
+
+* Radiation System
+* Infection System
+* Contagion System
+
+### Phase 3
+
+* Irradiated Zombies
+* Alpha Irradiated Zombies
+* Radiation Events
+
+### Phase 4
+
+* Plutonium Ore
+* Radiation Drill
+* Ore Mining Progression
+
+### Phase 5
+
+* Nuclear Smelter
+* Industrial Processing
+
+### Phase 6
+
+* Plutonium Equipment
+* Hazmat Armor
+* Combat Systems
+
+### Phase 7
+
+* Radioactive Farming
+* Cure Systems
+
+### Phase 8
+
+* Nuclear Forge
+* MK-I to MK-IV Upgrades
+
+### Phase 9
+
+* Advanced Combat
+* PvP Radiation
+* Weapon Mastery
+
+### Phase 10
+
+* Plutonium Titan Boss
+* Titan Summoning
+* Titan Arena
+* Titan Rewards
+
+Now implement the complete **Titan Technology Progression System**.
+
+This is the ultimate progression tier of NuclearCraft v1.0.
+
+Only players who defeat the Plutonium Titan should gain access to this technology.
+
+Titan equipment should feel legendary.
+
+---
+
+# SYSTEM OVERVIEW
+
+Progression:
+
+Titan Defeat
+
+↓
+
+Titan Core
+
+↓
+
+Titan Fragments
+
+↓
+
+Titan Reactor Forge
+
+↓
+
+Titan Equipment
+
+↓
+
+Ultimate Nuclear Technology
+
+↓
+
+Master Of Radiation
+
+Titan equipment represents the most powerful gear available in the plugin.
+
+---
+
+# TITAN MATERIALS
+
+Create:
+
+TitanCore
+
+TitanFragment
+
+ReactorHeart
+
+AncientReactorBlueprint
+
+All custom items.
+
+Use custom model support.
+
+PersistentDataContainer support.
+
+Future expansion ready.
+
+---
+
+# TITAN CORE
+
+Main Endgame Material.
+
+Appearance:
+
+Black Reactor Crystal
+
+Green Internal Energy
+
+Animated Glow
+
+Floating Particle Effects
+
+---
+
+Purpose:
+
+Craft Titan Equipment
+
+Power Titan Forge
+
+Create Ultimate Upgrades
+
+---
+
+# TITAN FRAGMENTS
+
+Appearance:
+
+Broken Reactor Shards
+
+Green Crystalline Energy
+
+---
+
+Purpose:
+
+Titan Crafting
+
+Titan Upgrades
+
+Titan Repairs
+
+---
+
+# REACTOR HEART
+
+Ultra Rare Drop.
+
+Appearance:
+
+Pulsing Reactor Organ
+
+Living Energy Core
+
+---
+
+Purpose:
+
+Highest Tier Recipes
+
+Future Reactor Systems
+
+Special Cosmetics
+
+---
+
+# TITAN REACTOR FORGE
+
+Create:
+
+TitanForgeManager
+
+TitanForgeBlock
+
+TitanForgeGUI
+
+TitanForgeRecipeManager
+
+TitanForgeListener
+
+---
+
+# PURPOSE
+
+Craft Titan Equipment
+
+Upgrade MK-IV Gear
+
+Process Titan Materials
+
+Future Nuclear Technology
+
+---
+
+# RECIPE
+
+Requires:
+
+Titan Core
+
+Plutonium Block
+
+Radioactive Core
+
+Refined Plutonium
+
+Balanced endgame recipe.
+
+---
+
+# APPEARANCE
+
+Massive Reactor Machine
+
+Advanced Engineering
+
+Titan Core Chamber
+
+Rotating Energy Rings
+
+Animated Energy Flow
+
+---
+
+# MACHINE STATES
+
+OFFLINE
+
+READY
+
+CRAFTING
+
+POWERED
+
+OVERLOADED
+
+ERROR
+
+Display all states in GUI.
+
+---
+
+# TITAN ARMOR SET
+
+Create:
+
+Titan Helmet
+
+Titan Chestplate
+
+Titan Leggings
+
+Titan Boots
+
+---
+
+# APPEARANCE
+
+Dark Reactor Metal
+
+Glowing Green Cracks
+
+Floating Reactor Particles
+
+Energy Veins
+
+Titan Core Embedded In Armor
+
+---
+
+# TITAN HELMET
+
+Effects:
+
+Permanent Night Vision
+
+Radiation Scanner
+
+Ore Detection Framework
+
+Future Expansion Support
+
+---
+
+# TITAN CHESTPLATE
+
+Effects:
+
+Regeneration
+
+Radiation Immunity
+
+Bonus Max Health
+
+---
+
+# TITAN LEGGINGS
+
+Effects:
+
+Movement Speed
+
+Knockback Resistance
+
+Reduced Radiation Slow Effects
+
+---
+
+# TITAN BOOTS
+
+Effects:
+
+Fall Damage Immunity
+
+Jump Boost
+
+Reduced Environmental Damage
+
+---
+
+# FULL SET BONUS
+
+Create:
+
+TitanArmorManager
+
+SetBonusManager
+
+---
+
+# FULL SET EFFECTS
+
+Complete Radiation Immunity
+
+Increased Health
+
+Speed Boost
+
+Jump Boost
+
+Resistance
+
+Hostile Radiation Reflection
+
+Automatic Infection Removal
+
+Environmental Hazard Immunity
+
+---
+
+# RADIATION REFLECTION
+
+When hostile source applies radiation:
+
+Partially reflect radiation.
+
+Works against:
+
+Players
+
+Zombies
+
+Bosses
+
+Configurable.
+
+---
+
+# TITAN WEAPONS
+
+Create:
+
+Titan Sword
+
+Titan Axe
+
+Titan Pickaxe
+
+Titan Shovel
+
+Titan Hoe
+
+Titan Bow
+
+---
+
+# VISUAL STYLE
+
+More Advanced Than Plutonium
+
+Reactor Powered
+
+Titan Core Technology
+
+Legendary Appearance
+
+---
+
+# TITAN SWORD
+
+Damage:
+
+Highest In Plugin
+
+---
+
+Effects:
+
+Heavy Radiation
+
+Energy Slash
+
+Radiation Wave
+
+Critical Explosions
+
+---
+
+# TITAN AXE
+
+Effects:
+
+Massive Shockwaves
+
+Radiation Burst
+
+Armor Breaking Bonus
+
+---
+
+# TITAN BOW
+
+Uses:
+
+Titan Arrows
+
+---
+
+Effects:
+
+Radiation
+
+Poison
+
+Glowing
+
+Piercing
+
+Small Impact Explosion
+
+---
+
+# TITAN PICKAXE
+
+Effects:
+
+Extremely Fast Mining
+
+Bonus Ore Yield
+
+No Debris Generation
+
+Automatic Smelting Framework
+
+---
+
+# TITAN SHOVEL
+
+Effects:
+
+Large Area Excavation
+
+Environmental Cleanup
+
+Radiation Soil Conversion
+
+---
+
+# TITAN HOE
+
+Effects:
+
+Large Area Farming
+
+Crop Growth Boost
+
+Automatic Harvest Framework
+
+---
+
+# TITAN ARROW
+
+Create:
+
+TitanArrowManager
+
+---
+
+# EFFECTS
+
+Heavy Radiation
+
+Piercing
+
+Area Damage
+
+Energy Explosion
+
+Custom Trail
+
+---
+
+# TITAN UPGRADE SYSTEM
+
+Create:
+
+TitanUpgradeManager
+
+---
+
+Upgrade Levels:
+
+Titan-I
+
+Titan-II
+
+Titan-III
+
+Titan-IV
+
+---
+
+Higher Than MK-IV
+
+Use Titan Materials.
+
+Store upgrade data.
+
+---
+
+# TITAN AURA SYSTEM
+
+Create:
+
+TitanAuraManager
+
+---
+
+Radius:
+
+5 Blocks
+
+Effects:
+
+Hostile Mobs
+
+Receive Radiation
+
+Weakness
+
+Slowness
+
+---
+
+Players
+
+PvP Only
+
+Receive Radiation
+
+---
+
+# TITAN REPAIR SYSTEM
+
+Create:
+
+TitanRepairManager
+
+---
+
+Repair Materials:
+
+Titan Fragments
+
+Titan Cores
+
+Support future items.
+
+---
+
+# ENDGAME ACHIEVEMENTS
+
+Create:
+
+Titan Engineer
+
+Craft Titan Forge
+
+---
+
+Titan Warrior
+
+Craft Titan Armor
+
+---
+
+Master Of Radiation
+
+Obtain Full Titan Set
+
+---
+
+Ultimate Technology
+
+Craft Every Titan Item
+
+---
+
+# ENDGAME STATISTICS
+
+Track:
+
+Titan Equipment Crafted
+
+Titan Upgrades Applied
+
+Titan Repairs
+
+Titan Materials Collected
+
+Radiation Reflected
+
+Store permanently.
+
+---
+
+# COMMANDS
+
+Admin:
+
+/nuclearcraft titanitem give
+
+Give Titan Equipment
+
+---
+
+/nuclearcraft titanforge give
+
+Give Titan Forge
+
+---
+
+/nuclearcraft titan stats
+
+Display Statistics
+
+Permissions:
+
+nuclearcraft.admin.titanitems
+
+---
+
+# CONFIGURATION
+
+Create:
+
+titan_items.yml
+
+Include:
+
+Armor Stats
+
+Weapon Stats
+
+Aura Settings
+
+Upgrade Values
+
+Repair Costs
+
+Radiation Reflection
+
+Everything configurable.
+
+---
+
+# PERFORMANCE REQUIREMENTS
+
+Support:
+
+Large SMP Servers
+
+Heavy PvP
+
+Many Titan Players
+
+Avoid:
+
+Repeated equipment scanning
+
+Heavy aura loops
+
+Memory leaks
+
+Use efficient caching systems.
+
+---
+
+# DELIVERABLES
+
+Generate complete production-ready code for:
+
+* TitanForgeManager
+* TitanForgeGUI
+* TitanForgeRecipeManager
+* TitanArmorManager
+* TitanWeaponManager
+* TitanArrowManager
+* TitanUpgradeManager
+* TitanAuraManager
+* TitanRepairManager
+* SetBonusManager
+* Statistics Tracking
+* Commands
+* Config Integration
+
+All code must compile successfully and integrate perfectly with:
+
+* Radiation System
+* Titan Boss System
+* Nuclear Forge
+* Combat System
+* Player Data System
+
+After completion, the project should be fully ready for **Phase 12: Resource Pack Integration, Asset Pipeline, Balancing, Optimization & v1.0 Release Preparation**.

@@ -1,6 +1,7 @@
 package com.nuclearcraft.core;
 
 import com.nuclearcraft.advancements.AdvancementManager;
+import com.nuclearcraft.titantech.TitanTechManager;
 import com.nuclearcraft.blocks.BlockManager;
 import com.nuclearcraft.boss.TitanManager;
 import com.nuclearcraft.combat.CombatManager;
@@ -103,6 +104,9 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     // ── Phase 10 ──
     private TitanManager titanManager;
 
+    // ── Phase 11 ──
+    private TitanTechManager titanTechManager;
+
     private NuclearCraftCommand nuclearCraftCommandHandler;
 
     @Override
@@ -128,6 +132,9 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
+
+        // Phase 11 — shut down titan tech first
+        if (titanTechManager != null) titanTechManager.shutdown();
 
         // Phase 10 — shut down titan before combat
         if (titanManager != null) titanManager.shutdown();
@@ -328,6 +335,12 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 irradiatedZombieManager, zombieSpawnManager);
         titanManager.initialize();
 
+        // ── Phase 11 ──
+        titanTechManager = new TitanTechManager(
+                this, configManager, itemManager, radiationManager,
+                playerDataManager, advancementManager);
+        titanTechManager.initialize();
+
         NCLogger.debug("All managers initialized successfully.");
     }
 
@@ -386,6 +399,15 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 new com.nuclearcraft.listeners.TitanListener(this, titanManager, itemManager),
                 this);
 
+        // Phase 11
+        pm.registerEvents(
+                new com.nuclearcraft.listeners.TitanForgeListener(
+                        titanTechManager.getForgeManager(), itemManager, this),
+                this);
+        pm.registerEvents(
+                new com.nuclearcraft.listeners.TitanItemListener(titanTechManager, this),
+                this);
+
         NCLogger.debug("Event listeners registered.");
     }
 
@@ -400,6 +422,7 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 equipmentManager, farmingManager, nuclearForgeManager, upgradeManager);
         nuclearCraftCommandHandler.setCombatManager(combatManager);
         nuclearCraftCommandHandler.setTitanManager(titanManager);
+        nuclearCraftCommandHandler.setTitanTechManager(titanTechManager);
         cmd.setExecutor(nuclearCraftCommandHandler);
         cmd.setTabCompleter(nuclearCraftCommandHandler);
         NCLogger.debug("Commands registered.");
@@ -522,4 +545,7 @@ public final class NuclearCraftPlugin extends JavaPlugin {
 
     // Phase 10
     public TitanManager getTitanManager()                         { return titanManager; }
+
+    // Phase 11
+    public TitanTechManager getTitanTechManager()                 { return titanTechManager; }
 }

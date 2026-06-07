@@ -30,7 +30,8 @@ public class ConfigManager {
         EQUIPMENT("equipment.yml"),
         FORGE("forge.yml"),
         COMBAT("combat.yml"),
-        TITAN("titan.yml");
+        TITAN("titan.yml"),
+        TITAN_ITEMS("titan_items.yml");
 
         private final String fileName;
 
@@ -138,6 +139,10 @@ public class ConfigManager {
 
     public FileConfiguration getTitan() {
         return get(ConfigFile.TITAN);
+    }
+
+    public FileConfiguration getTitanItems() {
+        return get(ConfigFile.TITAN_ITEMS);
     }
 
     public void save(ConfigFile cf) {
