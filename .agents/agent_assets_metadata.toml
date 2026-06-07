@@ -42,3 +42,9 @@ id = "c6bkifdbaa4SnbIhz8Vwa"
 uri = "file://NuclearCraft-ResourcePack-v1.0.0.zip"
 type = "unspecified"
 title = "NuclearCraft Resource Pack v1.0.0 — 10 textures included"
+
+[[outputs]]
+id = "RlfbzIZJMbR-hK-KkhqwA"
+uri = "file://plutonium smp resource pack.zip"
+type = "unspecified"
+title = "Plutonium SMP Resource Pack"
