@@ -35,4 +35,10 @@ title = "NuclearCraft: Plutonium Age — Plugin Guide 1.0.1"
 id = "1KpJAnZWoS_HmjLhMBiOk"
 uri = "file://NuclearCraft-Guide.pdf"
 type = "pdf"
-title = "NuclearCraft: Plutonium Age — Complete Guide (19 sections, 23 pages)"
+title = "NuclearCraft Guide v1.0.0 — 14-page PDF (no blank pages)"
+
+[[outputs]]
+id = "c6bkifdbaa4SnbIhz8Vwa"
+uri = "file://NuclearCraft-ResourcePack-v1.0.0.zip"
+type = "unspecified"
+title = "NuclearCraft Resource Pack v1.0.0 — 79 files (39 models + 30 sounds + overrides)"
