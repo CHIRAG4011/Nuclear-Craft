@@ -62,6 +62,7 @@ public class ForgeRecipeManager {
         recipe.setIngredient('E', Material.ECHO_SHARD);
         recipe.setIngredient('S', Material.SMITHING_TABLE);
 
+        plugin.getServer().removeRecipe(recipeKey);
         plugin.getServer().addRecipe(recipe);
         NCLogger.debug("Nuclear Forge crafting recipe registered with key: " + recipeKey);
     }

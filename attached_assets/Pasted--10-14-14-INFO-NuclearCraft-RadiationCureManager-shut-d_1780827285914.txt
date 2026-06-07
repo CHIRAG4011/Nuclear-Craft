@@ -1,0 +1,93 @@
+[10:14:14 INFO]: [NuclearCraft] RadiationCureManager shut down.
+[10:14:14 INFO]: [NuclearCraft] MutatedCropManager shut down. Crops saved.
+[10:14:14 INFO]: [NuclearCraft] MutatedPlantManager shut down.
+[10:14:14 INFO]: [NuclearCraft] Phase 7 Farming System shut down.
+[10:14:14 INFO]: [NuclearCraft] Phase 6 Equipment System shut down.
+[10:14:14 INFO]: [NuclearCraft] MachineRadiationManager shut down.
+[10:14:14 INFO]: [NuclearCraft] NuclearSmelterManager shut down — 0 machine(s) saved.
+[10:14:14 INFO]: [NuclearCraft] OreRadiationManager shut down.
+[10:14:14 INFO]: [NuclearCraft] Radiation Surge: ENDED
+[10:14:14 INFO]: [NuclearCraft] RadiationNightManager shut down.
+[10:14:14 INFO]: [NuclearCraft] RadiationCloudManager shut down.
+[10:14:14 INFO]: [NuclearCraft] TaskManager shut down — all tasks cancelled.
+[10:14:14 INFO]: [NuclearCraft] RadiationVisualManager shut down.
+[10:14:14 INFO]: [NuclearCraft] ContagionManager shut down.
+[10:14:14 INFO]: [NuclearCraft] RadiationManager shut down.
+[10:14:14 WARN]: [NuclearCraft] Could not save config.yml to plugins/NuclearCraft-PlutoniumAge/config.yml because config.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save messages.yml to plugins/NuclearCraft-PlutoniumAge/messages.yml because messages.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save ore.yml to plugins/NuclearCraft-PlutoniumAge/ore.yml because ore.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save radiation.yml to plugins/NuclearCraft-PlutoniumAge/radiation.yml because radiation.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save zombies.yml to plugins/NuclearCraft-PlutoniumAge/zombies.yml because zombies.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save farming.yml to plugins/NuclearCraft-PlutoniumAge/farming.yml because farming.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save boss.yml to plugins/NuclearCraft-PlutoniumAge/boss.yml because boss.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save toolstats.yml to plugins/NuclearCraft-PlutoniumAge/toolstats.yml because toolstats.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save armors.yml to plugins/NuclearCraft-PlutoniumAge/armors.yml because armors.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save smelter.yml to plugins/NuclearCraft-PlutoniumAge/smelter.yml because smelter.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save equipment.yml to plugins/NuclearCraft-PlutoniumAge/equipment.yml because equipment.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save forge.yml to plugins/NuclearCraft-PlutoniumAge/forge.yml because forge.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save combat.yml to plugins/NuclearCraft-PlutoniumAge/combat.yml because combat.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save titan.yml to plugins/NuclearCraft-PlutoniumAge/titan.yml because titan.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save titan_items.yml to plugins/NuclearCraft-PlutoniumAge/titan_items.yml because titan_items.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save resourcepack.yml to plugins/NuclearCraft-PlutoniumAge/resourcepack.yml because resourcepack.yml already exists.
+[10:14:14 WARN]: [NuclearCraft] Could not save balance.yml to plugins/NuclearCraft-PlutoniumAge/balance.yml because balance.yml already exists.
+[10:14:14 INFO]: [NuclearCraft] Configuration reloaded.
+[10:14:14 INFO]: [NuclearCraft] ItemManager reloaded — 29 items registered.
+[10:14:14 INFO]: [NuclearCraft] BlockManager reloaded — 5 block types registered.
+[10:14:14 INFO]: [NuclearCraft] RecipeManager reloaded — 3 recipes registered.
+[10:14:14 INFO]: [NuclearCraft] GUIManager reloaded.
+[10:14:14 INFO]: [NuclearCraft] TaskManager initialized — 1 tasks scheduled.
+[10:14:14 INFO]: [NuclearCraft] RadiationManager initialized.
+[10:14:14 INFO]: [NuclearCraft] ContagionManager initialized.
+[10:14:14 INFO]: [NuclearCraft] RadiationVisualManager initialized.
+[10:14:14 INFO]: [NuclearCraft] RadiationCloudManager initialized.
+[10:14:14 INFO]: [NuclearCraft] RadiationNightManager initialized.
+[10:14:14 INFO]: [NuclearCraft] RadiationDrillManager initialized — recipe registered.
+[10:14:14 INFO]: [NuclearCraft] OreRadiationManager initialized.
+[10:14:14 INFO]: [NuclearCraft] RadiationExposureListener initialized.
+[10:14:14 INFO]: [NuclearCraft] NuclearSmelterRecipeManager reloaded — 1 recipe(s).
+[10:14:14 INFO]: [NuclearCraft] NuclearSmelterManager initialized — 0 machine(s) loaded.
+[10:14:14 INFO]: [NuclearCraft] MachineRadiationManager initialized.
+[10:14:14 INFO]: [NuclearCraft] Initializing Phase 6: Equipment System...
+[10:14:14 INFO]: [NuclearCraft] RadiationResistanceManager initialized.
+[10:14:14 ERROR]: [NuclearCraft] Reload failed
+java.lang.IllegalStateException: Duplicate recipe ignored with ID ResourceKey[minecraft:recipe / nuclearcraft-plutoniumage:plutonium_sword]
+        at net.minecraft.world.item.crafting.RecipeMap.addRecipe(RecipeMap.java:41) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.world.item.crafting.RecipeManager.addRecipe(RecipeManager.java:93) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at org.bukkit.craftbukkit.inventory.CraftShapedRecipe.addToCraftingManager(CraftShapedRecipe.java:55) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at org.bukkit.craftbukkit.CraftServer.addRecipe(CraftServer.java:1642) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at org.bukkit.craftbukkit.CraftServer.addRecipe(CraftServer.java:1606) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at NuclearCraft-PlutoniumAge-1.0.1.jar/com.nuclearcraft.equipment.PlutoniumToolManager.registerSword(PlutoniumToolManager.java:175) ~[NuclearCraft-PlutoniumAge-1.0.1.jar:?]
+        at NuclearCraft-PlutoniumAge-1.0.1.jar/com.nuclearcraft.equipment.PlutoniumToolManager.registerRecipes(PlutoniumToolManager.java:160) ~[NuclearCraft-PlutoniumAge-1.0.1.jar:?]
+        at NuclearCraft-PlutoniumAge-1.0.1.jar/com.nuclearcraft.equipment.PlutoniumToolManager.initialize(PlutoniumToolManager.java:53) ~[NuclearCraft-PlutoniumAge-1.0.1.jar:?]
+        at NuclearCraft-PlutoniumAge-1.0.1.jar/com.nuclearcraft.equipment.EquipmentManager.initialize(EquipmentManager.java:77) ~[NuclearCraft-PlutoniumAge-1.0.1.jar:?]
+        at NuclearCraft-PlutoniumAge-1.0.1.jar/com.nuclearcraft.core.NuclearCraftPlugin.reload(NuclearCraftPlugin.java:642) ~[NuclearCraft-PlutoniumAge-1.0.1.jar:?]
+        at NuclearCraft-PlutoniumAge-1.0.1.jar/com.nuclearcraft.commands.NuclearCraftCommand.handleReload(NuclearCraftCommand.java:354) ~[NuclearCraft-PlutoniumAge-1.0.1.jar:?]
+        at NuclearCraft-PlutoniumAge-1.0.1.jar/com.nuclearcraft.commands.NuclearCraftCommand.onCommand(NuclearCraftCommand.java:219) ~[NuclearCraft-PlutoniumAge-1.0.1.jar:?]
+        at org.bukkit.command.PluginCommand.execute(PluginCommand.java:45) ~[paper-api-1.21.4-R0.1-SNAPSHOT.jar:?]
+        at io.papermc.paper.command.brigadier.bukkit.BukkitCommandNode$BukkitBrigCommand.run(BukkitCommandNode.java:82) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at com.mojang.brigadier.context.ContextChain.runExecutable(ContextChain.java:73) ~[brigadier-1.3.10.jar:?]
+        at net.minecraft.commands.execution.tasks.ExecuteCommand.execute(ExecuteCommand.java:30) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.commands.execution.tasks.ExecuteCommand.execute(ExecuteCommand.java:13) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.commands.execution.UnboundEntryAction.lambda$bind$0(UnboundEntryAction.java:8) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.commands.execution.CommandQueueEntry.execute(CommandQueueEntry.java:5) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.commands.execution.ExecutionContext.runCommandQueue(ExecutionContext.java:105) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.commands.Commands.executeCommandInContext(Commands.java:450) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.commands.Commands.performCommand(Commands.java:357) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.commands.Commands.performCommand(Commands.java:347) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.commands.Commands.performCommand(Commands.java:341) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.server.network.ServerGamePacketListenerImpl.performUnsignedChatCommand(ServerGamePacketListenerImpl.java:2215) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.server.network.ServerGamePacketListenerImpl.lambda$handleChatCommand$11(ServerGamePacketListenerImpl.java:2188) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.server.TickTask.run(TickTask.java:18) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.util.thread.BlockableEventLoop.doRunTask(BlockableEventLoop.java:155) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.util.thread.ReentrantBlockableEventLoop.doRunTask(ReentrantBlockableEventLoop.java:24) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.server.MinecraftServer.doRunTask(MinecraftServer.java:1448) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.server.MinecraftServer.doRunTask(MinecraftServer.java:176) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.util.thread.BlockableEventLoop.pollTask(BlockableEventLoop.java:129) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.server.MinecraftServer.pollTaskInternal(MinecraftServer.java:1428) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.server.MinecraftServer.pollTask(MinecraftServer.java:1422) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.util.thread.BlockableEventLoop.managedBlock(BlockableEventLoop.java:139) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.server.MinecraftServer.managedBlock(MinecraftServer.java:1379) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.server.MinecraftServer.waitUntilNextTick(MinecraftServer.java:1387) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1264) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:310) ~[paper-1.21.4.jar:1.21.4-232-12d8fe0]
+        at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]

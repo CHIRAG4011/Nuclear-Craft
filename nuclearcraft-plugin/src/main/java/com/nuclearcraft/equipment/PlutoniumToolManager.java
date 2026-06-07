@@ -168,7 +168,9 @@ public class PlutoniumToolManager {
         ItemStack result = itemManager.getRegistry().get("plutonium-sword")
                 .map(ci -> ci.build(1)).orElse(null);
         if (result == null) return;
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, "plutonium_sword"), result);
+        NamespacedKey recipeKey = new NamespacedKey(plugin, "plutonium_sword");
+        plugin.getServer().removeRecipe(recipeKey);
+        ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
         recipe.shape(" P ", " P ", " S ");
         recipe.setIngredient('P', Material.ECHO_SHARD);
         recipe.setIngredient('S', Material.STICK);
@@ -179,7 +181,9 @@ public class PlutoniumToolManager {
         ItemStack result = itemManager.getRegistry().get("plutonium-axe")
                 .map(ci -> ci.build(1)).orElse(null);
         if (result == null) return;
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, "plutonium_axe"), result);
+        NamespacedKey recipeKey = new NamespacedKey(plugin, "plutonium_axe");
+        plugin.getServer().removeRecipe(recipeKey);
+        ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
         recipe.shape("PP ", "PS ", " S ");
         recipe.setIngredient('P', Material.ECHO_SHARD);
         recipe.setIngredient('S', Material.STICK);
@@ -190,7 +194,9 @@ public class PlutoniumToolManager {
         ItemStack result = itemManager.getRegistry().get("plutonium-pickaxe")
                 .map(ci -> ci.build(1)).orElse(null);
         if (result == null) return;
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, "plutonium_pickaxe"), result);
+        NamespacedKey recipeKey = new NamespacedKey(plugin, "plutonium_pickaxe");
+        plugin.getServer().removeRecipe(recipeKey);
+        ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
         recipe.shape("PPP", " S ", " S ");
         recipe.setIngredient('P', Material.ECHO_SHARD);
         recipe.setIngredient('S', Material.STICK);
@@ -201,7 +207,9 @@ public class PlutoniumToolManager {
         ItemStack result = itemManager.getRegistry().get("plutonium-shovel")
                 .map(ci -> ci.build(1)).orElse(null);
         if (result == null) return;
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, "plutonium_shovel"), result);
+        NamespacedKey recipeKey = new NamespacedKey(plugin, "plutonium_shovel");
+        plugin.getServer().removeRecipe(recipeKey);
+        ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
         recipe.shape(" P ", " S ", " S ");
         recipe.setIngredient('P', Material.ECHO_SHARD);
         recipe.setIngredient('S', Material.STICK);
@@ -212,7 +220,9 @@ public class PlutoniumToolManager {
         ItemStack result = itemManager.getRegistry().get("plutonium-hoe")
                 .map(ci -> ci.build(1)).orElse(null);
         if (result == null) return;
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, "plutonium_hoe"), result);
+        NamespacedKey recipeKey = new NamespacedKey(plugin, "plutonium_hoe");
+        plugin.getServer().removeRecipe(recipeKey);
+        ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
         recipe.shape("PP ", " S ", " S ");
         recipe.setIngredient('P', Material.ECHO_SHARD);
         recipe.setIngredient('S', Material.STICK);

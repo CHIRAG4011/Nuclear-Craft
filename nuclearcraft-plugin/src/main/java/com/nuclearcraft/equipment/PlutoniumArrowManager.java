@@ -100,7 +100,9 @@ public class PlutoniumArrowManager {
                 .map(ci -> ci.build(4)).orElse(null);
         if (result == null) return;
         // P = refined-plutonium-ingot (ECHO_SHARD), A = arrow, F = feather
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, "plutonium_arrow"), result);
+        NamespacedKey arrowKey = new NamespacedKey(plugin, "plutonium_arrow");
+        plugin.getServer().removeRecipe(arrowKey);
+        ShapedRecipe recipe = new ShapedRecipe(arrowKey, result);
         recipe.shape(" P ", " A ", " F ");
         recipe.setIngredient('P', Material.ECHO_SHARD);
         recipe.setIngredient('A', Material.ARROW);

@@ -219,7 +219,9 @@ public class PlutoniumArmorManager {
         ItemStack result = itemManager.getRegistry().get(itemId)
                 .map(ci -> ci.build(1)).orElse(null);
         if (result == null) return;
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, recipeId), result);
+        NamespacedKey recipeKey = new NamespacedKey(plugin, recipeId);
+        plugin.getServer().removeRecipe(recipeKey);
+        ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
         recipe.shape(row1, row2, row3);
         recipe.setIngredient('W', Material.YELLOW_WOOL);
         plugin.getServer().addRecipe(recipe);
@@ -230,7 +232,9 @@ public class PlutoniumArmorManager {
         ItemStack result = itemManager.getRegistry().get(itemId)
                 .map(ci -> ci.build(1)).orElse(null);
         if (result == null) return;
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, recipeId), result);
+        NamespacedKey recipeKey = new NamespacedKey(plugin, recipeId);
+        plugin.getServer().removeRecipe(recipeKey);
+        ShapedRecipe recipe = new ShapedRecipe(recipeKey, result);
         recipe.shape(row1, row2, row3);
         recipe.setIngredient('P', Material.ECHO_SHARD);
         plugin.getServer().addRecipe(recipe);
