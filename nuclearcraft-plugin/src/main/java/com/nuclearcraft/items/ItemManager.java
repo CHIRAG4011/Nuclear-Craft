@@ -294,7 +294,7 @@ public class ItemManager {
                         "<green>Used to craft and repair Hazmat Suits</green>",
                         "<yellow>☢ Radiation-resistant material</yellow>"),
                 Material.YELLOW_WOOL,
-                1315,
+                1113,
                 false));
 
         // ── Phase 5: Nuclear Smelter ──────────────────────────────────────────

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": { "layer0": "minecraft:item/netherite_boots" },
+  "overrides": [
+    { "predicate": { "custom_model_data": 1313 }, "model": "nuclearcraft:item/plutonium_boots" },
+    { "predicate": { "custom_model_data": 1505 }, "model": "nuclearcraft:item/titan_boots" }
+  ]
+}

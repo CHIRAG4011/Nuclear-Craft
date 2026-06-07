@@ -9,16 +9,19 @@ import java.util.Map;
 /**
  * Authoritative registry of every CustomModelData value used by NuclearCraft.
  *
- * ID ranges
+ * ID ranges (by base material, since same CMD on different materials does not conflict)
  *  1101-1199  Core material items
  *  1200-1299  Machines
- *  1300-1399  Consumables (cures / serums)
+ *  1300-1302  Consumables (radiation-antidote, radiation-serum) — HONEY_BOTTLE / GLASS_BOTTLE
+ *  1301-1305  Plutonium tools — NETHERITE_SWORD/AXE/PICKAXE/SHOVEL/HOE  (shared CMD range, different base)
+ *  1306-1309  Hazmat armor — LEATHER_HELMET/CHESTPLATE/LEGGINGS/BOOTS
+ *  1310-1313  Plutonium armor — NETHERITE_HELMET/CHESTPLATE/LEGGINGS/BOOTS
+ *  1314       Plutonium arrow — ARROW
  *  1400-1499  Upgrade machines
  *  1500-1599  Titan Technology equipment
- *  1600-1699  Plutonium tools
- *  1700-1799  Hazmat armor
- *  1800-1899  Plutonium armor
  *
+ * Note: CMDs 1301-1302 are shared between cure items and plutonium tools because they
+ *       sit on different base materials — no in-game conflict exists.
  * Note: titan-fragment was previously a duplicate of radiation-drill (both 1108).
  *       The canonical value for titan-fragment is now 1112.
  */
@@ -65,25 +68,27 @@ public final class ModelRegistry {
     public static final int TITAN_BOW                  = 1511;
     public static final int TITAN_ARROW                = 1512;
 
-    // ── Plutonium Tools ───────────────────────────────────────────────────────
-    public static final int PLUTONIUM_SWORD            = 1601;
-    public static final int PLUTONIUM_AXE              = 1602;
-    public static final int PLUTONIUM_PICKAXE          = 1603;
-    public static final int PLUTONIUM_SHOVEL           = 1604;
-    public static final int PLUTONIUM_HOE              = 1605;
-    public static final int PLUTONIUM_ARROW            = 1606;
+    // ── Plutonium Tools (NETHERITE base, CMDs 1301-1305) ─────────────────────
+    public static final int PLUTONIUM_SWORD            = 1301;
+    public static final int PLUTONIUM_AXE              = 1302;
+    public static final int PLUTONIUM_PICKAXE          = 1303;
+    public static final int PLUTONIUM_SHOVEL           = 1304;
+    public static final int PLUTONIUM_HOE              = 1305;
 
-    // ── Hazmat Armor ─────────────────────────────────────────────────────────
-    public static final int HAZMAT_HELMET              = 1701;
-    public static final int HAZMAT_CHESTPLATE          = 1702;
-    public static final int HAZMAT_LEGGINGS            = 1703;
-    public static final int HAZMAT_BOOTS               = 1704;
+    // ── Hazmat Armor (LEATHER base, CMDs 1306-1309) ───────────────────────────
+    public static final int HAZMAT_HELMET              = 1306;
+    public static final int HAZMAT_CHESTPLATE          = 1307;
+    public static final int HAZMAT_LEGGINGS            = 1308;
+    public static final int HAZMAT_BOOTS               = 1309;
 
-    // ── Plutonium Armor ───────────────────────────────────────────────────────
-    public static final int PLUTONIUM_HELMET           = 1801;
-    public static final int PLUTONIUM_CHESTPLATE       = 1802;
-    public static final int PLUTONIUM_LEGGINGS         = 1803;
-    public static final int PLUTONIUM_BOOTS            = 1804;
+    // ── Plutonium Armor (NETHERITE base, CMDs 1310-1313) ─────────────────────
+    public static final int PLUTONIUM_HELMET           = 1310;
+    public static final int PLUTONIUM_CHESTPLATE       = 1311;
+    public static final int PLUTONIUM_LEGGINGS         = 1312;
+    public static final int PLUTONIUM_BOOTS            = 1313;
+
+    // ── Plutonium Arrow (ARROW base, CMD 1314) ────────────────────────────────
+    public static final int PLUTONIUM_ARROW            = 1314;
 
     // ── Lookup maps ───────────────────────────────────────────────────────────
 

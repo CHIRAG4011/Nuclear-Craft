@@ -1,0 +1,20 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/nether_star"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1107
+      },
+      "model": "nuclearcraft:item/titan_core"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1109
+      },
+      "model": "nuclearcraft:item/reactor_heart"
+    }
+  ]
+}
