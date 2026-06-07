@@ -31,7 +31,9 @@ public class ConfigManager {
         FORGE("forge.yml"),
         COMBAT("combat.yml"),
         TITAN("titan.yml"),
-        TITAN_ITEMS("titan_items.yml");
+        TITAN_ITEMS("titan_items.yml"),
+        RESOURCEPACK("resourcepack.yml"),
+        BALANCE("balance.yml");
 
         private final String fileName;
 
@@ -83,6 +85,11 @@ public class ConfigManager {
 
     public FileConfiguration get(ConfigFile cf) {
         return configs.getOrDefault(cf, plugin.getConfig());
+    }
+
+    /** Alias for {@link #get(ConfigFile)} — used by Phase 12 managers. */
+    public FileConfiguration getConfig(ConfigFile cf) {
+        return get(cf);
     }
 
     public FileConfiguration getMain() {
@@ -143,6 +150,14 @@ public class ConfigManager {
 
     public FileConfiguration getTitanItems() {
         return get(ConfigFile.TITAN_ITEMS);
+    }
+
+    public FileConfiguration getResourcePack() {
+        return get(ConfigFile.RESOURCEPACK);
+    }
+
+    public FileConfiguration getBalance() {
+        return get(ConfigFile.BALANCE);
     }
 
     public void save(ConfigFile cf) {

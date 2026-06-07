@@ -51,7 +51,7 @@ public class ItemManager {
                         "<dark_purple>Used in high-tier crafting</dark_purple>",
                         "<red>☢ Emits extreme radiation</red>"),
                 Material.AMETHYST_SHARD,
-                1108,
+                1112,
                 true));
 
         register(new CustomItem(plugin,

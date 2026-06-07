@@ -2,6 +2,7 @@ package com.nuclearcraft.core;
 
 import com.nuclearcraft.advancements.AdvancementManager;
 import com.nuclearcraft.titantech.TitanTechManager;
+import com.nuclearcraft.balance.BalanceManager;
 import com.nuclearcraft.blocks.BlockManager;
 import com.nuclearcraft.boss.TitanManager;
 import com.nuclearcraft.combat.CombatManager;
@@ -9,6 +10,8 @@ import com.nuclearcraft.commands.NuclearCraftCommand;
 import com.nuclearcraft.config.ConfigManager;
 import com.nuclearcraft.data.DatabaseManager;
 import com.nuclearcraft.data.PlayerDataManager;
+import com.nuclearcraft.debug.DebugManager;
+import com.nuclearcraft.debug.TestingManager;
 import com.nuclearcraft.equipment.EquipmentManager;
 import com.nuclearcraft.equipment.RadiationAuraManager;
 import com.nuclearcraft.farming.FarmingManager;
@@ -17,14 +20,21 @@ import com.nuclearcraft.forge.NuclearForgeManager;
 import com.nuclearcraft.gui.GUIManager;
 import com.nuclearcraft.items.ItemManager;
 import com.nuclearcraft.listeners.*;
+import com.nuclearcraft.migration.MigrationManager;
 import com.nuclearcraft.ore.*;
+import com.nuclearcraft.particles.ParticleManager;
+import com.nuclearcraft.performance.PerformanceManager;
 import com.nuclearcraft.radiation.ContagionManager;
 import com.nuclearcraft.radiation.RadiationManager;
 import com.nuclearcraft.radiation.RadiationVisualManager;
 import com.nuclearcraft.recipes.RecipeManager;
+import com.nuclearcraft.release.ReleaseManager;
+import com.nuclearcraft.resourcepack.AssetRegistry;
+import com.nuclearcraft.resourcepack.ResourcePackManager;
 import com.nuclearcraft.smelter.MachineRadiationManager;
 import com.nuclearcraft.smelter.NuclearSmelterManager;
 import com.nuclearcraft.smelter.NuclearSmelterRecipeManager;
+import com.nuclearcraft.sound.SoundManager;
 import com.nuclearcraft.tasks.TaskManager;
 import com.nuclearcraft.upgrade.UpgradeManager;
 import com.nuclearcraft.utils.NCLogger;
@@ -107,6 +117,17 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     // ── Phase 11 ──
     private TitanTechManager titanTechManager;
 
+    // ── Phase 12 ──
+    private ReleaseManager      releaseManager;
+    private MigrationManager    migrationManager;
+    private BalanceManager      balanceManager;
+    private PerformanceManager  performanceManager;
+    private ResourcePackManager resourcePackManager;
+    private SoundManager        soundManager;
+    private ParticleManager     particleManager;
+    private DebugManager        debugManager;
+    private TestingManager      testingManager;
+
     private NuclearCraftCommand nuclearCraftCommandHandler;
 
     @Override
@@ -132,6 +153,17 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
+
+        // Phase 12
+        if (testingManager      != null) testingManager.shutdown();
+        if (debugManager        != null) debugManager.shutdown();
+        if (particleManager     != null) particleManager.shutdown();
+        if (soundManager        != null) soundManager.shutdown();
+        if (resourcePackManager != null) resourcePackManager.shutdown();
+        if (performanceManager  != null) performanceManager.shutdown();
+        if (balanceManager      != null) balanceManager.shutdown();
+        if (migrationManager    != null) migrationManager.shutdown();
+        if (releaseManager      != null) releaseManager.shutdown();
 
         // Phase 11 — shut down titan tech first
         if (titanTechManager != null) titanTechManager.shutdown();
@@ -341,6 +373,43 @@ public final class NuclearCraftPlugin extends JavaPlugin {
                 playerDataManager, advancementManager);
         titanTechManager.initialize();
 
+        // ── Phase 12 ──
+        releaseManager = new ReleaseManager(this);
+        releaseManager.initialize();
+
+        migrationManager = new MigrationManager(this, configManager);
+        migrationManager.initialize();
+
+        balanceManager = new BalanceManager(this, configManager);
+        balanceManager.initialize();
+
+        performanceManager = new PerformanceManager(this, configManager);
+        performanceManager.initialize();
+
+        resourcePackManager = new ResourcePackManager(this, configManager);
+        resourcePackManager.initialize();
+
+        soundManager = new SoundManager(this, configManager);
+        soundManager.initialize();
+
+        particleManager = new ParticleManager(this, configManager);
+        particleManager.initialize();
+        particleManager.setPerformanceManager(performanceManager);
+
+        debugManager = new DebugManager(
+                this, configManager, radiationManager,
+                irradiatedZombieManager, zombieSpawnManager,
+                plutoniumOreManager, oreGenerationManager,
+                nuclearSmelterManager, nuclearForgeManager,
+                farmingManager, combatManager, titanManager,
+                performanceManager, releaseManager);
+        debugManager.initialize();
+
+        testingManager = new TestingManager(this, configManager, databaseManager, itemManager);
+        testingManager.initialize();
+
+        AssetRegistry.validate();
+
         NCLogger.debug("All managers initialized successfully.");
     }
 
@@ -423,6 +492,7 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         nuclearCraftCommandHandler.setCombatManager(combatManager);
         nuclearCraftCommandHandler.setTitanManager(titanManager);
         nuclearCraftCommandHandler.setTitanTechManager(titanTechManager);
+        nuclearCraftCommandHandler.setDebugManager(debugManager);
         cmd.setExecutor(nuclearCraftCommandHandler);
         cmd.setTabCompleter(nuclearCraftCommandHandler);
         NCLogger.debug("Commands registered.");
@@ -492,6 +562,13 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         nuclearForgeManager.initialize();
         radiationAuraManager.initialize();
 
+        // Reload Phase 12
+        if (balanceManager      != null) balanceManager.reload();
+        if (performanceManager  != null) performanceManager.reload();
+        if (resourcePackManager != null) resourcePackManager.reload();
+        if (soundManager        != null) soundManager.reload();
+        if (particleManager     != null) particleManager.reload();
+
         NCLogger.info("NuclearCraft reloaded successfully.");
     }
 
@@ -548,4 +625,15 @@ public final class NuclearCraftPlugin extends JavaPlugin {
 
     // Phase 11
     public TitanTechManager getTitanTechManager()                 { return titanTechManager; }
+
+    // Phase 12
+    public ReleaseManager getReleaseManager()                     { return releaseManager; }
+    public MigrationManager getMigrationManager()                 { return migrationManager; }
+    public BalanceManager getBalanceManager()                     { return balanceManager; }
+    public PerformanceManager getPerformanceManager()             { return performanceManager; }
+    public ResourcePackManager getResourcePackManager()           { return resourcePackManager; }
+    public SoundManager getSoundManager()                         { return soundManager; }
+    public ParticleManager getParticleManager()                   { return particleManager; }
+    public DebugManager getDebugManager()                         { return debugManager; }
+    public TestingManager getTestingManager()                     { return testingManager; }
 }

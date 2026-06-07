@@ -39,6 +39,7 @@ permissions:
       nuclearcraft.admin.forge: true
       nuclearcraft.admin.combat: true
       nuclearcraft.admin.titan: true
+      nuclearcraft.admin.debug: true
 
   nuclearcraft.reload:
     description: Allows reloading NuclearCraft configuration
@@ -86,4 +87,8 @@ permissions:
 
   nuclearcraft.admin.titan:
     description: Allows admin-level Titan commands (spawn, kill, phase, stats)
+    default: op
+
+  nuclearcraft.admin.debug:
+    description: Allows access to /nc debug <system> diagnostic subcommands
     default: op

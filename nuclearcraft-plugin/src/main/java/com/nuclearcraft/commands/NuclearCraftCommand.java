@@ -3,6 +3,7 @@ package com.nuclearcraft.commands;
 import com.nuclearcraft.advancements.AdvancementManager;
 import com.nuclearcraft.boss.TitanManager;
 import com.nuclearcraft.combat.CombatManager;
+import com.nuclearcraft.debug.DebugManager;
 import com.nuclearcraft.titantech.TitanTechManager;
 import com.nuclearcraft.combat.WeaponMasteryManager;
 import com.nuclearcraft.config.ConfigManager;
@@ -130,6 +131,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     private CombatManager combatManager;
     private TitanManager titanManager;
     private TitanTechManager titanTechManager;
+    private DebugManager debugManager;
 
     public NuclearCraftCommand(NuclearCraftPlugin plugin, ConfigManager configManager,
                                 PlayerDataManager playerDataManager, ItemManager itemManager,
@@ -180,6 +182,11 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         this.titanTechManager = titanTechManager;
     }
 
+    /** Called after Phase 12 init so command can delegate debug subcommands. */
+    public void setDebugManager(DebugManager debugManager) {
+        this.debugManager = debugManager;
+    }
+
     // ──────────────────────────────────────────────────────────────────────────
     // Routing
     // ──────────────────────────────────────────────────────────────────────────
@@ -193,7 +200,7 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             case "version"   -> { sendVersion(sender);             yield true; }
             case "info"      -> { sendInfo(sender);                yield true; }
             case "reload"    -> { handleReload(sender);            yield true; }
-            case "debug"     -> { handleDebug(sender);             yield true; }
+            case "debug"     -> { handleDebug(sender, args);        yield true; }
             case "give"      -> { handleGive(sender, args);        yield true; }
             case "radiation" -> { handleRadiation(sender, args);   yield true; }
             case "zombie"    -> { handleZombie(sender, args);      yield true; }
@@ -319,9 +326,13 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void handleDebug(CommandSender sender) {
+    private void handleDebug(CommandSender sender, String[] args) {
         if (!sender.hasPermission("nuclearcraft.debug")) {
             sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.no-permission")));
+            return;
+        }
+        if (args.length >= 2 && debugManager != null) {
+            debugManager.handleDebugCommand(sender, args);
             return;
         }
         boolean newState = !NCLogger.isDebugMode();

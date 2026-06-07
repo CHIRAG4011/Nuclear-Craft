@@ -1,0 +1,184 @@
+# NuclearCraft Balance Configuration
+# Phase 12 — v1.0
+#
+# All numerical gameplay values are centralised here.
+# Change these to balance the server experience without touching code.
+
+# ─── Radiation ────────────────────────────────────────────────────────────────
+radiation:
+  # Points lost per server tick (20 ticks/second) when not in a radiation source.
+  decay-rate-per-tick: 0.05
+
+  # Radiation gained when mining plutonium ore without a Radiation Drill.
+  ore-mining-gain: 25.0
+
+  # Radiation gained per hit from an Irradiated Zombie.
+  zombie-hit-gain: 15.0
+
+  # Radiation spread per tick to nearby unprotected players (contagion).
+  contagion-rate: 5.0
+
+  # Number of Healing Petals consumed per Antidote craft.
+  antidote-petal-cost: 8
+
+  # Number of Antidotes consumed per Serum craft.
+  serum-craft-cost: 4
+
+  # Stage thresholds (0–1000 scale)
+  stage-thresholds:
+    stage-1: 100    # Mild exposure — subtle effects
+    stage-2: 300    # Moderate exposure
+    stage-3: 500    # Serious exposure
+    stage-4: 750    # Severe exposure
+    stage-5: 950    # Critical / near death
+
+# ─── Zombies ─────────────────────────────────────────────────────────────────
+zombies:
+  irradiated:
+    health: 30.0
+    damage: 6.0
+
+  alpha:
+    health: 80.0
+    damage: 12.0
+    glow-radius: 8
+
+  # Chance that a natural zombie spawn is replaced with an Irradiated Zombie.
+  spawn-chance: 0.10
+
+  # Multiplier applied to spawn chance during Radiation Night.
+  night-spawn-multiplier: 3
+
+# ─── Ore ─────────────────────────────────────────────────────────────────────
+ore:
+  vein-size: 3
+  veins-per-chunk: 1
+  min-y: -64
+  max-y: -20
+
+  # Fraction of radiation gain removed when mining with a Radiation Drill (0–1).
+  drill-radiation-reduction: 0.75
+
+# ─── Machines ────────────────────────────────────────────────────────────────
+machines:
+  smelter:
+    # Ticks to process one ore fragment (200 ticks = 10 seconds).
+    process-ticks: 200
+
+    # Radiation leaked to nearby players per tick while the smelter runs.
+    radiation-per-tick: 0.5
+
+    fuel:
+      coal: 800
+      blaze-rod: 1200
+      lava-bucket: 2000
+
+  forge:
+    energy-capacity: 1000
+
+    energy-cost:
+      mk1: 100
+      mk2: 250
+      mk3: 500
+      mk4: 1000
+
+    # Probability of a successful upgrade (0.0–1.0).
+    success-chance:
+      mk1: 0.90
+      mk2: 0.75
+      mk3: 0.60
+      mk4: 0.40
+
+# ─── Equipment ───────────────────────────────────────────────────────────────
+equipment:
+  plutonium:
+    sword-damage: 9.0
+    pickaxe-speed: 8.0
+    armor-toughness: 2.0
+
+  hazmat:
+    # Fraction of incoming radiation blocked (0 = no protection, 1 = full immunity).
+    radiation-resistance: 0.75
+
+  plutonium-armor:
+    radiation-resistance: 0.50
+
+# ─── Farming ─────────────────────────────────────────────────────────────────
+farming:
+  # Bonus growth chance per tick for mutated crops (additive to base rate).
+  mutated-crop-growth-bonus: 0.5
+
+  # Chance per tick that a Toxic Bloom spreads to an adjacent block.
+  toxic-bloom-spread-chance: 0.15
+
+  # Radius in blocks that a Toxic Bloom can spread.
+  toxic-bloom-radius: 3
+
+  # Radiation added per tick to players standing on Radioactive Farmland.
+  farmland-radiation-per-tick: 1.0
+
+  # Healing Petals required to craft one Antidote.
+  antidote-petal-count: 8
+
+  # Duration of immunity granted by a Radiation Serum (minutes).
+  serum-immunity-minutes: 10
+
+# ─── Combat ──────────────────────────────────────────────────────────────────
+combat:
+  # Multiplier applied to radiation level when converting to bonus PvP damage.
+  radiation-damage-multiplier: 0.5
+
+  # Probability of applying radiation infection on each melee hit.
+  infection-on-hit-chance: 0.10
+
+  # Radius of AOE radiation effects from Titan weapons (blocks).
+  aoe-radius: 4.0
+
+  mastery-max-level: 10
+  mastery-kills-per-level: 50
+
+# ─── Boss — Plutonium Titan ──────────────────────────────────────────────────
+boss:
+  titan:
+    base-health: 800.0
+
+    # Multiplier on Titan damage (1.0 = normal, 1.5 = 50% harder).
+    damage-scaling: 1.0
+
+    radiation-aura-radius: 8.0
+    radiation-aura-gain: 10.0
+
+    # Health % thresholds at which the Titan transitions phases.
+    phase2-health-percent: 75
+    phase3-health-percent: 50
+    phase4-health-percent: 25
+
+    # Ticks between ability uses.
+    ability-cooldown-ticks: 100
+
+    # Maximum number of zombies the Titan can summon at once.
+    max-summons: 6
+
+# ─── Titan Technology ─────────────────────────────────────────────────────────
+titantech:
+  set-bonus:
+    # Full set bonus: radiation resistance fraction (1.0 = total immunity).
+    radiation-resistance: 1.0
+
+  titan-sword:
+    base-damage: 20.0
+
+  weapons:
+    # Radiation added to the hit target per weapon strike.
+    radiation-on-hit: 50.0
+
+# ─── Economy Guards ───────────────────────────────────────────────────────────
+economy:
+  # Minimum minutes before the Titan can respawn after being killed.
+  boss-respawn-cooldown-minutes: 60
+
+  # Seconds of inactivity before AFK farming protections trigger.
+  afk-farming-timeout-seconds: 300
+
+  # Maximum number of machines a single player can own.
+  max-machines-per-player: 5

@@ -1,0 +1,69 @@
+# NuclearCraft Resource Pack Configuration
+# Phase 12 — v1.0
+
+resource-pack:
+  # Set to true to enable automatic resource pack delivery on player join.
+  # You must host the pack at a public URL (e.g. a direct download link).
+  enabled: false
+
+  # Direct download URL to the compiled NuclearCraft resource pack (.zip).
+  # Must be a publicly accessible HTTPS link.
+  url: ""
+
+  # SHA-1 hash of the pack file (40 hex characters).
+  # Used by the client to verify the download and skip re-downloading when unchanged.
+  # Generate with: sha1sum NuclearCraft-ResourcePack.zip
+  hash: ""
+
+  # If true, players who decline the pack are kicked from the server.
+  required: false
+
+  # Message shown to players when prompted to download the pack.
+  prompt: "NuclearCraft requires a resource pack for custom item models and sounds."
+
+  # Log pack acceptance / rejection status to console.
+  log-status: true
+
+sounds:
+  # Master volume multiplier (0.0 - 2.0). Applies to all NuclearCraft sounds.
+  master-volume: 1.0
+
+  # Master pitch multiplier (0.5 - 2.0).
+  master-pitch: 1.0
+
+# ─── Sound Event Reference ────────────────────────────────────────────────────
+# The following sound keys must be declared in your resource pack's sounds.json:
+#
+# nuclearcraft.radiation.gain
+# nuclearcraft.radiation.stage_change
+# nuclearcraft.radiation.cure
+# nuclearcraft.radiation.surge
+# nuclearcraft.radiation.death
+# nuclearcraft.item.antidote_drink
+# nuclearcraft.item.serum_drink
+# nuclearcraft.ore.discover
+# nuclearcraft.ore.mine
+# nuclearcraft.ore.drill
+# nuclearcraft.machine.smelter_start
+# nuclearcraft.machine.smelter_complete
+# nuclearcraft.machine.smelter_overheat
+# nuclearcraft.machine.forge_start
+# nuclearcraft.machine.forge_complete
+# nuclearcraft.machine.forge_overload
+# nuclearcraft.machine.titan_forge_start
+# nuclearcraft.machine.titan_forge_complete
+# nuclearcraft.upgrade.success
+# nuclearcraft.upgrade.fail
+# nuclearcraft.combat.radiation_hit
+# nuclearcraft.combat.aura_pulse
+# nuclearcraft.titan.spawn
+# nuclearcraft.titan.death
+# nuclearcraft.titan.phase_change
+# nuclearcraft.titan.ability.radiation
+# nuclearcraft.titan.ability.slam
+# nuclearcraft.titan.ability.summon
+# nuclearcraft.titan.ability.beam
+# nuclearcraft.titan.roar
+# nuclearcraft.environment.radiation_night_start
+# nuclearcraft.environment.radiation_night_end
+# nuclearcraft.environment.radiation_cloud

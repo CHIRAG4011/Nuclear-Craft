@@ -1,0 +1,822 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 12 - Resource Pack Integration, Asset Pipeline, Balancing, Optimization & v1.0 Release Preparation
+
+You are completing development of NuclearCraft for PaperMC 1.21+ using Java 21.
+
+All gameplay systems have been implemented.
+
+This phase focuses on turning the project into a polished, production-ready release.
+
+The objective is to prepare NuclearCraft for public deployment on large SMP servers.
+
+This phase must include:
+
+* Resource Pack Support
+* Custom Models
+* Custom Textures
+* Sound Design
+* Particle Design
+* Balancing
+* Optimization
+* Data Migration
+* Debugging
+* Testing
+* Documentation
+* Release Packaging
+
+---
+
+# SYSTEM OVERVIEW
+
+At this point NuclearCraft contains:
+
+### Core Systems
+
+* Framework
+* Commands
+* Data
+* Configs
+* GUI Framework
+
+### Radiation Systems
+
+* Radiation
+* Infection
+* Contagion
+* Immunity
+
+### Mobs
+
+* Irradiated Zombies
+* Alpha Zombies
+
+### Ore Progression
+
+* Plutonium Ore
+* Radiation Drill
+* Mining Systems
+
+### Industry
+
+* Nuclear Smelter
+* Nuclear Forge
+* Titan Forge
+
+### Equipment
+
+* Plutonium Gear
+* Hazmat Gear
+* Titan Gear
+
+### Agriculture
+
+* Radioactive Farming
+* Cure System
+
+### Combat
+
+* Radiation PvP
+* Weapon Mastery
+* Radiation Arrows
+
+### Bosses
+
+* Plutonium Titan
+
+### Endgame
+
+* Titan Technology
+
+All systems must now be polished and production-ready.
+
+---
+
+# RESOURCE PACK SYSTEM
+
+Create:
+
+ResourcePackManager
+
+AssetRegistry
+
+ModelRegistry
+
+TextureRegistry
+
+SoundRegistry
+
+---
+
+# RESOURCE PACK DELIVERY
+
+Support:
+
+Server Resource Pack
+
+Optional Download
+
+Version Checking
+
+Automatic Updates
+
+Hash Validation
+
+Pack URL Configuration
+
+---
+
+# CUSTOM MODEL DATA
+
+Create centralized registry.
+
+Every custom item must have:
+
+Unique CustomModelData
+
+No duplicates.
+
+---
+
+# ITEM MODEL REGISTRY
+
+Register:
+
+Radioactive Core
+
+Raw Plutonium Fragment
+
+Refined Plutonium Ingot
+
+Irradiated Heart
+
+Mutated Seed
+
+Healing Petal
+
+Radiation Antidote
+
+Radiation Serum
+
+Radiation Drill
+
+Plutonium Tools
+
+Hazmat Armor
+
+Plutonium Armor
+
+Titan Armor
+
+Titan Weapons
+
+Titan Materials
+
+Titan Core
+
+Titan Fragments
+
+Titan Arrows
+
+All future items.
+
+---
+
+# TEXTURE DESIGN DOCUMENT
+
+Generate full texture specification.
+
+For every item provide:
+
+Color Palette
+
+Shape Design
+
+Visual Theme
+
+Glow Locations
+
+Animation Requirements
+
+Model Requirements
+
+---
+
+# PLUTONIUM ORE
+
+Theme:
+
+Dangerous Rare Material
+
+Colors:
+
+Black
+
+Dark Gray
+
+Neon Green
+
+Small Yellow Warnings
+
+Animation:
+
+Pulsing Glow
+
+---
+
+# RAW PLUTONIUM FRAGMENT
+
+Theme:
+
+Unstable Crystal
+
+Appearance:
+
+Jagged
+
+Sharp
+
+Dangerous
+
+Green Core
+
+---
+
+# REFINED PLUTONIUM INGOT
+
+Theme:
+
+Processed Nuclear Metal
+
+Appearance:
+
+Refined Metallic Bar
+
+Green Energy Channel
+
+---
+
+# RADIOACTIVE CORE
+
+Theme:
+
+Power Source
+
+Appearance:
+
+Crystal Reactor
+
+Floating Energy Effect
+
+---
+
+# MUTATED SEED
+
+Theme:
+
+Contaminated Agriculture
+
+Appearance:
+
+Dark Seed
+
+Green Veins
+
+---
+
+# HEALING PETAL
+
+Theme:
+
+Medical Plant
+
+Appearance:
+
+Blue Flower Petal
+
+Soft Glow
+
+---
+
+# PLUTONIUM EQUIPMENT
+
+Theme:
+
+Military Nuclear Technology
+
+Appearance:
+
+Black Alloy
+
+Green Energy Lines
+
+Reactor Components
+
+---
+
+# TITAN EQUIPMENT
+
+Theme:
+
+Ancient Reactor Civilization
+
+Appearance:
+
+Legendary Technology
+
+Titan Core Powered
+
+Energy Cracks
+
+Floating Energy Elements
+
+---
+
+# ARMOR MODEL DESIGN
+
+Generate model specifications.
+
+Hazmat Armor
+
+Plutonium Armor
+
+Titan Armor
+
+Include:
+
+Helmet
+
+Chestplate
+
+Leggings
+
+Boots
+
+Layer Design
+
+Model Parts
+
+Animation Suggestions
+
+---
+
+# MOB TEXTURE DESIGN
+
+Create specifications for:
+
+Irradiated Zombie
+
+Alpha Irradiated Zombie
+
+Plutonium Titan
+
+---
+
+# IRRADIATED ZOMBIE
+
+Green Eyes
+
+Radiation Burns
+
+Hazmat Remnants
+
+Mutated Flesh
+
+---
+
+# ALPHA ZOMBIE
+
+Larger
+
+Brighter Glow
+
+More Mutations
+
+---
+
+# TITAN
+
+Massive Reactor Creature
+
+Exposed Core
+
+Broken Armor
+
+Radiation Crystals
+
+---
+
+# SOUND SYSTEM
+
+Create:
+
+SoundManager
+
+CustomSoundRegistry
+
+---
+
+# SOUND EVENTS
+
+Radiation Gain
+
+Radiation Stage Change
+
+Radiation Cure
+
+Ore Discovery
+
+Ore Mining
+
+Nuclear Smelter
+
+Nuclear Forge
+
+Titan Forge
+
+Titan Spawn
+
+Titan Death
+
+Titan Abilities
+
+Upgrade Success
+
+Upgrade Failure
+
+Radiation Surge
+
+Antidote Usage
+
+Serum Usage
+
+---
+
+# PARTICLE SYSTEM
+
+Create:
+
+ParticleManager
+
+---
+
+# PARTICLE CATEGORIES
+
+Radiation
+
+Ore Effects
+
+Machine Effects
+
+Weapon Effects
+
+Armor Effects
+
+Boss Effects
+
+Farming Effects
+
+Healing Effects
+
+Upgrade Effects
+
+---
+
+# BALANCING PASS
+
+Create:
+
+BalanceManager
+
+---
+
+# REVIEW
+
+Radiation Gain Rates
+
+Radiation Decay
+
+Radiation Cure Costs
+
+Zombie Difficulty
+
+Ore Rarity
+
+Machine Costs
+
+Equipment Strength
+
+Titan Difficulty
+
+Upgrade Chances
+
+PvP Balance
+
+Endgame Balance
+
+---
+
+# ECONOMY REVIEW
+
+Prevent:
+
+Infinite Farming
+
+Infinite Resources
+
+Duplicate Exploits
+
+Upgrade Abuse
+
+Boss Abuse
+
+AFK Farming
+
+Item Inflation
+
+---
+
+# PERFORMANCE OPTIMIZATION
+
+Create:
+
+PerformanceManager
+
+---
+
+# OPTIMIZE
+
+Entity Tracking
+
+Radiation Tracking
+
+Machine Tracking
+
+Crop Tracking
+
+Boss Tracking
+
+GUI Updates
+
+Particle Rendering
+
+Sound Playback
+
+Inventory Scanning
+
+Metadata Storage
+
+---
+
+# MEMORY MANAGEMENT
+
+Prevent:
+
+Memory Leaks
+
+Dangling References
+
+Chunk Leaks
+
+Unloaded Machine Data
+
+Orphan Boss Data
+
+Unused Scheduled Tasks
+
+---
+
+# TESTING FRAMEWORK
+
+Create:
+
+TestingManager
+
+DiagnosticTools
+
+ValidationTools
+
+---
+
+# AUTOMATED TESTS
+
+Radiation System
+
+Zombie System
+
+Ore System
+
+Smelter System
+
+Forge System
+
+Combat System
+
+Boss System
+
+Armor System
+
+Data Storage
+
+Commands
+
+Permissions
+
+GUI Systems
+
+---
+
+# DEBUG SYSTEM
+
+Create:
+
+DebugManager
+
+---
+
+# DEBUG COMMANDS
+
+/nuclearcraft debug radiation
+
+/nuclearcraft debug zombies
+
+/nuclearcraft debug ore
+
+/nuclearcraft debug smelter
+
+/nuclearcraft debug forge
+
+/nuclearcraft debug titan
+
+/nuclearcraft debug performance
+
+---
+
+# DATA MIGRATION
+
+Create:
+
+MigrationManager
+
+---
+
+Support:
+
+Future Config Changes
+
+Database Migration
+
+Version Upgrades
+
+Data Conversions
+
+---
+
+# DOCUMENTATION
+
+Generate:
+
+Admin Guide
+
+Player Guide
+
+Installation Guide
+
+Configuration Guide
+
+Developer API Guide
+
+Permission Guide
+
+Troubleshooting Guide
+
+---
+
+# SERVER COMPATIBILITY
+
+Verify Support:
+
+Paper
+
+Purpur
+
+Future Compatibility Layer
+
+Avoid hard dependencies.
+
+---
+
+# RELEASE BUILD
+
+Create:
+
+ReleaseManager
+
+---
+
+Generate:
+
+Version Information
+
+Build Metadata
+
+Startup Diagnostics
+
+Plugin Health Checks
+
+Compatibility Reports
+
+---
+
+# FINAL STATISTICS SYSTEM
+
+Review and verify all tracked statistics:
+
+Radiation
+
+Combat
+
+Farming
+
+Ore Mining
+
+Machines
+
+Bosses
+
+Equipment
+
+Titan Systems
+
+Ensure data integrity.
+
+---
+
+# CONFIG REVIEW
+
+Verify all config files:
+
+config.yml
+
+radiation.yml
+
+zombies.yml
+
+ore.yml
+
+smelter.yml
+
+equipment.yml
+
+farming.yml
+
+forge.yml
+
+combat.yml
+
+titan.yml
+
+titan_items.yml
+
+Ensure:
+
+Comments
+
+Documentation
+
+Default Values
+
+Validation
+
+Reload Support
+
+---
+
+# DELIVERABLES
+
+Generate complete production-ready code and documentation for:
+
+* ResourcePackManager
+* AssetRegistry
+* TextureRegistry
+* ModelRegistry
+* SoundRegistry
+* ParticleManager
+* BalanceManager
+* PerformanceManager
+* TestingManager
+* DebugManager
+* MigrationManager
+* ReleaseManager
+
+Generate:
+
+* Complete Resource Pack Specification
+* Complete Sound Design Specification
+* Complete Texture Design Specification
+* Complete Documentation Package
+* Performance Optimization Report
+* Balancing Report
+* Release Checklist
+
+All systems must compile successfully, integrate with every previous phase, and be ready for a public v1.0 release of NuclearCraft: Plutonium Age.
