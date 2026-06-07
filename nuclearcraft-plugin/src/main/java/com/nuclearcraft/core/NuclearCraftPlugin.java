@@ -3,6 +3,12 @@ package com.nuclearcraft.core;
 import com.nuclearcraft.advancements.AdvancementManager;
 import com.nuclearcraft.titantech.TitanTechManager;
 import com.nuclearcraft.balance.BalanceManager;
+import com.nuclearcraft.balance.BossBalanceManager;
+import com.nuclearcraft.balance.CombatBalanceManager;
+import com.nuclearcraft.balance.EconomyBalanceManager;
+import com.nuclearcraft.balance.LootBalanceManager;
+import com.nuclearcraft.balance.ProgressionBalanceManager;
+import com.nuclearcraft.balance.RadiationBalanceManager;
 import com.nuclearcraft.blocks.BlockManager;
 import com.nuclearcraft.boss.TitanManager;
 import com.nuclearcraft.combat.CombatManager;
@@ -128,6 +134,14 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     private DebugManager        debugManager;
     private TestingManager      testingManager;
 
+    // ── Phase 13 ──
+    private LootBalanceManager        lootBalanceManager;
+    private EconomyBalanceManager     economyBalanceManager;
+    private RadiationBalanceManager   radiationBalanceManager;
+    private CombatBalanceManager      combatBalanceManager;
+    private BossBalanceManager        bossBalanceManager;
+    private ProgressionBalanceManager progressionBalanceManager;
+
     private NuclearCraftCommand nuclearCraftCommandHandler;
 
     @Override
@@ -153,6 +167,14 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
+
+        // Phase 13
+        if (progressionBalanceManager != null) progressionBalanceManager.shutdown();
+        if (bossBalanceManager        != null) bossBalanceManager.shutdown();
+        if (combatBalanceManager      != null) combatBalanceManager.shutdown();
+        if (radiationBalanceManager   != null) radiationBalanceManager.shutdown();
+        if (economyBalanceManager     != null) economyBalanceManager.shutdown();
+        if (lootBalanceManager        != null) lootBalanceManager.shutdown();
 
         // Phase 12
         if (testingManager      != null) testingManager.shutdown();
@@ -410,6 +432,25 @@ public final class NuclearCraftPlugin extends JavaPlugin {
 
         AssetRegistry.validate();
 
+        // ── Phase 13 ──
+        lootBalanceManager = new LootBalanceManager(this, configManager);
+        lootBalanceManager.initialize();
+
+        economyBalanceManager = new EconomyBalanceManager(this, configManager);
+        economyBalanceManager.initialize();
+
+        radiationBalanceManager = new RadiationBalanceManager(this, configManager);
+        radiationBalanceManager.initialize();
+
+        combatBalanceManager = new CombatBalanceManager(this, configManager);
+        combatBalanceManager.initialize();
+
+        bossBalanceManager = new BossBalanceManager(this, configManager);
+        bossBalanceManager.initialize();
+
+        progressionBalanceManager = new ProgressionBalanceManager(this, configManager);
+        progressionBalanceManager.initialize();
+
         NCLogger.debug("All managers initialized successfully.");
     }
 
@@ -562,6 +603,14 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         nuclearForgeManager.initialize();
         radiationAuraManager.initialize();
 
+        // Reload Phase 13
+        if (lootBalanceManager        != null) lootBalanceManager.reload();
+        if (economyBalanceManager     != null) economyBalanceManager.reload();
+        if (radiationBalanceManager   != null) radiationBalanceManager.reload();
+        if (combatBalanceManager      != null) combatBalanceManager.reload();
+        if (bossBalanceManager        != null) bossBalanceManager.reload();
+        if (progressionBalanceManager != null) progressionBalanceManager.reload();
+
         // Reload Phase 12
         if (balanceManager      != null) balanceManager.reload();
         if (performanceManager  != null) performanceManager.reload();
@@ -636,4 +685,12 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public ParticleManager getParticleManager()                   { return particleManager; }
     public DebugManager getDebugManager()                         { return debugManager; }
     public TestingManager getTestingManager()                     { return testingManager; }
+
+    // Phase 13
+    public LootBalanceManager getLootBalanceManager()                   { return lootBalanceManager; }
+    public EconomyBalanceManager getEconomyBalanceManager()             { return economyBalanceManager; }
+    public RadiationBalanceManager getRadiationBalanceManager()         { return radiationBalanceManager; }
+    public CombatBalanceManager getCombatBalanceManager()               { return combatBalanceManager; }
+    public BossBalanceManager getBossBalanceManager()                   { return bossBalanceManager; }
+    public ProgressionBalanceManager getProgressionBalanceManager()     { return progressionBalanceManager; }
 }

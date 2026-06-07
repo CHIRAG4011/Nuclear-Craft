@@ -5,3 +5,4 @@
 - [Paper 1.21 Attribute names](paper-attribute-names.md) — No GENERIC_ prefix in Paper 1.21: use Attribute.ATTACK_DAMAGE, ATTACK_SPEED, ARMOR, MAX_HEALTH, MOVEMENT_SPEED. GENERIC_* names cause "cannot find symbol" errors.
 - [Phase 8 forge architecture](phase8-forge.md) — Nuclear Forge wiring, PDC key patterns, forge.yml location, upgrade tier config keys, and overload cooldown Long cast requirement.
 - [Phase 12 resourcepack API](phase12-resourcepack.md) — Player.setResourcePack() in Paper 1.21 takes byte[] hash, not String; use hex-to-byte converter. Order: (url, byte[], Component, boolean).
+- [NCLogger API](nclogger-api.md) — NCLogger.info/warn/debug take a single String only; use String.format() at the call site, not printf-style varargs.

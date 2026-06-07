@@ -1,0 +1,616 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 13 - Economy, Balancing, Progression Tuning & Multiplayer Fairness
+
+You are continuing development of NuclearCraft for PaperMC 1.21+ using Java 21.
+
+All gameplay systems have been completed.
+
+This phase introduces NO new content.
+
+The purpose of this phase is to balance, refine, and tune every progression path so that NuclearCraft feels rewarding, challenging, fair, and suitable for long-term multiplayer survival.
+
+This phase should prepare the plugin for public SMP deployment.
+
+---
+
+# PRIMARY OBJECTIVE
+
+Review and rebalance every progression loop:
+
+Irradiated Zombies
+
+↓
+
+Radioactive Core Collection
+
+↓
+
+Radiation Drill Crafting
+
+↓
+
+Plutonium Ore Discovery
+
+↓
+
+Nuclear Smelter
+
+↓
+
+Plutonium Equipment
+
+↓
+
+Radioactive Farming
+
+↓
+
+Radiation Cures
+
+↓
+
+Nuclear Forge
+
+↓
+
+MK-IV Equipment
+
+↓
+
+Titan Boss
+
+↓
+
+Titan Equipment
+
+↓
+
+Endgame Progression
+
+No stage should feel impossible.
+
+No stage should feel trivial.
+
+---
+
+# BALANCE FRAMEWORK
+
+Create:
+
+BalanceManager
+
+EconomyBalanceManager
+
+ProgressionBalanceManager
+
+LootBalanceManager
+
+CombatBalanceManager
+
+BossBalanceManager
+
+RadiationBalanceManager
+
+All balancing values must be configurable.
+
+---
+
+# PROGRESSION TARGETS
+
+Average Survival Player
+
+Day 1
+
+* First Irradiated Zombie Encounter
+* First Radiation Exposure
+
+Day 2-3
+
+* First Radioactive Core
+
+Day 4-7
+
+* First Radiation Drill
+
+Day 5-10
+
+* First Plutonium Ore Discovery
+
+Day 7-14
+
+* First Nuclear Smelter
+
+Day 10-18
+
+* First Plutonium Equipment
+
+Day 12-20
+
+* First Radioactive Farm
+
+Day 15-25
+
+* First MK-I Upgrade
+
+Day 20-35
+
+* First Titan Summoning
+
+Day 25-40
+
+* First Titan Kill
+
+Day 35-50
+
+* First Titan Equipment
+
+These values should be configurable and documented.
+
+---
+
+# LOOT BALANCING
+
+Review all drops.
+
+Radioactive Core
+
+Mutated Seed
+
+Irradiated Heart
+
+Titan Fragment
+
+Titan Core
+
+Reactor Heart
+
+Ancient Reactor Blueprint
+
+Mutated Crystal
+
+---
+
+# RADIOACTIVE CORE TARGET
+
+Common enough for progression.
+
+Rare enough to retain value.
+
+Target:
+
+15-20 Zombie Kills
+
+≈ 1 Core
+
+---
+
+# MUTATED SEED TARGET
+
+Players should not instantly create farms.
+
+Target:
+
+10-15 Zombie Kills
+
+≈ 1 Seed
+
+---
+
+# IRRADIATED HEART TARGET
+
+Rare progression item.
+
+Target:
+
+1 Heart
+
+Every 100-150 Zombie Kills
+
+---
+
+# TITAN REWARDS
+
+Titan should always feel rewarding.
+
+Guaranteed:
+
+Titan Core
+
+Titan Fragments
+
+XP
+
+Bonus Loot:
+
+Based on contribution.
+
+---
+
+# ORE BALANCING
+
+Review:
+
+Spawn Height
+
+Spawn Frequency
+
+Vein Size
+
+Fortune Multipliers
+
+Mining Requirements
+
+Radiation Output
+
+---
+
+# TARGET
+
+Plutonium Ore should be:
+
+More Valuable Than Diamonds
+
+Less Rare Than Ancient Debris
+
+Harder To Obtain Than Netherite
+
+---
+
+# MACHINE BALANCING
+
+Review:
+
+Nuclear Smelter
+
+Nuclear Forge
+
+Titan Forge
+
+---
+
+# GOALS
+
+Machines should feel powerful.
+
+Machines should not replace effort.
+
+Machine progression should remain meaningful.
+
+---
+
+# SMELTER BALANCE
+
+Review:
+
+Fuel Usage
+
+Processing Speed
+
+Radiation Risk
+
+Output Yield
+
+Storage Systems
+
+---
+
+# FORGE BALANCE
+
+Review:
+
+Upgrade Costs
+
+Upgrade Success Rates
+
+Upgrade Rewards
+
+Failure Penalties
+
+---
+
+# MK UPGRADE TARGETS
+
+MK-I
+
+Easy
+
+Entry Upgrade
+
+---
+
+MK-II
+
+Moderate Investment
+
+---
+
+MK-III
+
+Significant Investment
+
+---
+
+MK-IV
+
+Major Achievement
+
+---
+
+# RADIATION BALANCING
+
+Review:
+
+Stage Thresholds
+
+Stage Effects
+
+Radiation Decay
+
+Radiation Spread
+
+Radiation Sources
+
+Radiation Resistance
+
+Radiation Immunity
+
+---
+
+# GOAL
+
+Radiation must:
+
+Feel dangerous.
+
+Never feel unfair.
+
+Never permanently ruin a player.
+
+Always have a cure path.
+
+---
+
+# CONTAGION BALANCING
+
+Review:
+
+Player-to-player spread.
+
+Combat infection.
+
+Proximity infection.
+
+Vehicle infection.
+
+---
+
+Goal:
+
+Encourage caution.
+
+Avoid griefing abuse.
+
+---
+
+# COMBAT BALANCING
+
+Review:
+
+Plutonium Sword
+
+Plutonium Axe
+
+Plutonium Arrow
+
+Radiation Aura
+
+Titan Weapons
+
+---
+
+# GOALS
+
+PvP should remain skill-based.
+
+Radiation should add strategy.
+
+Radiation should not replace combat skill.
+
+---
+
+# ARMOR BALANCING
+
+Review:
+
+Hazmat Armor
+
+Plutonium Armor
+
+Titan Armor
+
+---
+
+# GOALS
+
+Hazmat:
+
+Early Protection
+
+---
+
+Plutonium:
+
+Strong Protection
+
+---
+
+Titan:
+
+Ultimate Protection
+
+But not invincible.
+
+---
+
+# TITAN BOSS BALANCING
+
+Review:
+
+Health
+
+Damage
+
+Cooldowns
+
+Player Scaling
+
+Arena Mechanics
+
+Rewards
+
+---
+
+# TARGET
+
+Solo:
+
+Possible
+
+Very Difficult
+
+---
+
+Small Team:
+
+Recommended
+
+---
+
+Large Team:
+
+Efficient
+
+Not Trivial
+
+---
+
+# FARMING BALANCING
+
+Review:
+
+Growth Speed
+
+Mutation Rates
+
+Seed Availability
+
+Petal Production
+
+Cure Production
+
+---
+
+Goal:
+
+Cures should be accessible.
+
+Not infinite.
+
+---
+
+# ECONOMY PROTECTION
+
+Prevent:
+
+Item Inflation
+
+Boss Farming Abuse
+
+Machine Duplication
+
+Infinite Resources
+
+Upgrade Abuse
+
+Exploit Loops
+
+AFK Farming
+
+---
+
+# MULTIPLAYER FAIRNESS
+
+Review:
+
+New Players
+
+Mid-Game Players
+
+Late-Game Players
+
+Titan Players
+
+---
+
+Ensure:
+
+Late-game players remain powerful.
+
+New players remain relevant.
+
+---
+
+# CONFIG REVIEW
+
+Validate:
+
+radiation.yml
+
+zombies.yml
+
+ore.yml
+
+smelter.yml
+
+farming.yml
+
+equipment.yml
+
+forge.yml
+
+combat.yml
+
+titan.yml
+
+titan_items.yml
+
+---
+
+# DELIVERABLES
+
+Generate:
+
+BalanceManager
+
+EconomyBalanceManager
+
+ProgressionBalanceManager
+
+LootBalanceManager
+
+BossBalanceManager
+
+RadiationBalanceManager
+
+Full balancing report
+
+Progression timing report
+
+Economy protection report
+
+Multiplayer fairness report
+
+Recommended release values
+
+Ready for Phase 14.

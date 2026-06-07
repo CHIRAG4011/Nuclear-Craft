@@ -1,8 +1,9 @@
 # NuclearCraft Balance Configuration
-# Phase 12 — v1.0
+# Phase 13 — v1.1
 #
 # All numerical gameplay values are centralised here.
-# Change these to balance the server experience without touching code.
+# Change these to tune the server experience without touching code.
+# Use /nc reload to apply changes at runtime.
 
 # ─── Radiation ────────────────────────────────────────────────────────────────
 radiation:
@@ -24,13 +25,31 @@ radiation:
   # Number of Antidotes consumed per Serum craft.
   serum-craft-cost: 4
 
-  # Stage thresholds (0–1000 scale)
+  # Stage thresholds (0–1000 scale).
   stage-thresholds:
     stage-1: 100    # Mild exposure — subtle effects
     stage-2: 300    # Moderate exposure
     stage-3: 500    # Serious exposure
     stage-4: 750    # Severe exposure
     stage-5: 950    # Critical / near death
+
+  # ── Phase 13: Enforcement ─────────────────────────────────────────────────
+
+  # Maximum radiation that a single event can apply.
+  # Prevents one-tick spikes from instantly killing players.
+  max-gain-per-event: 100.0
+
+  # Minimum ticks between contagion applications to the same player (prevents spam).
+  contagion-cooldown-ticks: 40
+
+  # Maximum contagion spread range in blocks.
+  contagion-max-range: 5.0
+
+  # Ticks after consuming a cure before radiation can rise above the grace threshold.
+  post-cure-grace-ticks: 600
+
+  # Radiation level (pts) above which gains are blocked during post-cure grace.
+  post-cure-grace-threshold: 50.0
 
 # ─── Zombies ─────────────────────────────────────────────────────────────────
 zombies:
@@ -137,6 +156,24 @@ combat:
   mastery-max-level: 10
   mastery-kills-per-level: 50
 
+  # ── Phase 13: PvP Caps ────────────────────────────────────────────────────
+
+  # Maximum bonus damage from radiation per hit.
+  # Prevents radiation alone from causing one-shots in PvP.
+  max-radiation-damage-bonus: 15.0
+
+  # Max times a single player can be infected per fight (resets on victim death).
+  infection-stack-limit: 5
+
+  # Contagion spread range in blocks.
+  contagion-range: 5.0
+
+  # Minimum ticks between contagion/aura applications to the same target.
+  contagion-interval-ticks: 40
+
+  # Maximum radiation gain per aura pulse to a single target per interval.
+  max-aura-pulse-gain: 20.0
+
 # ─── Boss — Plutonium Titan ──────────────────────────────────────────────────
 boss:
   titan:
@@ -158,6 +195,32 @@ boss:
 
     # Maximum number of zombies the Titan can summon at once.
     max-summons: 6
+
+    # ── Phase 13: Multiplayer Scaling ─────────────────────────────────────────
+
+    # HP added per additional player beyond the first (up to max-players-for-scaling).
+    health-per-extra-player: 100.0
+
+    # Maximum player count used for health scaling.
+    max-players-for-scaling: 10
+
+    # Block radius to scan for players when Titan spawns (for health scaling).
+    player-scan-radius: 80
+
+    # Minimum player count to be considered a "group fight".
+    group-fight-min-players: 3
+
+    # Contribution thresholds (fraction of total damage dealt by a participant).
+    contribution:
+      tier-1-percent: 0.40    # Top contributor(s)
+      tier-2-percent: 0.20    # Significant contributors
+      tier-3-percent: 0.05    # Minor participants
+
+    # Loot quantity multiplier per contribution tier.
+    loot-multiplier:
+      tier-1: 1.5             # Top contributors get 50% more drops
+      tier-2: 1.2             # Significant contributors get 20% more
+      tier-3: 1.0             # Minor participants get base drops
 
 # ─── Titan Technology ─────────────────────────────────────────────────────────
 titantech:
@@ -182,3 +245,117 @@ economy:
 
   # Maximum number of machines a single player can own.
   max-machines-per-player: 5
+
+  # Seconds between machine placements per player (anti-spam).
+  machine-placement-cooldown-seconds: 5
+
+  # Maximum Radioactive Cores a single player can hold (soft cap, informational).
+  max-cores-per-player: 64
+
+  # Maximum Titan loot grants per boss kill per player.
+  max-titan-loots-per-kill: 1
+
+  # Enable duplicate custom item detection.
+  duplicate-detection: true
+
+# ─── Loot Drop Rates ──────────────────────────────────────────────────────────
+# Target economy:
+#   Radioactive Core : ~1 per 15–20 zombie kills (Level 1)
+#   Mutated Seed     : ~1 per 12–18 zombie kills (Level 1)
+#   Irradiated Heart : ~1 per 100–150 zombie kills (Level 1)
+
+loot:
+  zombie:
+    flesh-max: 3
+
+    level-1:
+      radioactive-core-chance: 0.06    # ~1 per 17 kills
+      mutated-seed-chance:     0.07    # ~1 per 14 kills
+      irradiated-heart-chance: 0.008   # ~1 per 125 kills
+
+    level-2:
+      radioactive-core-chance: 0.10    # ~1 per 10 kills
+      mutated-seed-chance:     0.09    # ~1 per 11 kills
+      irradiated-heart-chance: 0.010   # ~1 per 100 kills
+
+    level-3:
+      radioactive-core-chance: 0.15    # ~1 per 7 kills (alpha zombies)
+      mutated-seed-chance:     0.12    # ~1 per 8 kills
+      irradiated-heart-chance: 0.015   # ~1 per 67 kills
+
+  titan:
+    # Fragment range: uniform random between min and max.
+    fragment-min: 8
+    fragment-max: 16
+
+    # Bonus fragments per contribution-tier-1 or tier-2 participant.
+    bonus-fragment-per-contributor: 2
+
+    # Drop chances (1.0 = guaranteed, 0.0 = never).
+    titan-core-chance:         1.0
+    reactor-heart-chance:      1.0
+    ancient-blueprint-chance:  0.70
+    mutated-crystal-chance:    0.50
+
+  ore:
+    # Base fragment count per ore block mined.
+    fragment-base: 2
+
+    # Bonus fragments per Fortune enchantment level.
+    fortune-level1-bonus: 1    # Fortune I  → 3 total
+    fortune-level2-bonus: 2    # Fortune II → 4 total
+    fortune-level3-bonus: 3    # Fortune III → 5 total
+
+# ─── Progression Targets ──────────────────────────────────────────────────────
+# Expected real-world day ranges to reach each milestone (8 active hours/day).
+# Used by ProgressionBalanceManager for rush detection and admin monitoring.
+
+progression:
+  log-milestones:          true
+  rush-detection:          true
+  rush-threshold-percent:  0.50   # Warn if reached in < 50% of expected min time
+
+  milestones:
+    first-zombie-kill:
+      target-day-min: 1
+      target-day-max: 1
+
+    first-radioactive-core:
+      target-day-min: 2
+      target-day-max: 3
+
+    first-plutonium-ore:
+      target-day-min: 4
+      target-day-max: 7
+
+    first-radiation-drill-craft:
+      target-day-min: 4
+      target-day-max: 7
+
+    first-nuclear-smelter-craft:
+      target-day-min: 7
+      target-day-max: 14
+
+    first-plutonium-equipment:
+      target-day-min: 10
+      target-day-max: 18
+
+    first-radioactive-farm:
+      target-day-min: 12
+      target-day-max: 20
+
+    first-mk1-upgrade:
+      target-day-min: 15
+      target-day-max: 25
+
+    first-titan-summon:
+      target-day-min: 20
+      target-day-max: 35
+
+    first-titan-kill:
+      target-day-min: 25
+      target-day-max: 40
+
+    first-titan-equipment:
+      target-day-min: 35
+      target-day-max: 50

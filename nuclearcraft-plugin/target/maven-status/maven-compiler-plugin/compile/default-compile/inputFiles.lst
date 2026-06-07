@@ -1,5 +1,11 @@
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/advancements/AdvancementManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/balance/BalanceManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/balance/BossBalanceManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/balance/CombatBalanceManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/balance/EconomyBalanceManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/balance/LootBalanceManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/balance/ProgressionBalanceManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/balance/RadiationBalanceManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/blocks/BlockManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/blocks/BlockRegistry.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/blocks/CustomBlock.java
