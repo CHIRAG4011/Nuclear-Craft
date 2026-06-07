@@ -12,6 +12,7 @@ com/nuclearcraft/resourcepack/ModelRegistry.class
 com/nuclearcraft/zombies/IrradiatedZombie.class
 com/nuclearcraft/smelter/MachineRadiationManager.class
 com/nuclearcraft/forge/ForgeState.class
+com/nuclearcraft/admin/AdminManager.class
 com/nuclearcraft/ore/RadiationDrillManager.class
 com/nuclearcraft/combat/RadiationCombatManager.class
 com/nuclearcraft/ore/OreGenerationManager.class
@@ -21,6 +22,7 @@ com/nuclearcraft/events/NuclearSmelterOverheatEvent.class
 com/nuclearcraft/balance/RadiationBalanceManager.class
 com/nuclearcraft/titantech/TitanForgeRecipe.class
 com/nuclearcraft/combat/WeaponMasteryManager$WeaponType.class
+com/nuclearcraft/admin/RecoveryManager.class
 com/nuclearcraft/events/RadiationStageChangeEvent.class
 com/nuclearcraft/farming/MutatedCropManager.class
 com/nuclearcraft/gui/GuiButton.class
@@ -36,6 +38,7 @@ com/nuclearcraft/resourcepack/AssetRegistry.class
 com/nuclearcraft/farming/RadiationCureManager.class
 com/nuclearcraft/titantech/TitanUpgradeManager$TitanTier.class
 com/nuclearcraft/blocks/BlockManager.class
+com/nuclearcraft/admin/MemoryManager.class
 com/nuclearcraft/listeners/CombatListener.class
 com/nuclearcraft/debug/DebugManager.class
 com/nuclearcraft/balance/BalanceManager.class
@@ -70,8 +73,8 @@ com/nuclearcraft/utils/ParticleUtil.class
 com/nuclearcraft/equipment/RadiationResistanceManager.class
 com/nuclearcraft/events/ForgeUpgradeStartEvent.class
 com/nuclearcraft/config/ConfigManager$ConfigFile.class
-com/nuclearcraft/events/PlantHarvestEvent.class
 com/nuclearcraft/debug/TestingManager$TestResult.class
+com/nuclearcraft/events/PlantHarvestEvent.class
 com/nuclearcraft/listeners/SmelterListener.class
 com/nuclearcraft/performance/PerformanceManager.class
 com/nuclearcraft/equipment/RadiationAuraManager.class
@@ -128,6 +131,7 @@ com/nuclearcraft/zombies/RadiationCloudManager.class
 com/nuclearcraft/combat/WeaponMasteryManager$MasteryLevel.class
 com/nuclearcraft/combat/CombatStatisticsManager$KillType.class
 com/nuclearcraft/forge/ForgeRecipeManager.class
+com/nuclearcraft/admin/MemoryManager$1.class
 com/nuclearcraft/ore/OreRadiationManager$1.class
 com/nuclearcraft/equipment/RadioactiveFarmlandManager.class
 com/nuclearcraft/titantech/TitanArrowManager.class
@@ -139,10 +143,12 @@ com/nuclearcraft/titantech/TitanAuraManager.class
 com/nuclearcraft/zombies/RadiationNightManager$1.class
 com/nuclearcraft/farming/RadiationImmunityManager.class
 com/nuclearcraft/smelter/NuclearSmelterRecipeManager.class
+com/nuclearcraft/admin/ValidationManager$ValidationResult.class
 com/nuclearcraft/equipment/EquipmentItem.class
 com/nuclearcraft/listeners/TitanItemListener.class
 com/nuclearcraft/events/RadiationGainEvent.class
 com/nuclearcraft/forge/ForgeData.class
+com/nuclearcraft/admin/ValidationManager.class
 com/nuclearcraft/equipment/PlutoniumArrowManager.class
 com/nuclearcraft/zombies/IrradiatedZombieManager.class
 com/nuclearcraft/boss/events/TitanPhaseChangeEvent.class
@@ -188,6 +194,7 @@ com/nuclearcraft/radiation/RadiationManager.class
 com/nuclearcraft/upgrade/UpgradeManager.class
 com/nuclearcraft/listeners/OreListener.class
 com/nuclearcraft/listeners/RadiationExposureListener$1.class
+com/nuclearcraft/admin/BuildManager.class
 com/nuclearcraft/utils/MathHelper.class
 com/nuclearcraft/blocks/CustomBlock.class
 com/nuclearcraft/boss/TitanSummoningManager.class

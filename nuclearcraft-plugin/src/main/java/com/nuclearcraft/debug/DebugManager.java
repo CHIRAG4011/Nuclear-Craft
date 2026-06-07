@@ -8,6 +8,7 @@ import com.nuclearcraft.farming.FarmingManager;
 import com.nuclearcraft.forge.NuclearForgeManager;
 import com.nuclearcraft.ore.OreGenerationManager;
 import com.nuclearcraft.ore.PlutoniumOreManager;
+import com.nuclearcraft.admin.MemoryManager;
 import com.nuclearcraft.performance.PerformanceManager;
 import com.nuclearcraft.radiation.RadiationManager;
 import com.nuclearcraft.release.ReleaseManager;
@@ -44,10 +45,11 @@ public class DebugManager {
     private final TitanManager           titanManager;
     private final PerformanceManager     performanceManager;
     private final ReleaseManager         releaseManager;
+    private MemoryManager                memoryManager;
 
     public static final List<String> DEBUG_SUBCOMMANDS =
             List.of("radiation", "zombies", "ore", "smelter", "forge", "farming",
-                    "combat", "titan", "performance", "all");
+                    "combat", "titan", "performance", "memory", "all");
 
     public DebugManager(NuclearCraftPlugin plugin,
                         ConfigManager configManager,
@@ -85,6 +87,11 @@ public class DebugManager {
 
     public void shutdown() {}
 
+    /** Injected after Phase 14 init. */
+    public void setMemoryManager(MemoryManager memoryManager) {
+        this.memoryManager = memoryManager;
+    }
+
     // ── Public dispatch ───────────────────────────────────────────────────────
 
     public void handleDebugCommand(CommandSender sender, String[] args) {
@@ -102,6 +109,7 @@ public class DebugManager {
             case "combat"      -> debugCombat(sender);
             case "titan"       -> debugTitan(sender);
             case "performance" -> debugPerformance(sender);
+            case "memory"      -> debugMemory(sender);
             case "all"         -> {
                 debugRadiation(sender);
                 debugZombies(sender);
@@ -112,6 +120,7 @@ public class DebugManager {
                 debugCombat(sender);
                 debugTitan(sender);
                 debugPerformance(sender);
+                debugMemory(sender);
             }
             default -> sender.sendMessage("§cUnknown debug target: " + args[1]);
         }
@@ -228,6 +237,25 @@ public class DebugManager {
 
             if (releaseManager != null) {
                 line(sender, releaseManager.getBuildLine());
+            }
+        } catch (Exception e) {
+            line(sender, "Error: " + e.getMessage());
+        }
+    }
+
+    private void debugMemory(CommandSender sender) {
+        header(sender, "MEMORY");
+        try {
+            if (memoryManager != null) {
+                line(sender, memoryManager.getMemorySummary());
+                line(sender, "Memory critical: " + (memoryManager.isMemoryCritical() ? "§cYES" : "§aNo"));
+                line(sender, "Heap %: §f" + String.format("%.1f", memoryManager.getCurrentHeapPercent() * 100) + "%");
+            } else {
+                Runtime rt = Runtime.getRuntime();
+                long usedMB = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
+                long maxMB  = rt.maxMemory() / 1024 / 1024;
+                line(sender, "Heap: " + usedMB + " MB / " + maxMB + " MB");
+                line(sender, "(MemoryManager not yet initialized)");
             }
         } catch (Exception e) {
             line(sender, "Error: " + e.getMessage());

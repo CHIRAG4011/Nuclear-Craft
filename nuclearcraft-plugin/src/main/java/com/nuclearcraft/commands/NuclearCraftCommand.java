@@ -3,6 +3,8 @@ package com.nuclearcraft.commands;
 import com.nuclearcraft.advancements.AdvancementManager;
 import com.nuclearcraft.boss.TitanManager;
 import com.nuclearcraft.combat.CombatManager;
+import com.nuclearcraft.admin.AdminManager;
+import com.nuclearcraft.admin.BuildManager;
 import com.nuclearcraft.debug.DebugManager;
 import com.nuclearcraft.titantech.TitanTechManager;
 import com.nuclearcraft.combat.WeaponMasteryManager;
@@ -65,7 +67,10 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
 
     private static final List<String> TOP_SUBCOMMANDS =
             List.of("help", "reload", "info", "debug", "give", "version",
-                    "radiation", "zombie", "ore", "smelter", "equipment", "farming", "forge", "combat", "titan", "titantech");
+                    "radiation", "zombie", "ore", "smelter", "equipment", "farming", "forge", "combat", "titan", "titantech",
+                    "health", "diagnostics", "performance", "cleanup", "fixdata", "dumpdata", "serverreport");
+    private static final List<String> ADMIN_SUBCOMMANDS =
+            List.of("health", "diagnostics", "performance", "cleanup", "fixdata", "dumpdata", "serverreport");
     private static final List<String> TITANTECH_SUBCOMMANDS =
             List.of("give", "stats", "aura", "setbonusinfo");
     private static final List<String> TITANTECH_GIVE_TYPES = List.of(
@@ -132,6 +137,8 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     private TitanManager titanManager;
     private TitanTechManager titanTechManager;
     private DebugManager debugManager;
+    private AdminManager adminManager;
+    private BuildManager buildManager;
 
     public NuclearCraftCommand(NuclearCraftPlugin plugin, ConfigManager configManager,
                                 PlayerDataManager playerDataManager, ItemManager itemManager,
@@ -187,6 +194,16 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
         this.debugManager = debugManager;
     }
 
+    /** Called after Phase 14 init so command can delegate admin subcommands. */
+    public void setAdminManager(AdminManager adminManager) {
+        this.adminManager = adminManager;
+    }
+
+    /** Called after Phase 14 init for build/version info. */
+    public void setBuildManager(BuildManager buildManager) {
+        this.buildManager = buildManager;
+    }
+
     // ──────────────────────────────────────────────────────────────────────────
     // Routing
     // ──────────────────────────────────────────────────────────────────────────
@@ -211,7 +228,14 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             case "forge"     -> { handleForge(sender, args);       yield true; }
             case "combat"    -> { handleCombat(sender, args);      yield true; }
             case "titan"     -> { handleTitan(sender, args);       yield true; }
-            case "titantech" -> { handleTitanTech(sender, args);  yield true; }
+            case "titantech"    -> { handleTitanTech(sender, args);   yield true; }
+            case "health"       -> { handleAdminCmd(sender, "health");       yield true; }
+            case "diagnostics"  -> { handleAdminCmd(sender, "diagnostics");  yield true; }
+            case "performance"  -> { handleAdminCmd(sender, "performance");  yield true; }
+            case "cleanup"      -> { handleAdminCmd(sender, "cleanup");      yield true; }
+            case "fixdata"      -> { handleAdminCmd(sender, "fixdata");      yield true; }
+            case "dumpdata"     -> { handleAdminCmd(sender, "dumpdata");     yield true; }
+            case "serverreport" -> { handleAdminCmd(sender, "serverreport"); yield true; }
             default -> {
                 sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.unknown-command")));
                 yield true;
@@ -273,6 +297,15 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
             entries.put("nuclearcraft titan kill",           "Force-kill the active Titan");
             entries.put("nuclearcraft titan phase <1-4>",   "Force the Titan into a specific phase");
             entries.put("nuclearcraft titan stats [player]","Show Titan statistics for self or target");
+        }
+        if (sender.hasPermission("nuclearcraft.admin")) {
+            entries.put("nuclearcraft health",       "Server health overview (TPS, memory, systems)");
+            entries.put("nuclearcraft diagnostics",  "Run all startup checks and config validation");
+            entries.put("nuclearcraft performance",  "Detailed performance metrics report");
+            entries.put("nuclearcraft cleanup",      "Purge caches and request GC");
+            entries.put("nuclearcraft fixdata",      "Validate and auto-repair corrupt data");
+            entries.put("nuclearcraft dumpdata",     "Write full debug dump to disk");
+            entries.put("nuclearcraft serverreport", "Print production server report");
         }
         entries.forEach((cmd, desc) ->
                 sender.sendMessage(ColorUtil.parse(
@@ -1019,6 +1052,22 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
     }
 
     // ──────────────────────────────────────────────────────────────────────────
+    // Phase 14 — Admin commands
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private void handleAdminCmd(CommandSender sender, String subcommand) {
+        if (!sender.hasPermission("nuclearcraft.admin")) {
+            sender.sendMessage(ColorUtil.parse(configManager.getMessage("general.no-permission")));
+            return;
+        }
+        if (adminManager == null) {
+            sender.sendMessage(ColorUtil.parse("<red>[NuclearCraft] Admin system (Phase 14) is not initialized.</red>"));
+            return;
+        }
+        adminManager.handleAdminCommand(sender, new String[]{subcommand});
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
     // Phase 10 — Titan
     // ──────────────────────────────────────────────────────────────────────────
 
@@ -1214,6 +1263,8 @@ public class NuclearCraftCommand implements CommandExecutor, TabCompleter {
                             .filter(n -> n.toLowerCase().startsWith(args[1].toLowerCase()))
                             .collect(Collectors.toList())
                     : List.of();
+            case "health", "diagnostics", "performance", "cleanup",
+                    "fixdata", "dumpdata", "serverreport" -> List.of();
             default -> List.of();
         };
     }

@@ -26,7 +26,7 @@ import java.util.List;
 public class MigrationManager {
 
     private static final String VERSION_KEY = "plugin.config-version";
-    private static final String CURRENT_CONFIG_VERSION = "12";
+    private static final String CURRENT_CONFIG_VERSION = "14";
 
     private final NuclearCraftPlugin plugin;
     private final ConfigManager configManager;
@@ -64,6 +64,9 @@ public class MigrationManager {
         if (from < 12) {
             migrateToV12();
         }
+        if (from < 14) {
+            migrateToV14();
+        }
     }
 
     /**
@@ -83,6 +86,25 @@ public class MigrationManager {
 
         saveConfig(main, new File(plugin.getDataFolder(), "config.yml"));
         log("Migrated config.yml to v12 (added performance monitoring keys).");
+    }
+
+    /**
+     * Migration to config version 14 (Phase 14).
+     *
+     * Adds missing keys introduced in Phase 14:
+     *  - admin.enable-memory-sampler
+     *  - admin.memory-warn-threshold-percent
+     *  - admin.dump-dir
+     */
+    private void migrateToV14() {
+        FileConfiguration main = configManager.getConfig(ConfigManager.ConfigFile.MAIN);
+
+        addIfMissing(main, "admin.enable-memory-sampler",         true);
+        addIfMissing(main, "admin.memory-warn-threshold-percent", 85);
+        addIfMissing(main, "admin.dump-dir",                      "dumps");
+
+        saveConfig(main, new java.io.File(plugin.getDataFolder(), "config.yml"));
+        log("Migrated config.yml to v14 (added admin/memory management keys).");
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

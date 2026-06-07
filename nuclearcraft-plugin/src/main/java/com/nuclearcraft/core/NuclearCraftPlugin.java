@@ -16,6 +16,11 @@ import com.nuclearcraft.commands.NuclearCraftCommand;
 import com.nuclearcraft.config.ConfigManager;
 import com.nuclearcraft.data.DatabaseManager;
 import com.nuclearcraft.data.PlayerDataManager;
+import com.nuclearcraft.admin.AdminManager;
+import com.nuclearcraft.admin.BuildManager;
+import com.nuclearcraft.admin.MemoryManager;
+import com.nuclearcraft.admin.RecoveryManager;
+import com.nuclearcraft.admin.ValidationManager;
 import com.nuclearcraft.debug.DebugManager;
 import com.nuclearcraft.debug.TestingManager;
 import com.nuclearcraft.equipment.EquipmentManager;
@@ -134,6 +139,13 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     private DebugManager        debugManager;
     private TestingManager      testingManager;
 
+    // ── Phase 14 ──
+    private BuildManager      buildManager;
+    private MemoryManager     memoryManager;
+    private ValidationManager validationManager;
+    private RecoveryManager   recoveryManager;
+    private AdminManager      adminManager;
+
     // ── Phase 13 ──
     private LootBalanceManager        lootBalanceManager;
     private EconomyBalanceManager     economyBalanceManager;
@@ -167,6 +179,13 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         NCLogger.info("Shutting down NuclearCraft...");
+
+        // Phase 14
+        if (adminManager      != null) adminManager.shutdown();
+        if (recoveryManager   != null) recoveryManager.shutdown();
+        if (validationManager != null) validationManager.shutdown();
+        if (memoryManager     != null) memoryManager.shutdown();
+        if (buildManager      != null) buildManager.shutdown();
 
         // Phase 13
         if (progressionBalanceManager != null) progressionBalanceManager.shutdown();
@@ -451,6 +470,32 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         progressionBalanceManager = new ProgressionBalanceManager(this, configManager);
         progressionBalanceManager.initialize();
 
+        // ── Phase 14 ──
+        buildManager = new BuildManager(this);
+        buildManager.initialize();
+
+        memoryManager = new MemoryManager(this);
+        memoryManager.initialize();
+
+        if (debugManager != null) debugManager.setMemoryManager(memoryManager);
+
+        validationManager = new ValidationManager(this, configManager, databaseManager, playerDataManager);
+        validationManager.initialize();
+
+        recoveryManager = new RecoveryManager(
+                this, databaseManager, playerDataManager,
+                nuclearSmelterManager, nuclearForgeManager,
+                farmingManager, titanManager);
+        recoveryManager.initialize();
+
+        adminManager = new AdminManager(
+                this, configManager, databaseManager, playerDataManager,
+                radiationManager, nuclearSmelterManager, nuclearForgeManager,
+                farmingManager, titanManager, irradiatedZombieManager,
+                performanceManager, testingManager, releaseManager,
+                validationManager, memoryManager, recoveryManager);
+        adminManager.initialize();
+
         NCLogger.debug("All managers initialized successfully.");
     }
 
@@ -534,6 +579,8 @@ public final class NuclearCraftPlugin extends JavaPlugin {
         nuclearCraftCommandHandler.setTitanManager(titanManager);
         nuclearCraftCommandHandler.setTitanTechManager(titanTechManager);
         nuclearCraftCommandHandler.setDebugManager(debugManager);
+        nuclearCraftCommandHandler.setAdminManager(adminManager);
+        nuclearCraftCommandHandler.setBuildManager(buildManager);
         cmd.setExecutor(nuclearCraftCommandHandler);
         cmd.setTabCompleter(nuclearCraftCommandHandler);
         NCLogger.debug("Commands registered.");
@@ -685,6 +732,13 @@ public final class NuclearCraftPlugin extends JavaPlugin {
     public ParticleManager getParticleManager()                   { return particleManager; }
     public DebugManager getDebugManager()                         { return debugManager; }
     public TestingManager getTestingManager()                     { return testingManager; }
+
+    // Phase 14
+    public BuildManager getBuildManager()             { return buildManager; }
+    public MemoryManager getMemoryManager()           { return memoryManager; }
+    public ValidationManager getValidationManager()   { return validationManager; }
+    public RecoveryManager getRecoveryManager()       { return recoveryManager; }
+    public AdminManager getAdminManager()             { return adminManager; }
 
     // Phase 13
     public LootBalanceManager getLootBalanceManager()                   { return lootBalanceManager; }

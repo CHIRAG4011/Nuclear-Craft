@@ -1,3 +1,8 @@
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/admin/AdminManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/admin/BuildManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/admin/MemoryManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/admin/RecoveryManager.java
+/home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/admin/ValidationManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/advancements/AdvancementManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/balance/BalanceManager.java
 /home/runner/workspace/nuclearcraft-plugin/src/main/java/com/nuclearcraft/balance/BossBalanceManager.java

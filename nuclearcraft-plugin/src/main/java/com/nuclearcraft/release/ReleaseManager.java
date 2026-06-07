@@ -19,8 +19,8 @@ import java.time.format.DateTimeFormatter;
 public class ReleaseManager {
 
     private static final String PLUGIN_NAME    = "NuclearCraft: Plutonium Age";
-    private static final String RELEASE_STAGE  = "Release";
-    private static final int    PHASE_COUNT    = 12;
+    private static final String RELEASE_STAGE  = "v1.0.0 Production";
+    private static final int    PHASE_COUNT    = 14;
 
     private final NuclearCraftPlugin plugin;
 
