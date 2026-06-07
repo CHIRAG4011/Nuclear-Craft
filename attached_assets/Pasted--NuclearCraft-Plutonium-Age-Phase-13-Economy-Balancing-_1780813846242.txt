@@ -1,0 +1,320 @@
+# NuclearCraft: Plutonium Age
+
+## Phase 13 - Economy, Balancing & Progression Pass
+
+All gameplay systems are now complete.
+
+This phase is dedicated entirely to balancing, progression tuning, economy protection, exploit prevention, and multiplayer fairness.
+
+No major new content should be added.
+
+The goal is to make the plugin enjoyable for both small SMPs and large public servers.
+
+---
+
+# PRIMARY OBJECTIVE
+
+Review every gameplay loop:
+
+Irradiated Zombies
+
+↓
+
+Radioactive Core Collection
+
+↓
+
+Radiation Drill
+
+↓
+
+Plutonium Mining
+
+↓
+
+Nuclear Smelter
+
+↓
+
+Plutonium Equipment
+
+↓
+
+Radioactive Farming
+
+↓
+
+Nuclear Forge
+
+↓
+
+Titan Boss
+
+↓
+
+Titan Equipment
+
+Ensure no step is too fast or too slow.
+
+---
+
+# ECONOMY BALANCING
+
+Create:
+
+EconomyBalanceManager
+
+ProgressionBalanceManager
+
+LootBalanceManager
+
+---
+
+Review:
+
+Radioactive Core Drop Rates
+
+Mutated Seed Drop Rates
+
+Irradiated Heart Drop Rates
+
+Titan Fragment Drop Rates
+
+Titan Core Drop Rates
+
+---
+
+Target:
+
+No item should flood the server economy.
+
+Rare items must remain valuable.
+
+---
+
+# RADIATION BALANCING
+
+Review:
+
+Radiation Gain
+
+Radiation Decay
+
+Radiation Spread
+
+Contagion
+
+Cure Costs
+
+Immunity Duration
+
+Boss Radiation
+
+PvP Radiation
+
+Environmental Radiation
+
+---
+
+Goal:
+
+Radiation should be threatening.
+
+Radiation should never feel impossible.
+
+---
+
+# ZOMBIE BALANCING
+
+Review:
+
+Spawn Rates
+
+Level Chances
+
+Health
+
+Damage
+
+Loot
+
+Radiation Output
+
+---
+
+Ensure early game remains challenging but fair.
+
+---
+
+# ORE BALANCING
+
+Review:
+
+Generation Rates
+
+Vein Sizes
+
+Fragment Drops
+
+Fortune Multipliers
+
+Radiation Exposure
+
+---
+
+Prevent resource inflation.
+
+---
+
+# MACHINE BALANCING
+
+Review:
+
+Nuclear Smelter Costs
+
+Nuclear Forge Costs
+
+Titan Forge Costs
+
+Fuel Consumption
+
+Upgrade Costs
+
+---
+
+Ensure progression remains meaningful.
+
+---
+
+# EQUIPMENT BALANCING
+
+Review:
+
+Plutonium Equipment
+
+Hazmat Equipment
+
+Titan Equipment
+
+Upgrade Bonuses
+
+Radiation Resistance
+
+---
+
+Prevent Titan Gear from trivializing gameplay.
+
+---
+
+# TITAN BOSS BALANCING
+
+Review:
+
+Health Scaling
+
+Damage
+
+Ability Cooldowns
+
+Rewards
+
+Player Count Scaling
+
+---
+
+Ensure:
+
+Solo possible but difficult.
+
+Group play rewarding.
+
+---
+
+# PVP BALANCING
+
+Review:
+
+Radiation Weapons
+
+Titan Weapons
+
+Radiation Aura
+
+Contagion
+
+Mastery Bonuses
+
+---
+
+Prevent unavoidable kills.
+
+Prevent infinite radiation stacking.
+
+---
+
+# PROGRESSION TIMING TARGETS
+
+Average Survival Server:
+
+First Irradiated Zombie:
+Day 1
+
+First Radioactive Core:
+Day 1-2
+
+First Plutonium Ore:
+Day 3-5
+
+First Nuclear Smelter:
+Day 5-7
+
+First Plutonium Armor:
+Day 7-10
+
+First Titan Summon:
+Day 15-20
+
+First Titan Armor:
+Day 20-30
+
+Configurable.
+
+---
+
+# EXPLOIT PREVENTION
+
+Review all systems for:
+
+Duplication
+
+AFK Farming
+
+Boss Abuse
+
+Machine Abuse
+
+Upgrade Abuse
+
+Combat Exploits
+
+Chunk Loading Exploits
+
+---
+
+# DELIVERABLES
+
+Generate:
+
+BalanceManager
+
+EconomyBalanceManager
+
+ProgressionBalanceManager
+
+LootBalanceManager
+
+Complete balancing report
+
+Recommended default values
+
+Final progression tuning documentation
