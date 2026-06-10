@@ -57,7 +57,7 @@
 
     <build>
         <defaultGoal>clean package</defaultGoal>
-        <finalName>Final-Plutonium-Smp-Plugin</finalName>
+        <finalName>Last Update</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

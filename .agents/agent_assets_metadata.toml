@@ -60,3 +60,9 @@ id = "0QC6aJGDbkoa0BFSPbt5O"
 uri = "file://NuclearCraft-ResourcePack-Final.zip"
 type = "unspecified"
 title = "NuclearCraft-ResourcePack-Final.zip — fixed pack_format"
+
+[[outputs]]
+id = "7cXOFdSjH3ya3Mqyx8oUK"
+uri = "file://Last Pack.zip"
+type = "unspecified"
+title = "Last Pack.zip (42 KB)"
