@@ -54,3 +54,9 @@ id = "6vA0lGBUrTTKhkzlMalCm"
 uri = "file://NuclearCraft-PlutoniumAge-1.0.1.zip"
 type = "unspecified"
 title = "NuclearCraft: Plutonium Age 1.0.1 (Reload Fix)"
+
+[[outputs]]
+id = "0QC6aJGDbkoa0BFSPbt5O"
+uri = "file://NuclearCraft-ResourcePack-Final.zip"
+type = "unspecified"
+title = "NuclearCraft-ResourcePack-Final.zip (38 KB)"
