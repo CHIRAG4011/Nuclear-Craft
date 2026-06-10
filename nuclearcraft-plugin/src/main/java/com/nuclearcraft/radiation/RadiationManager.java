@@ -418,22 +418,25 @@ public class RadiationManager {
 
         switch (stage) {
             case 1 -> {
+                // DARKNESS fires immediately (no warmup unlike nausea).
+                // Nausea warp ramps up over ~15 s in parallel.
                 applyEffect(player, PotionEffectType.WEAKNESS, 0, dur);
-                applyNausea(player, 0); // glitch screen — long duration so warmup completes
+                applyDarkness(player, 0);   // subtle flicker — immediate
+                applyNausea(player, 0);     // screen warp — ramps in over time
             }
             case 2 -> {
                 applyEffect(player, PotionEffectType.WEAKNESS, 0, dur);
                 applyEffect(player, PotionEffectType.SLOWNESS, 0, dur);
+                applyDarkness(player, 0);
                 applyNausea(player, 0);
             }
             case 3 -> {
                 applyEffect(player, PotionEffectType.WEAKNESS, 1, dur);
                 applyEffect(player, PotionEffectType.SLOWNESS, 1, dur);
                 applyEffect(player, PotionEffectType.HUNGER, 0, dur);
+                applyDarkness(player, 1);   // stronger pulse
                 applyNausea(player, 0);
-                // Random teleportation — radiation destabilises matter
                 if (RandomUtil.chance(0.05)) randomTeleport(player, 2, 5);
-                // Periodic damage ~every 4 s
                 if ((System.currentTimeMillis() / 1000L) % 4 == 0) {
                     double dmg = configManager.getRadiation().getDouble("stages.3.damage-per-cycle", 0.5);
                     player.damage(dmg);
@@ -443,10 +446,9 @@ public class RadiationManager {
                 applyEffect(player, PotionEffectType.WEAKNESS, 2, dur);
                 applyEffect(player, PotionEffectType.SLOWNESS, 2, dur);
                 applyEffect(player, PotionEffectType.HUNGER, 1, dur);
-                applyNausea(player, 1); // Level-II nausea = stronger screen warp
-                // Aggressive random teleportation
+                applyDarkness(player, 1);   // heavy blackout pulses
+                applyNausea(player, 1);     // level-II warp
                 if (RandomUtil.chance(0.15)) randomTeleport(player, 3, 8);
-                // Damage every 2 s
                 if ((System.currentTimeMillis() / 1000L) % 2 == 0) {
                     double dmg = configManager.getRadiation().getDouble("stages.4.damage-per-cycle", 1.0);
                     player.damage(dmg);
@@ -490,6 +492,17 @@ public class RadiationManager {
 
         // Play arrival burst
         dst.getWorld().spawnParticle(Particle.PORTAL, dst.clone().add(0, 1, 0), 40, 0.4, 0.8, 0.4, 0.15);
+    }
+
+    /**
+     * Applies DARKNESS effect — pulses the screen to near-black immediately with no warmup.
+     * Duration is kept just long enough to avoid flicker (reapplied every second).
+     * Amplifier 0 = subtle flicker, 1 = heavy blackout pulses.
+     */
+    private void applyDarkness(Player player, int amplifier) {
+        PotionEffect current = player.getPotionEffect(PotionEffectType.DARKNESS);
+        if (current != null && current.getDuration() > 20 && current.getAmplifier() >= amplifier) return;
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 60, amplifier, true, false, false));
     }
 
     private void applyEffect(Player player, PotionEffectType type, int amplifier, int duration) {
