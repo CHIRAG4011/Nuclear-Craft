@@ -1,6 +1,6 @@
 {
   "pack": {
-    "pack_format": 46,
+    "pack_format": 34,
     "supported_formats": [34, 46],
     "description": "§aNuclearCraft §r— Custom textures for all nuclear items, equipment, and machines."
   }
