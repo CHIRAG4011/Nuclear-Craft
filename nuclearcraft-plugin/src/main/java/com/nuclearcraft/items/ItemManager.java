@@ -4,6 +4,7 @@ import com.nuclearcraft.config.ConfigManager;
 import com.nuclearcraft.core.NuclearCraftPlugin;
 import com.nuclearcraft.utils.NCLogger;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 
 import java.util.List;
 import java.util.Optional;
@@ -183,7 +184,7 @@ public class ItemManager {
                         "<yellow>Far beyond MK-IV capabilities</yellow>"),
                 Material.NETHERITE_HELMET,
                 1502,
-                true));
+                true).withEquippableModel(new NamespacedKey("nuclearcraft", "titan")));
 
         register(new CustomItem(plugin,
                 "titan-chestplate",
@@ -193,7 +194,7 @@ public class ItemManager {
                         "<green>▸ Radiation Resistance: TOTAL (full set)</green>"),
                 Material.NETHERITE_CHESTPLATE,
                 1503,
-                true));
+                true).withEquippableModel(new NamespacedKey("nuclearcraft", "titan")));
 
         register(new CustomItem(plugin,
                 "titan-leggings",
@@ -203,7 +204,7 @@ public class ItemManager {
                         "<green>▸ Radiation Resistance: TOTAL (full set)</green>"),
                 Material.NETHERITE_LEGGINGS,
                 1504,
-                true));
+                true).withEquippableModel(new NamespacedKey("nuclearcraft", "titan_leggings")));
 
         register(new CustomItem(plugin,
                 "titan-boots",
@@ -213,7 +214,7 @@ public class ItemManager {
                         "<green>▸ Radiation Resistance: TOTAL (full set)</green>"),
                 Material.NETHERITE_BOOTS,
                 1505,
-                true));
+                true).withEquippableModel(new NamespacedKey("nuclearcraft", "titan")));
 
         register(new CustomItem(plugin,
                 "titan-sword",

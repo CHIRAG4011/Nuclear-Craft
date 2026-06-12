@@ -1,0 +1,34 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/netherite_leggings"
+    },
+    "entries": [
+      {
+        "threshold": 1312.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "nuclearcraft:item/plutonium_leggings"
+        }
+      },
+      {
+        "threshold": 1313.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/netherite_leggings"
+        }
+      },
+      {
+        "threshold": 1504.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "nuclearcraft:item/titan_leggings"
+        }
+      }
+    ]
+  }
+}

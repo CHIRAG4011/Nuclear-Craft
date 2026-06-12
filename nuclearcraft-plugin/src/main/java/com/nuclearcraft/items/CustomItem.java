@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.components.EquippableComponent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,6 +28,7 @@ public class CustomItem {
     private final boolean glowing;
 
     private final NamespacedKey namespacedKey;
+    private NamespacedKey equippableModelKey = null;
 
     public CustomItem(JavaPlugin plugin, String id, String displayName, List<String> lore,
                       Material material, int customModelData, boolean glowing) {
@@ -37,6 +39,18 @@ public class CustomItem {
         this.customModelData = customModelData;
         this.glowing = glowing;
         this.namespacedKey = new NamespacedKey(plugin, id);
+    }
+
+    /**
+     * Sets a custom equipment model key for this item's worn armor texture.
+     * The key maps to assets/&lt;namespace&gt;/equipment/&lt;name&gt;.json in the resource pack.
+     * Must be called before {@link #build(int)}.
+     *
+     * @return {@code this} for chaining
+     */
+    public CustomItem withEquippableModel(NamespacedKey key) {
+        this.equippableModelKey = key;
+        return this;
     }
 
     /**
@@ -59,6 +73,14 @@ public class CustomItem {
 
         if (customModelData > 0) {
             meta.setCustomModelData(customModelData);
+        }
+
+        if (equippableModelKey != null && meta.hasEquippable()) {
+            EquippableComponent eq = meta.getEquippable();
+            if (eq != null) {
+                eq.setModel(equippableModelKey);
+                meta.setEquippable(eq);
+            }
         }
 
         meta.getPersistentDataContainer()

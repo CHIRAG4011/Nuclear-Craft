@@ -106,10 +106,12 @@ public class PlutoniumArmorManager {
                                 EquipmentSlotGroup slot,
                                 double armor, double toughness, int durability, double knockback,
                                 String... loreLines) {
+        String modelName = piece.equals("leggings") ? "hazmat_leggings" : "hazmat";
         EquipmentItem item = new EquipmentItem(plugin, id,
                 "<gradient:#ffcc00:#ff8800>Hazmat " + capitalize(piece) + "</gradient>",
                 List.of(loreLines),
                 mat, cmd, false, durability, HAZMAT_COLOR);
+        item.withEquippableModel(new NamespacedKey("nuclearcraft", modelName));
         item.addAttribute(Attribute.ARMOR,
                 key(id + "_armor"), armor,
                 AttributeModifier.Operation.ADD_NUMBER, slot);
@@ -176,10 +178,12 @@ public class PlutoniumArmorManager {
                                EquipmentSlotGroup slot,
                                double armor, double toughness, int durability, double knockback,
                                String... loreLines) {
+        String modelName = piece.equals("leggings") ? "plutonium_leggings" : "plutonium";
         EquipmentItem item = new EquipmentItem(plugin, id,
                 "<gradient:#39ff14:#00bfff>Plutonium " + capitalize(piece) + "</gradient>",
                 List.of(loreLines),
                 mat, cmd, true, durability);
+        item.withEquippableModel(new NamespacedKey("nuclearcraft", modelName));
         item.addAttribute(Attribute.ARMOR,
                 key(id + "_armor"), armor,
                 AttributeModifier.Operation.ADD_NUMBER, slot);
