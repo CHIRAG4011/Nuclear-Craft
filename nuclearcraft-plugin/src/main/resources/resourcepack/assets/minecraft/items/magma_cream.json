@@ -1,0 +1,20 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/magma_cream"
+    },
+    "entries": [
+      {
+        "threshold": 1101.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "nuclearcraft:item/radioactive_core"
+        }
+      }
+    ]
+  }
+}

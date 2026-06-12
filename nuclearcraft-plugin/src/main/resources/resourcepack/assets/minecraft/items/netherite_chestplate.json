@@ -1,0 +1,34 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/netherite_chestplate"
+    },
+    "entries": [
+      {
+        "threshold": 1311.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "nuclearcraft:item/plutonium_chestplate"
+        }
+      },
+      {
+        "threshold": 1312.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/netherite_chestplate"
+        }
+      },
+      {
+        "threshold": 1503.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "nuclearcraft:item/titan_chestplate"
+        }
+      }
+    ]
+  }
+}

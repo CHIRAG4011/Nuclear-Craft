@@ -1,0 +1,34 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/netherite_helmet"
+    },
+    "entries": [
+      {
+        "threshold": 1310.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "nuclearcraft:item/plutonium_helmet"
+        }
+      },
+      {
+        "threshold": 1311.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/netherite_helmet"
+        }
+      },
+      {
+        "threshold": 1502.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "nuclearcraft:item/titan_helmet"
+        }
+      }
+    ]
+  }
+}
