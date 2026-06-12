@@ -66,3 +66,9 @@ id = "7cXOFdSjH3ya3Mqyx8oUK"
 uri = "file://Last Pack.zip"
 type = "unspecified"
 title = "Last Pack.zip (42 KB)"
+
+[[outputs]]
+id = "YUD9R7FfhSTVNY5ES_2IM"
+uri = "file://nuclearcraft-plugin/src/main/resources/NuclearCraft-ResourcePack.zip"
+type = "unspecified"
+title = "NuclearCraft-ResourcePack.zip"
