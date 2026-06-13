@@ -118,7 +118,6 @@ public class ResourcePackManager implements Listener {
                     .packs(info)
                     .prompt(prompt)
                     .required(required)
-                    .replace(true)
                     .build();
 
             player.sendResourcePacks(request);

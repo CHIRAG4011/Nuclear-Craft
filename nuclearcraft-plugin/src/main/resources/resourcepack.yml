@@ -13,7 +13,7 @@ resource-pack:
   # SHA-1 hash of the pack file (40 hex characters).
   # Used by the client to verify the download and skip re-downloading when unchanged.
   # Generate with: sha1sum NuclearCraft-ResourcePack.zip
-  hash: "98d5077a449c57ccf85af398ce67c27139d379d5"
+  hash: "f17511af5aed1000a3b87e70d22ad54e9841f939"
 
   # If true, players who decline the pack are kicked from the server.
   required: false
