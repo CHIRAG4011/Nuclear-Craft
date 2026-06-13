@@ -75,12 +75,14 @@ public class CustomItem {
             meta.setCustomModelData(customModelData);
         }
 
-        if (equippableModelKey != null && meta.hasEquippable()) {
-            EquippableComponent eq = meta.getEquippable();
-            if (eq != null) {
-                eq.setModel(equippableModelKey);
-                meta.setEquippable(eq);
-            }
+        if (equippableModelKey != null) {
+            try {
+                EquippableComponent eq = meta.getEquippable();
+                if (eq != null) {
+                    eq.setModel(equippableModelKey);
+                    meta.setEquippable(eq);
+                }
+            } catch (Exception ignored) {}
         }
 
         meta.getPersistentDataContainer()

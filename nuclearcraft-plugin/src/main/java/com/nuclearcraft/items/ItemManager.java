@@ -204,7 +204,7 @@ public class ItemManager {
                         "<green>▸ Radiation Resistance: TOTAL (full set)</green>"),
                 Material.NETHERITE_LEGGINGS,
                 1504,
-                true).withEquippableModel(new NamespacedKey("nuclearcraft", "titan_leggings")));
+                true).withEquippableModel(new NamespacedKey("nuclearcraft", "titan")));
 
         register(new CustomItem(plugin,
                 "titan-boots",

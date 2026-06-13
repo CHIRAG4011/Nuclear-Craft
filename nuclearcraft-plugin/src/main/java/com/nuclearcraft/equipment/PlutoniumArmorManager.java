@@ -106,7 +106,7 @@ public class PlutoniumArmorManager {
                                 EquipmentSlotGroup slot,
                                 double armor, double toughness, int durability, double knockback,
                                 String... loreLines) {
-        String modelName = piece.equals("leggings") ? "hazmat_leggings" : "hazmat";
+        String modelName = "hazmat";
         EquipmentItem item = new EquipmentItem(plugin, id,
                 "<gradient:#ffcc00:#ff8800>Hazmat " + capitalize(piece) + "</gradient>",
                 List.of(loreLines),
@@ -178,7 +178,7 @@ public class PlutoniumArmorManager {
                                EquipmentSlotGroup slot,
                                double armor, double toughness, int durability, double knockback,
                                String... loreLines) {
-        String modelName = piece.equals("leggings") ? "plutonium_leggings" : "plutonium";
+        String modelName = "plutonium";
         EquipmentItem item = new EquipmentItem(plugin, id,
                 "<gradient:#39ff14:#00bfff>Plutonium " + capitalize(piece) + "</gradient>",
                 List.of(loreLines),
