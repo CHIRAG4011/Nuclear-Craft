@@ -3,6 +3,8 @@ package com.nuclearcraft.resourcepack;
 import com.nuclearcraft.config.ConfigManager;
 import com.nuclearcraft.core.NuclearCraftPlugin;
 import com.nuclearcraft.utils.NCLogger;
+import net.kyori.adventure.resource.ResourcePackInfo;
+import net.kyori.adventure.resource.ResourcePackRequest;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,15 +16,16 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 /**
  * Manages server-side resource pack delivery for NuclearCraft.
  *
  * Reads pack URL, SHA-1 hash, required flag and prompt message from
  * resourcepack.yml and applies the pack to every player on join.
- * Optionally logs acceptance/rejection status.
- *
- * Phase 12 addition.
+ * Uses a stable UUID derived from the pack hash so clients do not
+ * re-download the pack on every join.
  */
 public class ResourcePackManager implements Listener {
 
@@ -74,16 +77,14 @@ public class ResourcePackManager implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (!enabled || packUrl == null || packUrl.isBlank()) return;
-        Player player = event.getPlayer();
-        applyPack(player);
+        applyPack(event.getPlayer());
     }
 
     @EventHandler
     public void onResourcePackStatus(PlayerResourcePackStatusEvent event) {
         if (!logStatus) return;
         Player player = event.getPlayer();
-        PlayerResourcePackStatusEvent.Status status = event.getStatus();
-        switch (status) {
+        switch (event.getStatus()) {
             case SUCCESSFULLY_LOADED ->
                 NCLogger.debug("[ResourcePackManager] " + player.getName() + " accepted resource pack.");
             case DECLINED ->
@@ -96,29 +97,35 @@ public class ResourcePackManager implements Listener {
 
     /**
      * Sends the configured resource pack to a specific player.
+     * Uses a UUID derived from the hash so the Minecraft client recognises
+     * the same pack across sessions and does not re-download it.
      */
     public void applyPack(Player player) {
         if (!enabled || packUrl == null || packUrl.isBlank()) return;
         try {
-            byte[] hashBytes = parseHex(packHash);
+            UUID stableId = UUID.nameUUIDFromBytes(
+                    (packUrl + ":" + packHash).getBytes(StandardCharsets.UTF_8));
+
+            ResourcePackInfo info = ResourcePackInfo.resourcePackInfo()
+                    .id(stableId)
+                    .uri(URI.create(packUrl))
+                    .hash(packHash)
+                    .build();
+
             Component prompt = Component.text(promptMessage, NamedTextColor.GREEN);
-            player.setResourcePack(packUrl, hashBytes, prompt, required);
+
+            ResourcePackRequest request = ResourcePackRequest.resourcePackRequest()
+                    .packs(info)
+                    .prompt(prompt)
+                    .required(required)
+                    .replace(true)
+                    .build();
+
+            player.sendResourcePacks(request);
         } catch (Exception e) {
             NCLogger.warn("[ResourcePackManager] Failed to send resource pack to "
                     + player.getName() + ": " + e.getMessage());
         }
-    }
-
-    /** Converts a 40-char hex SHA-1 string to byte[20]. Returns empty array on blank/null. */
-    private static byte[] parseHex(String hex) {
-        if (hex == null || hex.isBlank()) return new byte[0];
-        int len = hex.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
-                    + Character.digit(hex.charAt(i + 1), 16));
-        }
-        return data;
     }
 
     public boolean isEnabled() { return enabled; }
