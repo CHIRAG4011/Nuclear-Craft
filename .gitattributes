@@ -1,3 +1,5 @@
 nuclearcraft-plugin/src/main/resources/NuclearCraft-ResourcePack.zip filter=lfs diff=lfs merge=lfs -text
 nuclearcraft-plugin/target/Last[[:space:]]Update.jar filter=lfs diff=lfs merge=lfs -text
 nuclearcraft-plugin/target/original-Last[[:space:]]Update.jar filter=lfs diff=lfs merge=lfs -text
+nuclearcraft-plugin/target/NuclearCraft-Plugin.jar filter=lfs diff=lfs merge=lfs -text
+nuclearcraft-plugin/target/NuclearCraft-Plugin.zip filter=lfs diff=lfs merge=lfs -text
