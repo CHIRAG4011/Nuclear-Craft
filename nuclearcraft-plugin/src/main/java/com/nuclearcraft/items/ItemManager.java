@@ -308,7 +308,7 @@ public class ItemManager {
                         "<gray>into Refined Plutonium Ingots.</gray>",
                         "<dark_gray>Requires fuel: Coal, Blaze Rod, or Lava Bucket</dark_gray>",
                         "<green>Right-click to open machine interface</green>"),
-                Material.BLAST_FURNACE,
+                Material.SMOKER,
                 1201,
                 true));
 
@@ -321,7 +321,7 @@ public class ItemManager {
                         "<yellow>☢ Upgrade Plutonium & Hazmat gear to MK-IV</yellow>",
                         "<gray>Requires Radioactive Cores for energy</gray>",
                         "<green>Right-click to open upgrade interface</green>"),
-                Material.SMITHING_TABLE,
+                Material.CARTOGRAPHY_TABLE,
                 1401,
                 true));
 

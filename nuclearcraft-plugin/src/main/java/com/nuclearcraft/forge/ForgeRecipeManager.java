@@ -51,16 +51,16 @@ public class ForgeRecipeManager {
     private void registerForgeRecipe() {
         ItemStack forgeItem = itemManager.getItem("nuclear-forge")
                 .map(ci -> ci.build(1))
-                .orElseGet(() -> new ItemStack(Material.SMITHING_TABLE));
+                .orElseGet(() -> new ItemStack(Material.CARTOGRAPHY_TABLE));
 
         ShapedRecipe recipe = new ShapedRecipe(recipeKey, forgeItem);
 
-        // Pattern: O=Obsidian, D=Ancient Debris, E=Echo Shard(Refined Ingot), S=Smithing Table
-        recipe.shape("ODO", "ESE", "ODO");
+        // Pattern: O=Obsidian, D=Ancient Debris, E=Echo Shard(Refined Ingot), C=Cartography Table
+        recipe.shape("ODO", "ECE", "ODO");
         recipe.setIngredient('O', Material.OBSIDIAN);
         recipe.setIngredient('D', Material.ANCIENT_DEBRIS);
         recipe.setIngredient('E', Material.ECHO_SHARD);
-        recipe.setIngredient('S', Material.SMITHING_TABLE);
+        recipe.setIngredient('C', Material.CARTOGRAPHY_TABLE);
 
         plugin.getServer().removeRecipe(recipeKey);
         plugin.getServer().addRecipe(recipe);

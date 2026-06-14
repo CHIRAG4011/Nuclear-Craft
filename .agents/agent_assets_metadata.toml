@@ -71,7 +71,7 @@ title = "Last Pack.zip (42 KB)"
 id = "YUD9R7FfhSTVNY5ES_2IM"
 uri = "file://nuclearcraft-plugin/src/main/resources/NuclearCraft-ResourcePack.zip"
 type = "unspecified"
-title = "NuclearCraft Resource Pack (all textures fixed)"
+title = "NuclearCraft Resource Pack (updated)"
 
 [[outputs]]
 id = "Tb4jOUWquPaHhUxKHXY9a"
@@ -84,3 +84,9 @@ id = "lgWBIN41sjxFsjJeefZ4S"
 uri = "file://nuclearcraft-plugin/target/NuclearCraft-Plugin.zip"
 type = "unspecified"
 title = "NuclearCraft Plugin JAR (extract and use .jar)"
+
+[[outputs]]
+id = "XYoLZSTx0ngc9EBwpjSha"
+uri = "file://nuclearcraft-plugin/target/NuclearCraft-Plugin-Updated.zip"
+type = "unspecified"
+title = "NuclearCraft Plugin JAR (extract to get .jar)"

@@ -60,14 +60,14 @@ public class BlockManager {
         registry.register(new CustomBlock(plugin,
                 "nuclear-smelter",
                 "Nuclear Smelter",
-                Material.BLAST_FURNACE,
+                Material.SMOKER,
                 true,
                 true));
 
         registry.register(new CustomBlock(plugin,
                 "nuclear-forge",
                 "Nuclear Forge",
-                Material.SMITHING_TABLE,
+                Material.CARTOGRAPHY_TABLE,
                 true,
                 true));
     }

@@ -93,7 +93,7 @@ public class ForgeListener implements Listener {
         if (!event.getAction().isRightClick()) return;
 
         Block clicked = event.getClickedBlock();
-        if (clicked == null || clicked.getType() != Material.SMITHING_TABLE) return;
+        if (clicked == null || clicked.getType() != Material.CARTOGRAPHY_TABLE) return;
         if (!forgeManager.isForge(clicked)) return;
 
         event.setCancelled(true);
