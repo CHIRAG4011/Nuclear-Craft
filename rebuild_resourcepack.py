@@ -25,8 +25,12 @@ with zipfile.ZipFile(SRC_ZIP) as z:
 replaced = []
 added    = []
 
+SKIP_EXTS = {".md", ".txt", ".DS_Store"}
+
 for root, dirs, files in os.walk(CUSTOM):
     for fname in files:
+        if any(fname.endswith(ext) for ext in SKIP_EXTS):
+            continue
         src_path = os.path.join(root, fname)
         rel_path = os.path.relpath(src_path, CUSTOM)
         dst_path = os.path.join(TMP_DIR, rel_path)
