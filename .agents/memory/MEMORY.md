@@ -7,3 +7,4 @@
 - [Phase 12 resourcepack API](phase12-resourcepack.md) — Player.setResourcePack() in Paper 1.21 takes byte[] hash, not String; use hex-to-byte converter. Order: (url, byte[], Component, boolean).
 - [Resource pack full structure](resourcepack-structure.md) — Complete CMD ID table, file layout, dispatch format, and texture list for the 7.29 MB NuclearCraft-ResourcePack.zip.
 - [NCLogger API](nclogger-api.md) — NCLogger.info/warn/debug take a single String only; use String.format() at the call site, not printf-style varargs.
+- [Forge/Smelter common bugs](machine-bugs.md) — ForgeListener missing right-click guard; smelter ACTIVE state never re-inits totalTicks after resetProgress; resource pack must use NORMAL priority + 1-tick delay; block model overrides must delegate to vanilla parent.

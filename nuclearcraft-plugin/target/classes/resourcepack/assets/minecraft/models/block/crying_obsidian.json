@@ -1,0 +1,52 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "nuclearcraft:block/titan_reactor_forge_front",
+    "top": "nuclearcraft:block/titan_reactor_forge_top",
+    "bottom": "nuclearcraft:block/titan_reactor_forge_bottom",
+    "front": "nuclearcraft:block/titan_reactor_forge_front",
+    "back": "nuclearcraft:block/titan_reactor_forge_back",
+    "side": "nuclearcraft:block/titan_reactor_forge_side",
+    "side2": "nuclearcraft:block/titan_reactor_forge_side2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#top",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bottom",
+          "cullface": "down"
+        },
+        "north": {
+          "texture": "#front",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#back",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#side",
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#side2",
+          "cullface": "east"
+        }
+      }
+    }
+  ]
+}

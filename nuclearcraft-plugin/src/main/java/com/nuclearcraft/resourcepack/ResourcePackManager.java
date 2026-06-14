@@ -74,10 +74,11 @@ public class ResourcePackManager implements Listener {
         logStatus     = cfg.getBoolean("resource-pack.log-status", true);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (!enabled || packUrl == null || packUrl.isBlank()) return;
-        applyPack(event.getPlayer());
+        Player player = event.getPlayer();
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> applyPack(player), 1L);
     }
 
     @EventHandler

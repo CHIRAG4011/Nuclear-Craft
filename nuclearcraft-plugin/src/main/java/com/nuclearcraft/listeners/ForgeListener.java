@@ -90,6 +90,7 @@ public class ForgeListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
+        if (!event.getAction().isRightClick()) return;
 
         Block clicked = event.getClickedBlock();
         if (clicked == null || clicked.getType() != Material.SMITHING_TABLE) return;

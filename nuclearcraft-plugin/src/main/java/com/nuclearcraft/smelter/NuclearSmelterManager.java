@@ -220,6 +220,13 @@ public class NuclearSmelterManager {
                     break;
                 }
 
+                // Re-initialize recipe timing if it was cleared by a prior completion
+                if (machine.getCurrentRecipeTotalTicks() <= 0 && recipeOpt.isPresent()) {
+                    machine.setCurrentRecipeTotalTicks(recipeOpt.get().getProcessingTicks());
+                    machine.setCurrentRecipeId(recipeOpt.get().getId());
+                    machine.setProgressTicks(0);
+                }
+
                 machine.setProgressTicks(machine.getProgressTicks() + tickPeriod);
                 spawnActiveParticles(machine);
 
