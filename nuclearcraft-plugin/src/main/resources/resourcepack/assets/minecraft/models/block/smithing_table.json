@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "nuclearcraft:block/nuclear_forge_top",
+    "front": "nuclearcraft:block/nuclear_forge_front",
+    "side": "nuclearcraft:block/nuclear_forge_side"
+  }
+}

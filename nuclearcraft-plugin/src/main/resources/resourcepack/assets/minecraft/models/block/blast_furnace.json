@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "nuclearcraft:block/nuclear_smelter_top",
+    "front": "nuclearcraft:block/nuclear_smelter_front",
+    "side": "nuclearcraft:block/nuclear_smelter_side"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "nuclearcraft:block/titan_reactor_forge_top",
+    "front": "nuclearcraft:block/titan_reactor_forge_front",
+    "side": "nuclearcraft:block/titan_reactor_forge_side"
+  }
+}
