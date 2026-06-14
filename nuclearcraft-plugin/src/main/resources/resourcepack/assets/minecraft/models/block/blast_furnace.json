@@ -1,8 +1,52 @@
 {
-  "parent": "minecraft:block/orientable",
+  "parent": "minecraft:block/block",
   "textures": {
+    "particle": "nuclearcraft:block/nuclear_smelter_front",
     "top": "nuclearcraft:block/nuclear_smelter_top",
+    "bottom": "nuclearcraft:block/nuclear_smelter_bottom",
     "front": "nuclearcraft:block/nuclear_smelter_front",
-    "side": "nuclearcraft:block/nuclear_smelter_side"
-  }
+    "back": "nuclearcraft:block/nuclear_smelter_back",
+    "side": "nuclearcraft:block/nuclear_smelter_side",
+    "side2": "nuclearcraft:block/nuclear_smelter_side2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#top",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bottom",
+          "cullface": "down"
+        },
+        "north": {
+          "texture": "#front",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#back",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#side",
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#side2",
+          "cullface": "east"
+        }
+      }
+    }
+  ]
 }
