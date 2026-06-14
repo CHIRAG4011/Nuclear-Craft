@@ -72,3 +72,9 @@ id = "YUD9R7FfhSTVNY5ES_2IM"
 uri = "file://nuclearcraft-plugin/src/main/resources/NuclearCraft-ResourcePack.zip"
 type = "unspecified"
 title = "NuclearCraft-ResourcePack.zip"
+
+[[outputs]]
+id = "Tb4jOUWquPaHhUxKHXY9a"
+uri = "file://NuclearCraft-Guide.zip"
+type = "unspecified"
+title = "NuclearCraft-Guide.zip — Complete Crafting Guide"
